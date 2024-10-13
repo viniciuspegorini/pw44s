@@ -2,13 +2,13 @@
 
 ## Introdução
 
-O Spring é um conjunto de projetos que focam em levar produtividade ao programador. Auxiliando de maneira a aumentar a produtividade no desenvolvimento de aplicações Java com simplicidade e flexibilidade.
+O Spring é um conjunto de projetos que focam em levar produtividade ao programador. Auxiliando de maneira a aumentar a produtividade no desenvolvimento de aplicações Java com simplicidade e flexibilidade. 
 O conjunto de *frameworks* Spring possui o Spring MVC para criação de aplicações web e serviços RESTful, o Spring Data, para  acesso a banco de dados, o Spring Security, para prover segurança em aplicações, e diversos outros projetos como computação em nuvem, microsserviços e *big data*, por exemplo.  
 Os *frameworks* Spring são todos **Open Source** e o seu código-fonte pode ser encontrado no [GitHub](https://github.com/spring-projects) [1].
 
 ## Spring e Java EE
 
-O Spring possui uma série de recursos implementados que não estão presentes no Java EE. Entretanto, o *framework* Spring também utiliza várias tecnologias que estão implementadas dentro do Java EE. Não existe uma concorrência entre o Spring e o Java EE, o Spring apenas veio para dar maior produtividade ao desenvolvedor com os recursos disponibilizados no *framework*.
+O Spring possui uma série de recursos implementados que não estão presentes no Java EE. Entretanto, o *framework* Spring também utiliza várias tecnologias que estão implementadas dentro do Java EE. Não existe uma concorrência entre o Spring e o Java EE, o Spring apenas veio para dar maior produtividade ao desenvolvedor com os recursos disponibilizados no *framework*. 
 
 ## Inversão  de Controle (IoC) e  Injeção de Dependências (DI) com Spring
 
@@ -43,7 +43,7 @@ Durante as aulas será desenvolvido um projeto para controle de produtos classif
 
 ### Criação do projeto
 
-O projeto será criado utilizando como base o *framework* Spring Boot, que por sua vez permite que projetos com o Spring MVC, Data JPA e Security já venham configurados por meio de convenções.
+O projeto será criado utilizando como base o *framework* Spring Boot, que por sua vez permite que projetos com o Spring MVC, Data JPA e Security já venham configurados por meio de convenções. 
 Será criado um projeto [Maven](https://maven.apache.org/) por meio da ferramenta web [Spring Initializr](https://start.spring.io/) com as seguintes configurações:
 O projeto será do tipo **Maven Project**.
 A linguagem será **Java**.
@@ -51,9 +51,9 @@ A versão do Spring Boot será a última versão estável na data de criação d
 Os metadados do projeto são:
 - Group: **br.edu.utfpr.pb.pw44s**
 - Artifact: **server**
-- Options:
-  - Packaging: **Jar**
-  - Java: **17** ou superior (utilizar a versão instalada na máquina, preferência pela mais atual).
+- Options: 
+	- Packaging: **Jar** 	
+	- Java: **17** ou superior (utilizar a versão instalada na máquina, preferência pela mais atual).
 
 Em dependências devem ser selecionados os *frameworks*:
 - Spring Data JPA
@@ -126,7 +126,7 @@ public class UsuarioControllerTest {
 }
 ```` 
 
-A anotação **@SpringBootTest** permite que o teste execute a partir das configurações padrão do Spring Boot, ou seja, as várias convenções do *framework* para iniciar o projeto já estão pré-configuradas. A propriedade *webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT* serve para que sempre que executar o teste a aplicação seja executada em uma porta diferente, evitando executar em uma porta que já ocupada na máquina em que esteja rodando os testes. O Spring permite que a aplicação seja executada em diferentes ambientes (*profiles*), ou seja, ambiente teste, desenvolvimento, produção, etc.. Assim, por meio da anotação **@ActiveProfiles("test")** está sendo informado que o projeto será executado com base no *profile test*, isso irá permitir que na sequência do desenvolvimento do projeto ele possa ser executado por meio de configurações diferentes dentro de cada ambiente em que deve ser executado.
+A anotação **@SpringBootTest** permite que o teste execute a partir das configurações padrão do Spring Boot, ou seja, as várias convenções do *framework* para iniciar o projeto já estão pré-configuradas. A propriedade *webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT* serve para que sempre que executar o teste a aplicação seja executada em uma porta diferente, evitando executar em uma porta que já ocupada na máquina em que esteja rodando os testes. O Spring permite que a aplicação seja executada em diferentes ambientes (*profiles*), ou seja, ambiente teste, desenvolvimento, produção, etc.. Assim, por meio da anotação **@ActiveProfiles("test")** está sendo informado que o projeto será executado com base no *profile test*, isso irá permitir que na sequência do desenvolvimento do projeto ele possa ser executado por meio de configurações diferentes dentro de cada ambiente em que deve ser executado. 
 
 O próximo passo é criar o primeiro teste, para nomear cada teste será utilizada a convenção:
 **methodName_condition_expectedBehaviour**
@@ -197,18 +197,22 @@ public class UsuarioControllerTest {
 	}
 }
 ```
-O primeiro passo para resolver o teste é fazer com que a classe **User** possa ser lida como uma entidade que pode ser persistida no banco de dados por meio da anotação **@Entity**. Essa anotação faz parte da Java™ Persistence API (JPA), que é uma especificação oficial que descreve como deve ser o comportamento dos *frameworks* de persistência Java que desejarem implementá-la. Toda a classe que é mapeada com a anotação @Entity deve possuir uma chave primária e a mesma deve ser anotada com **@Id**. Além disso é necessário informar como será gerado o incremento da chave primária, o que deve ser feito por meio da anotação **@GeneratedValue**, a qual por padrão incrementa o **Id** automaticamente somando 1 ao valor da chave primária a cada novo registro.
+O primeiro passo para resolver o teste é fazer com que a classe **User** possa ser lida como uma entidade que pode ser persistida no banco de dados por meio da anotação **@Entity**. Essa anotação faz parte da Java™ Persistence API (JPA), que é uma especificação oficial que descreve como deve ser o comportamento dos *frameworks* de persistência Java que desejarem implementá-la. Toda a classe que é mapeada com a anotação @Entity deve possuir uma chave primária e a mesma deve ser anotada com **@Id**. Além disso é necessário informar como será gerado o incremento da chave primária, o que deve ser feito por meio da anotação **@GeneratedValue**, a qual por padrão incrementa o **Id** automaticamente somando 1 ao valor da chave primária a cada novo registro. Outra modificação que se faz necessária é a adição do nome da tabela que será gerada, por meio da anotação **@Table**, pois em alguns bancos de dados a palavra User é reservada pela linguagem SQL utilizada pelo Sistema Gerenciador de Banco de Dados (SGBD). As demais anotações antes da declaração da classe são do **Lombok**  ,  que é um *framework* java que serve para eliminar a verbosidade do código durante o desenvolvimento. As anotações **@Getter e @Setter** geram os métodos *getters e setters*,     **@AllArgsConstructor  e @NoArgsConstructor ** geram construtores com todos os parâmetros e sem parâmetros, respetivamente e a anotação **@Builder** gera o método *builder*, em todos os casos os métodos são gerados em tempo de compilação.
 ```java
-\\...
+//...
 @Entity
+@Table(name = "tb_user" )
 @Getter @Setter
+@AllArgsConstructor  
+@NoArgsConstructor  
+@Builder
 public class User {
 
 	@Id
 	@GeneratedValue
 	private long id;
 	private String username;
-	\\... o restante da classe permanece igual
+	//... o restante da classe permanece igual
 }
 ```
 Agora é necessário criar as operações de escrita e leitura no banco de dados, isso por ser feito por meio da *interface* **JpaRepository**, disponibilizada pelo *framework* Spring Data. A *interface* **UserRepository** será criada dentro do pacote **br.edu.utfpr.pb.pw44s.repository**. Ao herdar as características de **JpaRepository** a *interface* conta com os principais métodos CRUD, tais como *save(), delete(), findAll(), findById()*, entre outros. Agora a classe **UserRepository** pode ser importada dentro da classe de teste.
@@ -233,7 +237,9 @@ public class UserService {
 	}
 }
 ```
-Para salvar o usuário basta fazer a injeção de **UserService **, então utilizar o método ***userService.save()*** que espera como parâmetro de entrada um objeto do tipo **User**, o objeto será persistido no banco de dados. Nesse momento é possível executar o teste e o mesmo vai passar.
+Para salvar o usuário basta fazer a injeção de **UserService **, então utilizar o método ***userService.save()*** que espera como parâmetro de entrada um objeto do tipo **User**, o objeto será persistido no banco de dados. Nesse momento é possível executar o teste e o mesmo vai passar. 
+
+
 
 ```java
 @RestController  
@@ -249,7 +255,7 @@ public class UserController {
 }
 ```
 
-Para evitar problemas durante a execução dos testes é importante limpar o banco de dados a cada execução, para isso será criado um método que remove os registros do banco a cada execução, ou seja, cada teste irá executar de maneira independente. O método **cleanup()** será precedido da anotação **@BeforeEach** que irá garantir que o método seja executado, limpando a tabela de usuários, antes de cada teste.
+Para evitar problemas durante a execução dos testes é importante limpar o banco de dados a cada execução, para isso será criado um método que remove os registros do banco a cada execução, ou seja, cada teste irá executar de maneira independente. O método **cleanup()** será precedido da anotação **@BeforeEach** que irá garantir que o método seja executado, limpando a tabela de usuários, antes de cada teste. 
 
 ``` java
 //...
@@ -279,6 +285,7 @@ spring:
 Ao acessar a URL [http://localhost:8080/h2-console](http://localhost:8080/h2-console) em um navegador irá abrir a tela de conexão com o banco de dados **H2** a configuração está praticamente pronta, bastando alterar a URL de conexão com o banco para: **jdbc:h2:mem:testdb**. Ao clicar para realizar a conexão temos acesso ao banco de dados gerado, por enquanto foi criada apenas a tabela **tb_user**, ao clicar na tabela é habilitado o console no qual podemos realizar consultas. Ao fazer um **select * from tb_user** e executar o comando irá resultar em uma tabela vazia como resultado, para adicionar um usuário no banco de dados será utilizado o Postman.
 
 ### Realizando uma requisição HTTP POST por meio do Postman
+
 Ao abrir o Postam basta clicar em **File > New Tab** e uma nova aba para realizar requisições HTTP será aberta. No método selecionar a opção **POST** e na URL [http://localhost:8080/users](http://localhost:8080/users). O próximo passo é configurar o corpo da requisição com um objeto JSON representando um usuário. Clicar na aba **Body** marcar a opção **raw** e no final das opções selecionar **JSON**. Com isso é possível adicionar no corpo da requisição o objeto que representa um usuário.
 
 ```json
@@ -334,7 +341,7 @@ public class GenericResponse {
 A próxima alteração de código será realizado no método **createUser()** da classe **UserController**, que agora deverá retornar um objeto do tipo **GenericResponse**. Após essa alteração o teste criado irá passar. Para visualizar o comportamento na prática a requisição pode ser realizada novamente por meio do Postman.
 
 ```java
-	\\...
+	//...
 	@PostMapping  
 	public ResponseEntity<GenericResponse> createUser(@RequestBody User user) {  
 		userService.save(user); 
@@ -342,7 +349,7 @@ A próxima alteração de código será realizado no método **createUser()** da
 		genericResponse.setMessage("User saved."); 
 		return ResponseEntity.ok(genericResponse);  
 	}
-	\\...
+	//...
 ```
 Com essa etapa finalizada, agora serão adicionadas algumas melhorias no código e na maneira com que os dados são persistidos. Ao fazer o **select** no banco de dados é possível observar que a coluna **password** está sendo armazenada como texto, o que não é uma boa prática. O teste a seguir irá validar se a senha salva no banco está diferente da senha que foi enviada para cadastro, o que sinaliza que ela estará criptografada no banco de dados.
 
@@ -408,7 +415,8 @@ Para resolver esse teste o inicialmente será adicionada a anotação **@NotNull
 //...
 import jakarta.validation.constraints.NotNull;
 
-@Entity(name = "tb_user")  
+@Entity
+@Table(name = "tb_user")  
 @Getter @Setter
 public class User {  
   
@@ -443,7 +451,7 @@ public class UserController {
 	}
 ```
 
-O mesmo teste (**UserControllerTest**) será realizado para o campo **password** da classe **User**.
+O mesmo teste (**UserControllerTest**) será realizado para o campo **password** da classe **User**. 
 
 ```java
 	@Test
@@ -478,6 +486,152 @@ public class User {
 }
 ```
 
+### Personalizando o tratamento de erros
+
+Por meio da anotação @Valid o objeto enviado no corpo da requisição é validado antes da execução do método *createUser()* do *controller*, porém as mensagens de erro enviadas ao cliente que está consumindo a API são geradas automaticamente pelo Spring, e são verbosas. Com o objetivo de melhorar as mensagens de erro enviadas aos clientes da API, será criada uma estrutura de tratamento de erros:
+
+As classes serão criadas dentro do pacote **error**:
+ - **ApiError**: Classe que vai representar um objeto com o retorno da mensagem de erro.
+- **ErrorHandler**: Classe que irá tratar os erros da API.
+- **ExceptionHandlerAdvice**: Classe que irá tratar erros específicos da API.
+
+#### A classe ApiError
+
+A classe **ApiError** possui os atributos ***timestamp*** que armazena o *timestamp* em que ocorreu o erro, o atributo ***status*** com o código de resposta HTTP que representa o erro. O atributo ***message*** irá armazenar a mensagem de erro, o atributo ***url*** irá representar a URL da API em que aconteceu o erro e, por fim, o atributo ***validationErrors*** irá representar uma lista com os erros no caso de erros de validação de dados do formulário.
+
+```java
+package br.edu.utfpr.pb.pw25s.server.error;  
+  
+import lombok.Data;  
+import lombok.NoArgsConstructor;  
+  
+import java.util.Date;  
+import java.util.Map;  
+  
+@Data  
+@NoArgsConstructor  
+public class ApiError {  
+    private long timestamp = new Date().getTime();  
+    private int status;  
+    private String message;  
+    private String url;  
+    private Map<String, String> validationErrors;  
+  
+    public ApiError(int status, String message, String url, Map<String, String> validationErrors) {  
+        this.status = status;  
+        this.message = message;  
+        this.url = url;  
+        this.validationErrors = validationErrors;  
+    }  
+  
+    public ApiError(String message, String url, Integer status) {  
+        this.message = message;  
+        this.url = url;  
+        this.status = status;  
+    }  
+}
+```
+
+#### A classe ErrorHandler
+
+A classe **ErrorHandler** implementa a interface *ErrorController* que permite com que a classe seja um *controller* responsável por tratar os erros. A classe deve ser anotada com *@RestController*. Essa classe por padrão irá tratar todos os erros que acontecem na API.
+
+```java
+package br.edu.utfpr.pb.pw44s.server.error;  
+  
+import jakarta.servlet.http.HttpServletResponse;  
+import org.springframework.boot.web.error.ErrorAttributeOptions;  
+import org.springframework.boot.web.servlet.error.ErrorAttributes;  
+import org.springframework.boot.web.servlet.error.ErrorController;  
+import org.springframework.web.bind.annotation.RequestMapping;  
+import org.springframework.web.bind.annotation.RestController;  
+import org.springframework.web.context.request.WebRequest;  
+
+import java.util.Map;  
+  
+@RestController  
+public class ErrorHandler implements ErrorController {  
+    private final ErrorAttributes errorAttributes;  
+  
+    public ErrorHandler(ErrorAttributes errorAttributes) {  
+        this.errorAttributes = errorAttributes;  
+    }  
+  
+    @RequestMapping("error")  
+    public ApiError handlerError(WebRequest webRequest, HttpServletResponse response) {  
+        Map<String, Object> attributes = errorAttributes.getErrorAttributes(webRequest,  
+                                            ErrorAttributeOptions.of(ErrorAttributeOptions.Include.MESSAGE));  
+  
+        if (attributes.get("status") == null) {  
+            attributes.put("status", response.getStatus());  
+        }  
+        return new ApiError( (String) attributes.get("message"),  
+                             (String) attributes.get("path"),  
+                             (Integer) attributes.get("status")  
+                            );  
+    }  
+}
+```
+
+#### A classe ExceptionHandlerAdvice
+
+A classe **ExceptionHandlerAdvice**  irá tratar erros específicos que ocorrem nos *controllers*, a anotação responsável por permitir esse comportamento é o *@RestControllerAdvice*. O tratamento das exceções geradas nas operações de CRUD em que o método do *controller* é validado pela anotação *@Valid* deverão tratar uma exceção do tipo **MethodArgumentNotValidException.class**, assim as validações que foram adicionadas ao model poderão ser utilizadas para montar a mensagem de erro de resposta.
+
+Além das validações dos *models* outras validações de error podem ser realizadas na classe, bastando criar um método para cada tipo de erro a ser tratado. 
+
+
+```java
+package br.edu.utfpr.pb.pw44s.server.error;  
+  
+import org.springframework.http.HttpStatus;  
+import org.springframework.http.converter.HttpMessageNotReadableException;  
+import org.springframework.validation.BindingResult;  
+import org.springframework.validation.FieldError;  
+import org.springframework.web.bind.MethodArgumentNotValidException;  
+import org.springframework.web.bind.annotation.ExceptionHandler;  
+import org.springframework.web.bind.annotation.ResponseStatus;  
+import org.springframework.web.bind.annotation.RestControllerAdvice;  
+  
+import jakarta.servlet.http.HttpServletRequest;  
+import java.util.HashMap;  
+import java.util.Map;  
+  
+@RestControllerAdvice  
+public class ExceptionHandlerAdvice {  
+  
+	// Trata as exceções que irão ocorrer devido a anotação @Valid
+    @ExceptionHandler({MethodArgumentNotValidException.class})  
+	// Irá retornar como HttpStatus 400 - Bad Request
+    @ResponseStatus(HttpStatus.BAD_REQUEST)  
+    public ApiError handlerValidationException(MethodArgumentNotValidException exception, HttpServletRequest request) {  
+	    //Recupera a lista de erros
+        BindingResult result = exception.getBindingResult();  
+        Map<String, String> validationErrors = new HashMap<>();  
+        //Cria uma lista com os erros
+        for (FieldError fieldError : result.getFieldErrors()) {  
+            validationErrors.put(fieldError.getField(), fieldError.getDefaultMessage());  
+        }  
+		//Retorna uma json com um objeto do tipo ApiError com os errors durante a validação dos dados enviados.
+        return new ApiError(HttpStatus.BAD_REQUEST.value(), "Validation error!",  
+                request.getServletPath(), validationErrors);  
+    }  
+  
+    @ExceptionHandler({IllegalStateException.class})  
+    @ResponseStatus(HttpStatus.BAD_REQUEST)  
+    public ApiError handlerValidationException(IllegalStateException exception, HttpServletRequest request) {  
+        return new ApiError(HttpStatus.BAD_REQUEST.value(), "Validation error!",  
+                request.getServletPath(), null);  
+    }  
+  
+    @ExceptionHandler({HttpMessageNotReadableException.class})  
+    @ResponseStatus(HttpStatus.BAD_REQUEST)  
+    public ApiError handlerValidationException(HttpMessageNotReadableException exception, HttpServletRequest request) {  
+        return new ApiError(HttpStatus.BAD_REQUEST.value(), "Validation error!",  
+                request.getServletPath(), null);  
+    }  
+}
+```
+
 ### Utilizando *Data Transfer Object* (DTO) para transferência de dados entre o cliente e o servidor
 
 O *Data Transfer Object* (DTO) é um padrão de design de software utilizado para transferência de dados entre diferentes camadas de uma aplicação. No projeto será utilizado para transferência de dados entre o cliente e a API Rest. O primeiro passo para isso será a criação de um DTO para representar a classe de usuário, será a classe UserDTO e será criada no pacote: **br.edu.utfpr.pb.pw44s.server.dto**, conforme o código abaixo:
@@ -497,15 +651,16 @@ import jakarta.validation.constraints.Size;
 @Data  
 @NoArgsConstructor  
 @AllArgsConstructor  
-public class UserDTO {  
+public class UserDTO {
+  
     private Long id;  
   
     @NotNull  
- @Size(min = 4, max = 50)  
+	@Size(min = 4, max = 50)  
     private String username;  
   
     @NotNull  
- @Size(min = 4, max = 50)  
+	@Size(min = 4, max = 50)  
     private String displayName;  
   
     @NotNull
@@ -517,10 +672,11 @@ public class UserDTO {
         this.id = user.getId();  
         this.displayName = user.getDisplayName();  
         this.username = user.getUsername();  
+        this.password = user.getPassword();
     }  
 }
 ```
-O DTO criado para representar a classe User é bem semelhante a classe, apenas não possui a anotação *@Entity* pois os objetos dessa classe não serão persistidos no banco de dados, eles vão servir apenas para a transferência de dados entre o cliente e a API.
+O DTO criado para representar a classe User é bem semelhante a classe original, apenas não possui a anotação *@Entity* pois os objetos dessa classe não serão persistidos no banco de dados, eles vão servir apenas para a transferência de dados entre o cliente e a API.
 A próxima etapa vai ser ajustar a classe **UserController**, pois ao invés de receber diretamente um objeto do tipo **User**, agora a aplicação vai esperar um objeto do tipo **UserDTO**. Antes disso vamos criar uma classe de configuração para instanciar  um objeto do tipo modelMapper, pois uma tarefa que será sempre necessária ao utilizar DTOs é a conversão da classe *model* para DTO e vise-versa. A classe **WebConfig** vai ter um único método para instanciar um objeto do tipo **ModelMapper** e será criada no pacote **br.edu.utfpr.pb.pw44s.server.config**.
 
 ```java
@@ -585,18 +741,18 @@ Após esse ajuste, não será necessário fazer mais nenhuma modificação na ap
 O conteúdo abordado na sequência é o conceito de autenticação e autorização com o *framework* **Spring Security**[8]. Neste projeto será criado um arquivo de configuração para sobrescrever alguns comportamentos padrão do **Spring Security**. A classe **User** será utilizada para criar os objetos dos usuários que poderão se autenticar na API. E a interface **UserRepository** será utilizada para criar a consulta que irá retornar o usuário do banco de dados.
 
 Além disso, foram criadas dentro dos pacotes **security** e **service** as demais classes utilizadas na configuração do Spring Security:
-- **AuthenticationResponse**:
-- **EntryPointUnauthorizedHandler**:  classe utilizada para definir o tipo de resposta ao cliente quando ocorrer um erro no processo de autenticação.
-- **JWTAuthenticationFilter**: classe utilizada durante o processo de autenticação de usuário.
-- **JWTAuthorizationFilter**: classe utilizada durante o processo de autorização de um usuário já autenticado.
-- **SecurityConstants**: classe contendo as constantes utilizadas pelas classes de configuração do Spring Security.
-- **WebSecurity**: classe em que serão realizadas todas as configurações do Spring Security.
-- **AuthService**: classe de serviço que estará no pacote *service* e vai ser utilizada para implementar o método de busca do usuário no banco de dados.
-- **AuthenticationResponse**: classe utilizada para definir o objeto de retorno com o Token criado e dados do usuário ao finalizar a autenticação.
-- **UserResponseDTO**: classe que será utilizada para  montar a resposta ao usuário autenticado com sucesso, irá representar o usuário autenticado.
-- **AuthorityResponseDTO**: classe que será utilizada para  montar a resposta ao usuário autenticado com sucesso, irá representar uma permissão de usuário.
+ - **EntryPointUnauthorizedHandler**:  classe utilizada para definir o tipo de resposta ao cliente quando ocorrer um erro no processo de autenticação.
+ - **JWTAuthenticationFilter**: classe utilizada durante o processo de autenticação de usuário.
+ - **JWTAuthorizationFilter**: classe utilizada durante o processo de autorização de um usuário já autenticado. 
+ - **SecurityConstants**: classe contendo as constantes utilizadas pelas classes de configuração do Spring Security.
+ - **WebSecurity**: classe em que serão realizadas todas as configurações do Spring Security.
+ - **AuthService**: classe de serviço que estará no pacote *service* e vai ser utilizada para implementar o método de busca do usuário no banco de dados.
+ - **AuthenticationResponse**: classe utilizada para definir o objeto de retorno com o Token criado e dados do usuário ao finalizar a autenticação.
+ - **UserResponseDTO**: classe que será utilizada para  montar a resposta ao usuário autenticado com sucesso, irá representar o usuário autenticado.
+ - **AuthorityResponseDTO**: classe que será utilizada para  montar a resposta ao usuário autenticado com sucesso, irá representar uma permissão de usuário. 
 
 #### Ajuste na classe ServerApplication
+
 O primeiro passo a ser realizado para o **Spring Security** funcionar é retirar o trecho de código *exclude = SecurityAutoConfiguration.class* da classe **ServerApplication**, pois agora é necessário que o *framework* Spring traga algumas configurações já definidas por convenção no Spring Boot. Por padrão, ao retirar essa configuração o **Spring Security** volta a funcionar na aplicação e todas as rotas da API passam a necessitar de autenticação. Ou seja nesse momento os testes vão parar de funcionar e, ao tentar fazer uma requisição **HTTP POST** para a URL **/users** da API o retorno será um código **HTTP** **403 FORBIDEN**, mesmo todos os campos estando corretos, pois o Spring Security está validando o acesso às rotas. Abaixo está o código da classe *ServerApplication* após a remoção da configuração *exclude = SecurityAutoConfiguration.class*.
 
 ```java
@@ -609,6 +765,7 @@ public class ServerApplication {
 ``` 
 
 #### Criação da classe SecurityConstants
+
 A classe **SecurityConstants** irá conter as constantes utilizadas pelas classes de configuração do Spring Security. As constantes da classe são a chave utilizada para gerar o Token, o tempo de validade do Token, o prefixo do Token e o nome do atributo do cabeçalho da requisição HTTP que irá conter o Token no processo de autorização.
 
 ```java
@@ -622,6 +779,7 @@ public class SecurityConstants {
 ```
 
 #### Criação da classe EntryPointUnauthorizedHandler
+
 A classe **EntryPointUnauthorizedHandler** implementa a interface *AuthenticationEntryPoint * do *framework* Spring Security e será utilizada para definir o tipo de resposta ao cliente quando ocorrer um erro no processo de autenticação, ao ocorrer a exceção durante a autenticação o Spring irá chamar o método  **commence()** presente na classe.
 
 ```java
@@ -648,6 +806,7 @@ public class EntryPointUnauthorizedHandler implements AuthenticationEntryPoint {
 ```
 
 #### Criação da classe Web Security
+
 Para configurar o **Spring Security** será criada a classe **Web Security** no pacote **br.edu.utfpr.pb.pw44s.server.security**. Nessa classe serão sobrescritas as configurações padrão do Spring Security, por isso ela recebe a anotação **@EnableWebSecurity** e como serão criados objetos compartilhados a anotação **@Configuration**. O objeto **authService** será explicado na sequência do texto e é utilizado para buscar um usuário no banco.  O objeto **authenticationEntryPoint** é responsável por realizar o tratamento de exceção quando o usuário informar credenciais incorretas ao autenticar-se. O método **filterChain()** retorna um objeto do tipo **SecurityFilterChain**, nesse método serão sobrescritas algumas configurações padrão do Spring Security. Essas configurações serão alteradas por meio do objeto **http** instanciado de **HttpSecurity**, nele podem ser alteados os objetos de tratamento de erro, quais rotas da aplicação serão autenticadas/autorizadas, as rotas para autenticação, controle do tipo de sessão e no caso desse projeto os filtros utilizados na Autenticação (**authenticationManager**) e autorização dos usuários (**authorizationManager**), conforme pode ser observado nos comentários do código abaixo.
 
 ```java
@@ -740,7 +899,7 @@ public class WebSecurity {
 
 Para autenticar-se em um sistema qualquer geralmente precisamos ter credenciais, no caso deste projeto as credenciais para acesso serão gerenciadas pela classe **User** por meio dos campos **username** e **password**. Dessa maneira os objetos instanciados de **User** serão armazenados no banco de dados e utilizados posteriormente para autenticação e autorização. O processo de salvar um novo usuário já foi explicado no início deste projeto, já o processo de autenticação e autorização está sendo descrito agora. Por padrão, para autenticar-se em uma aplicação Spring Security é necessário realizar uma requisição do tipo **HTTP POST** para URL **/login**  (no caso dessa aplicação: http://localhost:8080/login), enviando no corpo da requisição os dados de usuário e senha no formato JSON, essa URL e verbo HTTP são padrão do Spring Security, mas caso necessário pode ser alterado na classe de configuração.
 
-Agora serão descritas as configurações na classe **User**, **UserRepository** e a criação da classe **AuthService**. Como será utilizado o *framework* **Spring Security** para gerenciar a autenticação e autorização da API, deve-se obedecer a documentação do mesmo, que define que para utilizar uma classe criada na API a mesma deverá implementar a *interface* **UserDetails**. Essa *interface* exige a implementação de alguns métodos padrão , sendo os principais o **getUsername()**, o **getPassword()** e o **getAuthorities() **. O método **getUsername()** deve retornar o nome de usuário utilizado na autenticação (que pode ser outro campo da classe **User**, por exemplo, o campo email), nesse caso basta retornar **this.email** no método. O método **getPassword()** deverá retornar a senha e, por fim o método **getAuthorities() ** deverá retornar as permissões de usuário, nesse caso só teremos uma permissão, por isso o retorno é **return AuthorityUtils.createAuthorityList("Role_USER");**, ou seja será retornada uma *string* padrão para todos os usuários *Role_USER*.
+Agora serão descritas as configurações na classe **User**, **UserRepository** e a criação da classe **AuthService**. Como será utilizado o *framework* **Spring Security** para gerenciar a autenticação e autorização da API, deve-se obedecer a documentação do mesmo, que define que para utilizar uma classe criada na API a mesma deverá implementar a *interface* **UserDetails**. Essa *interface* exige a implementação de alguns métodos padrão , sendo os principais o **getUsername()**, o **getPassword()** e o **getAuthorities() **. O método **getUsername()** deve retornar o nome de usuário utilizado na autenticação (que pode ser outro campo da classe **User**, por exemplo, o campo email), nesse caso basta retornar **this.email** no método. O método **getPassword()** deverá retornar a senha e, por fim o método **getAuthorities() ** deverá retornar as permissões de usuário, nesse caso só teremos uma permissão, por isso o retorno é **return AuthorityUtils.createAuthorityList("Role_USER");**, ou seja será retornada uma *string* padrão para todos os usuários *Role_USER*.  
 
 ```java
 //... imports e pacotes
@@ -752,7 +911,7 @@ public class User implements UserDetails {
 	private long id;  
   
     @UniqueUsername  
-	@NotNull(message = "{br.edu.utfpr.pb.pw25s.username}")  
+	@NotNull
     @Size(min = 4, max = 255)  
     private String username;
   
@@ -794,31 +953,31 @@ public class User implements UserDetails {
     }  
 }
 ```
-Os demais métodos: **isAccountNonExpired(), isAccountNonLocked**, etc. estão retornando **true** por padrão, pois o Spring Security utiliza esses dados para verificar se a conta de usuário é válida. Nesse caso não foi implementado nenhum tipo de validação, mas esses métodos poderiam retornar valores armazenados no banco de dados.
+ Os demais métodos: **isAccountNonExpired(), isAccountNonLocked**, etc. estão retornando **true** por padrão, pois o Spring Security utiliza esses dados para verificar se a conta de usuário é válida. Nesse caso não foi implementado nenhum tipo de validação, mas esses métodos poderiam retornar valores armazenados no banco de dados.  
 
-#### Ajustes na UserRepository
+#### Ajustes na interface UserRepository
 
 Continuando a implementação do processo de autenticação e autorização, na interface **UserRepository** foi adicionadio a assinatura do método **findByUsername**. Esse método recebe como parâmetro o atributo **username** e retorna um objeto **User**. Esse método será utilizado pela classe **AuthService** para buscar o usuário que está tentando autenticar-se no sistema.
 
 ```java
-\\...
+//...
 @Repository  
 public interface UserRepository extends JpaRepository<User, Long> {  
     User findByUsername(String username);  
 }
 ```
 
-#### Criação da classe AuthUserService
+#### Criação da classe AuthService
 
-A classe **AuthUserService** implementa a interface do Spring Security **UserDetailsService**, a qual necessita a implementação do método **loadUserByUsername**, que recebe uma *string* (*username*) por parâmetro e retorna uma instancia de um objeto do tipo **UserDetails**, pois o Spring Security utiliza esse objeto para verificar se um usuário existe no banco. Caso exista o usuário o Spring Security irá comparar a senha criptografada no banco com a senha informada pelo usuário durante o processo de autenticação, além das permissões de usuário.
+A classe **AuthService** implementa a interface do Spring Security **UserDetailsService**, a qual necessita a implementação do método **loadUserByUsername**, que recebe uma *string* (*username*) por parâmetro e retorna uma instancia de um objeto do tipo **UserDetails**, pois o Spring Security utiliza esse objeto para verificar se um usuário existe no banco. Caso exista o usuário o Spring Security irá comparar a senha criptografada no banco com a senha informada pelo usuário durante o processo de autenticação, além das permissões de usuário.
 
 ```java
-\\...
+//...
 @Service  
-public class AuthUserService implements UserDetailsService {  
+public class AuthService implements UserDetailsService {  
 	private final UserRepository userRepository;  
 	
-	public AuthUserService(UserRepository userRepository) {  
+	public AuthService(UserRepository userRepository) {  
         this.userRepository = userRepository;  
     }  
 
@@ -922,8 +1081,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;  
 import java.io.IOException;  
 import java.util.Date;  
-  
-  
+
 @NoArgsConstructor  
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {  
     private AuthenticationManager authenticationManager;  
@@ -941,9 +1099,11 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			//Obtém os dados de username e password utilizando o ObjectMapper para converter o JSON //em um objeto User com esses dados.  User credentials = new User();  
             User user = new User();  
             //Verifica se o usuário existe no banco de dados, caso não exista uma Exception será disparada  
- //e o código será parado de executar nessa parte e o usuário irá receber uma resposta //com falha na autenticação (classe: EntryPointUnauthorizedHandler)  if (request.getInputStream() != null && request.getInputStream().available() > 0) {  
-                credentials = new ObjectMapper().readValue(request.getInputStream(), User.class);  
-                user = (User) authService.loadUserByUsername(credentials.getUsername());  
+			//e o código será parado de executar nessa parte e o usuário irá receber uma resposta 
+			//com falha na autenticação (classe: EntryPointUnauthorizedHandler)  
+			if (request.getInputStream() != null && request.getInputStream().available() > 0) {  
+	            credentials = new ObjectMapper().readValue(request.getInputStream(), User.class);  
+	            user = (User) authService.loadUserByUsername(credentials.getUsername());  
             }  
             //Caso o usuário seja encontrado, o objeto authenticationManager encarrega-se de autenticá-lo.  
 		    /* Como o authenticationManager foi configurado na classe WebSecurity e, foi informado o método  
@@ -1017,7 +1177,6 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         UsernamePasswordAuthenticationToken authenticationToken =  
                 getAuthentication(request);  
 		//Adiciona o usuário autenticado no contexto do spring security
-		
 		SecurityContextHolder.getContext().setAuthentication(authenticationToken);  
 		chain.doFilter(request, response);  
     }  
@@ -1045,7 +1204,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 }
 ```
 
-#### Testes da autenticação e autorização
+#### Testes da autenticação e autorização 
 
 Para testar, poder ser utilizado o Postman ou Insomia para realizar uma requisição do tipo HTTP POST para a url */login*. Abaixo está o JSON que deverá ser enviado via **HTTP POST** para URL **/login** para autenticar-se na aplicação.
 ```json
@@ -1058,9 +1217,9 @@ Abaixo está um exemplo de resposta ao cliente após a autenticação realizada 
 ```
 
 Com posse do Token recebido o cliente poderá realizar novas requisições ao servidor nas rotas que necessitam de autorização. Para isso basta enviar o Token no cabeçalho da requisição utilizando a chave **Authorization**.
-`Authorization:  Bearer  <token>`
+`Authorization:  Bearer  <token>` 
 
-Com o Token validado e o usuário autenticado e autorizado adicionado adicionado no contexto do Spring Security, qualquer **endpoint** da aplicação que necessite de autorização para acesso precisa ser acessado enviando o token gerado durante a autenticação.
+Com o Token validado e o usuário autenticado e autorizado adicionado adicionado no contexto do Spring Security, qualquer ***endpoint*** da aplicação que necessite de autorização para acesso precisa ser acessado enviando o token gerado durante a autenticação.
 
 ### Implementando o CRUD de Categorias
 #### TO-DO
@@ -1077,12 +1236,13 @@ Com o Token validado e o usuário autenticado e autorizado adicionado adicionado
 
 [4] Spring Data JPA - Disponível em: https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#reference
 
-[5] Fielding, Roy. Architectural Styles and the Design of Network-based Software Architectures  Disponível em: https://www.ics.uci.edu/~fielding/pubs/dissertation/fielding_dissertation.pdf
+[5] Fielding, Roy. Architectural Styles and the Design of Network-based Software Architectures  Disponível em: https://www.ics.uci.edu/~fielding/pubs/dissertation/fielding_dissertation.pdf 
 
 [6] BCryptPasswordEncoder. Disponível em: https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/crypto/bcrypt/BCryptPasswordEncoder.html
 
 [7] Java Bean Validation. Disponível em:  https://beanvalidation.org/3.0/
 
 [8] Spring Security [https://spring.io/projects/spring-security](https://spring.io/projects/spring-security)
+
 
 [9] CSRF Attack [https://docs.spring.io/spring-security/reference/features/exploits/csrf.html#csrf-explained](https://docs.spring.io/spring-security/reference/features/exploits/csrf.html#csrf-explained)

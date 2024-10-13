@@ -5,7 +5,7 @@
 A API REST será desenvolvida utilizando o *framework* **Spring**.
 
 ### Softwares
-	- JDK 17 ou superior
+	- JDK 21 ou superior
 	- IDE:
 		- ItelliJ IDEA
 		- Spring Tools Suite 4

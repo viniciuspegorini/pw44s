@@ -53,7 +53,7 @@ Os metadados do projeto são:
 - Artifact: **server**
 - Options: 
 	- Packaging: **Jar** 	
-	- Java: **17** ou superior (utilizar a versão instalada na máquina, preferência pela mais atual).
+	- Java: **21** ou superior (utilizar a versão instalada na máquina, preferência pela mais atual).
 
 Em dependências devem ser selecionados os *frameworks*:
 - Spring Data JPA
@@ -488,7 +488,7 @@ public class User {
 
 ### Personalizando o tratamento de erros
 
-Por meio da anotação @Valid o objeto enviado no corpo da requisição é validado antes da execução do método *createUser()* do *controller*, porém as mensagens de erro enviadas ao cliente que está consumindo a API são geradas automaticamente pelo Spring, e são verbosas. Com o objetivo de melhorar as mensagens de erro enviadas aos clientes da API, será criada uma estrutura de tratamento de erros:
+Por meio da anotação @Valid o objeto enviado no corpo da requisição é validado antes da execução do método *createUser()* do *controller*, porém as mensagens de erro enviadas ao cliente que está consumindo a API são geradas automaticamente pelo *framework* Spring, e são verbosas, dificultando o tratamento de erros no lado cliente da aplicação. Com o objetivo de customizar as mensagens de erro enviadas aos clientes da API, será criada uma estrutura de tratamento de erros composta por três classes:
 
 As classes serão criadas dentro do pacote **error**:
  - **ApiError**: Classe que vai representar um objeto com o retorno da mensagem de erro.
@@ -631,10 +631,11 @@ public class ExceptionHandlerAdvice {
     }  
 }
 ```
+Após finalizadas a criação das classes é possível realizar uma requisição **HTTP POST** com os dados de usuário inválidos para API para verificar como ficou a resposta ao cliente.
 
 ### Utilizando *Data Transfer Object* (DTO) para transferência de dados entre o cliente e o servidor
 
-O *Data Transfer Object* (DTO) é um padrão de design de software utilizado para transferência de dados entre diferentes camadas de uma aplicação. No projeto será utilizado para transferência de dados entre o cliente e a API Rest. O primeiro passo para isso será a criação de um DTO para representar a classe de usuário, será a classe UserDTO e será criada no pacote: **br.edu.utfpr.pb.pw44s.server.dto**, conforme o código abaixo:
+O *Data Transfer Object* (DTO) é um padrão de design de software utilizado para transferência de dados entre diferentes camadas de uma aplicação. No projeto será utilizado para transferência de dados entre o cliente e a API Rest. O primeiro passo para isso será a criação de um DTO para representar a classe de usuário, será a classe UserDTO e será criada no pacote **br.edu.utfpr.pb.pw44s.server.dto**, conforme o código abaixo:
 
 ```java
 package br.edu.utfpr.pb.pw44s.server.dto;  
@@ -676,6 +677,7 @@ public class UserDTO {
     }  
 }
 ```
+
 O DTO criado para representar a classe User é bem semelhante a classe original, apenas não possui a anotação *@Entity* pois os objetos dessa classe não serão persistidos no banco de dados, eles vão servir apenas para a transferência de dados entre o cliente e a API.
 A próxima etapa vai ser ajustar a classe **UserController**, pois ao invés de receber diretamente um objeto do tipo **User**, agora a aplicação vai esperar um objeto do tipo **UserDTO**. Antes disso vamos criar uma classe de configuração para instanciar  um objeto do tipo modelMapper, pois uma tarefa que será sempre necessária ao utilizar DTOs é a conversão da classe *model* para DTO e vise-versa. A classe **WebConfig** vai ter um único método para instanciar um objeto do tipo **ModelMapper** e será criada no pacote **br.edu.utfpr.pb.pw44s.server.config**.
 
@@ -1054,7 +1056,9 @@ public class AuthorityResponseDTO {
     private String authority;  
 }
 ```
+
 Agora, com as classes para compor a resposta criadas, será criada a classe **JWTAuthenticationFilter**:
+
 ```java
 package br.edu.utfpr.pb.pw44s.server.security;  
   
@@ -1204,7 +1208,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 }
 ```
 
-#### Testes da autenticação e autorização 
+#### Testando a autenticação e autorização via Postman
 
 Para testar, poder ser utilizado o Postman ou Insomia para realizar uma requisição do tipo HTTP POST para a url */login*. Abaixo está o JSON que deverá ser enviado via **HTTP POST** para URL **/login** para autenticar-se na aplicação.
 ```json
@@ -1221,11 +1225,695 @@ Com posse do Token recebido o cliente poderá realizar novas requisições ao se
 
 Com o Token validado e o usuário autenticado e autorizado adicionado adicionado no contexto do Spring Security, qualquer ***endpoint*** da aplicação que necessite de autorização para acesso precisa ser acessado enviando o token gerado durante a autenticação.
 
+### Utilizando o conceito de herança para implementar a camada de *Service* e *Controller* para os demais CRUDs do projeto.
+
+Uma das maneiras de evitar a repetição de código e melhorar a manutenibilidade do mesmo é por meio do conceito de herança, pois assim juntamos características semelhantes de atributos e métodos de diferentes classes em uma só classe que será herdada nas demais classes da aplicação. Para aplicar o conceito de herança no projeto serão implementadas interfaces e classes nas camadas **service** e  **controller** da aplicação. A estrutura criada será:
+
+- **ICrudService**: interface a ser criada na camada service para servir de contrato com as classes criadas, irá conter a assinatura de todos os métodos necessários para realizar as operações de CRUD.
+- **CrudServiceImpl**: classe abstrata com implementação da interface *ICrudService* implementando os métodos com as operações de CRUD.
+- **CrudController**: classe abstrata contendo a implementação dos principais métodos HTTP utilizado para receber requisições dos clientes.
+
+#### A interface ICrudService e a classe CrudServiceImpl
+
+Dentro do pacote **br.edu.utfpr.pb.pw44s.server.service** será criada a  interface **ICrudService**, a qual tem em sua assinatura a necessidade de duas classes, conforme: **<T, ID extends Serializable>**, em que **T** será o tipo da classe irá implementar a interface para realizar as operações de CRUD e **ID** o tipo de dados que representa a chave primária na classe. A interface conta com assinatura de métodos de busca de dados (*findAll()*), persistência de dados (*save()*) e remoção de dados (*delete()*).
+
+```java
+package br.edu.utfpr.pb.pw44s.server.service;  
+
+import org.springframework.data.domain.Page;  
+import org.springframework.data.domain.Pageable;  
+import org.springframework.data.domain.Sort;  
+import java.io.Serializable;  
+import java.util.List;  
+
+public interface ICrudService<T, ID extends Serializable> {  
+    List<T> findAll();  
+    List<T> findAll(Sort sort);  
+    Page<T> findAll(Pageable pageable);  
+    T save(T entity);  
+    T saveAndFlush(T entity);  
+    Iterable<T> save(Iterable<T> iterable);  
+    void flush();  
+    T findOne(ID id);  
+    boolean exists(ID id);  
+    long count();  
+    void delete(ID id);  
+    void delete(Iterable<? extends T> iterable);   
+    void deleteAll();  
+}
+```
+A classe **CrudServiceImpl** será criada no pacote **br.edu.utfpr.pb.pw44s.server.service.impl**. Essa classe é abstrata e irá implementar todos os métodos existentes na classe **ICrudService** e contém também a assinatura de um método abstrato o ***getRepository()***, que irá retornar o repositório de dados que irá ser utilizado para realizar as operações de CRUD.
+
+```java
+package br.edu.utfpr.pb.pw44s.server.service.impl;  
+  
+import br.edu.utfpr.pb.pw44s.server.service.ICrudService;  
+import org.springframework.data.domain.Page;  
+import org.springframework.data.domain.Pageable;  
+import org.springframework.data.domain.Sort;  
+import org.springframework.data.jpa.repository.JpaRepository;  
+import org.springframework.transaction.annotation.Transactional;  
+  
+import java.io.Serializable;  
+import java.util.List;  
+  
+public abstract class CrudServiceImpl<T, ID extends Serializable>   implements ICrudService<T, ID> {    
+    protected abstract JpaRepository<T, ID> getRepository();  
+  
+    @Override  
+	public List<T> findAll() {  
+        return getRepository().findAll();  
+    }  
+    @Override  
+	public List<T> findAll(Sort sort) {  
+        return getRepository().findAll(sort);  
+    }  
+    @Override  
+	public Page<T> findAll(Pageable pageable) {  
+        return getRepository().findAll(pageable);  
+    }  
+    @Override  
+	public T save(T entity) {  
+        return getRepository().save(entity);  
+    }  
+    @Override  
+	public T saveAndFlush(T entity) {  
+        return getRepository().saveAndFlush(entity);  
+    }  
+    @Override  
+	public Iterable<T> save(Iterable<T> iterable) {  
+        return getRepository().saveAll(iterable);  
+    }  
+    @Override  
+	public void flush() {  
+        getRepository().flush();  
+    }  
+    @Override  
+	public T findOne(ID id) {  
+        return getRepository().findById(id).orElse(null);  
+    }  
+    @Override  
+	public boolean exists(ID id) {  
+        return getRepository().existsById(id);  
+    }  
+    @Override  
+	@Transactional(readOnly = true)  
+    public long count() {  
+        return getRepository().count();  
+    }  
+    @Override  
+	public void delete(ID id) {  
+        getRepository().deleteById(id);  
+    }  
+    @Override  
+	public void delete(Iterable<? extends T> iterable) {  
+        getRepository().deleteAll(iterable);  
+    }  
+    @Override  
+	public void deleteAll() {  
+        getRepository().deleteAll();  
+    }  
+}
+```
+ Após a criação da interface **ICrudService** e da classe abstrata **CrudServiceImpl** a camada de persistência de dados está finalizada. O próximo passo é desenvolver a camada de ***controller*** da aplicação.
+
+#### Criação da classe abstrata *CrudController*
+
+A classe abstrata **CrudController** será criada no pacote **br.edu.utfpr.pb.pw44s.server.controller**, a assinatura irá contar com três classes como parâmetro **<T, D, ID extends Serializable>**, em que **T** o tipo da classe *model*, **D** o tipo da classe *DTO* e **ID** o tipo de dados da chave primária.
+
+Os métodos com as anotações *@GetMapping* executam as requisições do tipo *GET*, ou seja, receberão as requisições para consulta de dados. Para retorno de todos os dados, com os dados paginados, retornando apenas um registro pelo código (ID).
+
+Já o método *create(@RequestBody @Valid D entity)* será utilizado para criar um novo registro, irá receber como parâmetro um JSON no formato da classe DTO, será validado de acordo com as anotações no DTO e então persistido utilizando o *service*.
+
+
+```java
+package br.edu.utfpr.pb.pw44s.server.controller;  
+  
+import br.edu.utfpr.pb.pw44s.server.service.ICrudService;  
+import org.modelmapper.ModelMapper;  
+import org.springframework.data.domain.Page;  
+import org.springframework.data.domain.PageRequest;  
+import org.springframework.data.domain.Sort;  
+import org.springframework.http.HttpStatus;  
+import org.springframework.http.ResponseEntity;  
+import org.springframework.web.bind.annotation.*;  
+  
+import jakarta.validation.Valid;  
+import java.io.Serializable;  
+import java.util.List;  
+import java.util.stream.Collectors;  
+// T = class type, D = dto type, ID = attribute related to primary key type  
+public abstract class CrudController <T, D, ID extends Serializable> {  
+    protected abstract ICrudService<T, ID> getService();  
+    protected abstract ModelMapper getModelMapper();  
+    private final Class<T> typeClass;  
+    private final Class<D> typeDtoClass;  
+  
+    public CrudController(Class<T> typeClass, Class<D> typeDtoClass) {  
+        this.typeClass = typeClass;  
+        this.typeDtoClass = typeDtoClass;  
+    }  
+    private D convertToDto(T entity) {  
+        return getModelMapper().map(entity, this.typeDtoClass);  
+    }  
+    private T convertToEntity(D entityDto) {  
+        return getModelMapper().map(entityDto, this.typeClass);  
+    }  
+    @GetMapping //http://ip.api:port/classname  	
+    public ResponseEntity<List<D>> findAll() {  
+        return ResponseEntity.ok(  
+                getService().findAll().stream().map(  
+                        this::convertToDto).collect(Collectors.toList()  
+                )  
+        );  
+    }  
+    @GetMapping("page")  //http://ip.api:port/classname/page  
+	public ResponseEntity<Page<D>> findAll(  
+                        @RequestParam int page,  
+                        @RequestParam int size,  
+                        @RequestParam(required = false) String order,  
+                        @RequestParam(required = false) Boolean asc  
+                    ) {  
+        PageRequest pageRequest = PageRequest.of(page, size);  
+        if (order != null && asc != null) {  
+            pageRequest = PageRequest.of(page, size, asc ? Sort.Direction.ASC : Sort.Direction.DESC, order);  
+        }  
+        return ResponseEntity.ok(  
+                getService().findAll(pageRequest).map(this::convertToDto)  
+        );  
+    }  
+    @GetMapping("{id}")  
+    public ResponseEntity<D> findOne(@PathVariable ID id) {  
+        T entity = getService().findOne(id);  
+        if ( entity != null) {  
+            return ResponseEntity.ok(convertToDto(entity));  
+        } else {  
+            return ResponseEntity.noContent().build();  
+        }  
+    }  
+    @PostMapping  
+	public ResponseEntity<D> create(@RequestBody @Valid D entity) {  
+        return ResponseEntity.status(HttpStatus.CREATED).body(convertToDto(getService().save(convertToEntity(entity))));  
+    }  
+    @PutMapping("{id}")  
+    public ResponseEntity<D> update(@PathVariable ID id, @RequestBody @Valid D entity) {  
+        return ResponseEntity.status(HttpStatus.OK).body(convertToDto(getService().save(convertToEntity(entity))));  
+    }  
+    @GetMapping("exists/{id}")  
+    public ResponseEntity<Boolean> exists(@PathVariable ID id) {  
+        return ResponseEntity.ok(getService().exists(id));  
+    }  
+    @GetMapping("count")  
+    public ResponseEntity<Long> count() {  
+        return ResponseEntity.ok(getService().count());  
+    }  
+    @DeleteMapping("{id}")  
+    public ResponseEntity<Void> delete(@PathVariable ID id) {  
+        getService().delete(id);  
+        return ResponseEntity.noContent().build();  
+    }   
+}
+```
+
 ### Implementando o CRUD de Categorias
-#### TO-DO
+
+Considerando o escopo do projeto em que serão armazenados Categorias e Produtos após o cadastro e autenticação do usuário, o próximo passo será a criação das operações CRUD de categorias. Para isso serão criados o *model*, o *DTO*, o *service* e o *controller*.
+
+- **Category**: classe que será criada no pacote *model* para representar uma categoria.
+- **CategoryDTO**: classe que será criada no pacote *DTO* para representar uma categoria que será utilizada para transferir o objeto entre as camadas de *view* e *controller*.
+- **CategoryRepository**: interface que irá implementar JPA Repository e será responsável por realizar as operações de CRUD.
+- **ICategoryService**: interface que irá herdar as características da interface *ICrudService* e deverá ser implementada para persistência dos dados.
+- **CategoryServiceImpl**: classe que irá herdar as características da interface *ICategoryService* e da classe abstrata *CrudServiceImpl* e por meio da interface *CategoryRepository* será responsável pela persistência dos dados.
+- **CategoryController**: classe que irá tratar as requisições HTTP vindas do cliente e fazer a comunicação com a camada de persistência de dados.
+
+#### Criando o *model* Category e o DTO CategoryDTO 
+
+O *model* que irá representar uma categoria, por meio da classe **Category**, possui os atributos *id* e *name*. A classe possui a anotação *@Entity*, pois os dados de categoria serão persistidos no banco de dados e o nome da tabela gerada será *tb_category*, como pode ser observado na anotação *@Table(name = "tb_category")*, as demais anotações são do Lombok e do JPA, seguindo as mesmas características da classe *User*.
+
+```java
+package br.edu.utfpr.pb.pw44s.server.model;  
+  
+import jakarta.persistence.*;  
+import jakarta.validation.constraints.NotNull;  
+import jakarta.validation.constraints.Size;  
+import lombok.*;  
+  
+import java.util.Objects;  
+  
+@Entity  
+@Table(name = "tb_category")  
+@NoArgsConstructor  
+@AllArgsConstructor  
+@Builder  
+@Getter @Setter  
+public class Category {  
+
+    @Id  
+	@GeneratedValue(strategy = GenerationType.IDENTITY)  
+    private Long id;  
+  
+    @NotNull  
+	@Size(min = 2, max = 50)  
+    @Column(length = 50, nullable = false)  
+    private String name;
+}
+```
+
+Agora será apresentado o código-fonte da classe **CategoryDTO** que será utilizada na transferência de dados nas requisições HTTP entre cliente e servidor da aplicação.
+ 
+```java
+package br.edu.utfpr.pb.pw44s.server.dto;  
+  
+import lombok.Data;  
+  
+import jakarta.validation.constraints.NotNull;  
+import jakarta.validation.constraints.Size;  
+  
+@Data  
+public class CategoryDTO {  
+  
+    private Long id;  
+  
+    @NotNull  
+	@Size(min = 2, max = 50)  
+    private String name;  
+}
+```
+
+#### Criação da interface CategoryRepository e camada *service*
+
+A interface **CategoryRepository** será utilizada na consulta, remoção e persistência de dados e herdará as características da interface JPA Repository do *framework* Spring Data.
+
+```java
+package br.edu.utfpr.pb.pw44s.server.repository;  
+  
+import br.edu.utfpr.pb.pw44s.server.model.Category;  
+import org.springframework.data.jpa.repository.JpaRepository;  
+  
+import java.util.List;  
+  
+public interface CategoryRepository extends JpaRepository<Category, Long> {  
+}
+```
+
+Na sequência serão criadas a interface **ICategoryService** e a classe **CategoryServiceImpl**. Na interface *ICategoryService* como as característica serão herdadas de *ICrudService* será necessário informar apenas o tipo do model (*Category*) e o tipo de dados da chave primária da classe *model* (*Long*).
+
+```java
+package br.edu.utfpr.pb.pw44s.server.service;  
+  
+import br.edu.utfpr.pb.pw44s.server.model.Category;  
+  
+public interface ICategoryService extends ICrudService<Category, Long> {  
+}
+```
+A classe **CategoryServiceImpl** herdará da classe *CrudServiceImpl* e assinará o contrato dos métodos da interface *ICategoryService*. Além disso será necessário injetar a dependência do objeto *categoryRepository* que é gerenciado pelo *framework* Spring. Outra característica que deve ser observada nessa classe é a anotação *@Service*, a qual tornará o ciclo de vida dessa classe também gerenciável pelo *framework* Spring, para podermos utilizar do conceito de injeção de dependências no *controller*.
+
+```java
+package br.edu.utfpr.pb.pw44s.server.service.impl;  
+  
+import br.edu.utfpr.pb.pw44s.server.model.Category;  
+import br.edu.utfpr.pb.pw44s.server.repository.CategoryRepository;  
+import br.edu.utfpr.pb.pw44s.server.service.ICategoryService;  
+import org.springframework.data.jpa.repository.JpaRepository;  
+import org.springframework.stereotype.Service;  
+  
+@Service  
+public class CategoryServiceImpl extends CrudServiceImpl<Category, Long> implements ICategoryService {  
+  
+    private final CategoryRepository categoryRepository;  
+  
+    public CategoryServiceImpl(CategoryRepository categoryRepository) {  
+        this.categoryRepository = categoryRepository;  
+    }  
+  
+    @Override  
+	protected JpaRepository<Category, Long> getRepository() {  
+        return categoryRepository;  
+    }  
+}
+```
+
+Com a criação da camada *service* está finalizada a camada de acesso e persistência de dados, o próximo passo será implementar a camada *controller* para entidade categoria.
+
+#### Criando a classe CategoryController
+
+A classe **CrudController** irá herdar as características de **CrudController** e terá como atributos o *categoryService* para persistência de dados e o *modelMapper* para conversão entre o *model* e o DTO.  No método construtor foi necessário passar os tipos de dados do *model* e do DTO **super(Category.class, CategoryDTO.class);** para serem utilizados pelo *modelMapper* para conversão dos objetos.
+
+```java
+package br.edu.utfpr.pb.pw44s.server.controller;  
+  
+import br.edu.utfpr.pb.pw44s.server.dto.CategoryDTO;  
+import br.edu.utfpr.pb.pw44s.server.model.Category;  
+import br.edu.utfpr.pb.pw44s.server.service.ICategoryService;  
+import br.edu.utfpr.pb.pw44s.server.service.ICrudService;  
+import org.modelmapper.ModelMapper;  
+import org.springframework.web.bind.annotation.RequestMapping;  
+import org.springframework.web.bind.annotation.RestController;  
+  
+@RestController  
+@RequestMapping("categories")  
+public class CategoryController extends CrudController<Category, CategoryDTO, Long> {  
+    private static ICategoryService categoryService;  
+    private static ModelMapper modelMapper;  
+  
+    public CategoryController(ICategoryService categoryService, ModelMapper modelMapper) {  
+        super(Category.class, CategoryDTO.class);  
+        CategoryController.categoryService = categoryService;  
+        CategoryController.modelMapper = modelMapper;  
+    }  
+  
+    @Override  
+	protected ICrudService<Category, Long> getService() {  
+        return CategoryController.categoryService;  
+    }  
+  
+    @Override  
+	protected ModelMapper getModelMapper() {  
+        return CategoryController.modelMapper;  
+    }  
+}
+```
+
+Com a finalização do *controller* já é possível realizar requisições HTTP para adicionar, atualizar, buscar e remover categorias. Por exemplo, realizando um HTTP POST para URL [http://localhost:8080/categories](http://localhost:8080/categories), com um JSON no corpo da requisição com a propriedade **name** uma nova categoria será armazenada no banco de dados.
+
+```json
+{"name": "Categoria 1"}
+```
+E, ao realizar um HTTP GET para URL [http://localhost:8080/categories](http://localhost:8080/categories) uma lista de categorias no formato JSON será exibida como resultado.
 
 ### Implementando o CRUD de Produtos
-#### TO-DO
+
+Para a implementação do CRUD de Produtos, os passos são os mesmos utilizados ao implementar as operações CRUD de categoria. Para isso serão criados o *model*, o *DTO*, o *service* e o *controller*.
+
+- **Product**: classe que será criada no pacote *model* para representar um produto.
+- **ProductDTO**: classe que será criada no pacote *DTO* para representar um produto que será utilizado para transferir o objeto entre as camadas de *view* e *controller*.
+- **ProductRepository**: interface que irá implementar JPA Repository e será responsável por realizar as operações de CRUD.
+- **IProductService**: interface que irá herdar as características da interface *ICrudService* e deverá ser implementada para persistência dos dados.
+- **ProductServiceImpl**: classe que irá herdar as características da interface *IProductService* e da classe abstrata *CrudServiceImpl* e por meio da interface *ProductRepository* será responsável pela persistência dos dados.
+- **ProductController**: classe que irá tratar as requisições HTTP vindas do cliente e fazer a comunicação com a camada de persistência de dados.
+
+#### Implementando as classes e interfaces para o CRUD de produtos
+
+##### Product
+```java
+package br.edu.utfpr.pb.pw44s.server.model;  
+  
+import jakarta.persistence.*;  
+import jakarta.validation.constraints.NotNull;  
+import lombok.*;  
+  
+import java.math.BigDecimal;  
+import java.util.Objects;  
+  
+@Entity  
+@Table(name = "tb_product")  
+@AllArgsConstructor  
+@NoArgsConstructor  
+@Builder  
+@Getter @Setter  
+public class Product {  
+  
+    @Id  
+	@GeneratedValue(strategy = GenerationType.IDENTITY)  
+    private Long id;  
+  
+    @NotNull  
+	private String name;  
+  
+    @NotNull  
+	@Column(length = 1024)  
+    private String description;  
+  
+    @NotNull  
+	private BigDecimal price;  
+  
+    @ManyToOne  
+	@JoinColumn(name = "category_id", referencedColumnName = "id")  
+    private Category category;
+```
+##### ProductDTO
+
+```java
+package br.edu.utfpr.pb.pw44s.server.dto;  
+  
+import lombok.Data;  
+  
+import jakarta.validation.constraints.NotNull;  
+import java.math.BigDecimal;  
+  
+@Data  
+public class ProductDTO {  
+  
+    private Long id;  
+  
+    @NotNull  
+	private String name;  
+  
+    @NotNull  
+	private String description;  
+  
+    @NotNull  
+	private BigDecimal price;  
+  
+    private CategoryDTO category;  
+}
+```
+##### ProductRepository
+```java
+package br.edu.utfpr.pb.pw44s.server.repository;  
+  
+import br.edu.utfpr.pb.pw44s.server.model.Product;  
+import org.springframework.data.jpa.repository.JpaRepository;  
+  
+public interface ProductRepository extends JpaRepository<Product, Long> {  
+}
+```
+##### IProductService
+```java
+package br.edu.utfpr.pb.pw44s.server.service;  
+  
+import br.edu.utfpr.pb.pw44s.server.model.Product;  
+  
+public interface IProductService extends ICrudService<Product, Long> {  
+}
+```
+##### ProductServiceImpl
+```java
+package br.edu.utfpr.pb.pw44s.server.service.impl;  
+  
+import br.edu.utfpr.pb.pw44s.server.model.Product;  
+import br.edu.utfpr.pb.pw44s.server.repository.ProductRepository;  
+import br.edu.utfpr.pb.pw44s.server.service.IProductService;  
+import org.springframework.data.jpa.repository.JpaRepository;  
+import org.springframework.stereotype.Service;  
+  
+@Service  
+public class ProductServiceImpl extends CrudServiceImpl<Product, Long> implements IProductService {  
+  
+    private final ProductRepository productRepository;  
+  
+    public ProductServiceImpl(ProductRepository productRepository) {  
+        this.productRepository = productRepository;  
+    }  
+  
+    @Override  
+	protected JpaRepository<Product, Long> getRepository() {  
+        return productRepository;  
+    }  
+}
+```
+##### ProductController
+```java
+package br.edu.utfpr.pb.pw44s.server.controller;  
+  
+import br.edu.utfpr.pb.pw44s.server.dto.ProductDTO;  
+import br.edu.utfpr.pb.pw44s.server.model.Product;  
+import br.edu.utfpr.pb.pw44s.server.service.ICrudService;  
+import br.edu.utfpr.pb.pw44s.server.service.IProductService;  
+import org.modelmapper.ModelMapper;  
+import org.springframework.web.bind.annotation.RequestMapping;  
+import org.springframework.web.bind.annotation.RestController;  
+  
+@RestController  
+@RequestMapping("products")  
+public class ProductController extends CrudController<Product, ProductDTO, Long> {  
+    private static IProductService productService;  
+    private static ModelMapper modelMapper;  
+  
+    public ProductController(IProductService productService, ModelMapper modelMapper) {  
+        super(Product.class, ProductDTO.class);  
+        ProductController.productService = productService;  
+        ProductController.modelMapper = modelMapper;  
+    }  
+  
+    @Override  
+	protected ICrudService<Product, Long> getService() {  
+        return productService;  
+    }  
+  
+    @Override  
+	protected ModelMapper getModelMapper() {  
+        return modelMapper;  
+    }  
+}
+```
+
+Finalizando o *controller* de produtos já é possível realizar requisições HTTP para adicionar, atualizar, buscar e remover categorias. Por exemplo, realizando um HTTP POST para URL [http://localhost:8080/products](http://localhost:8080/products), com um JSON no corpo da requisição com as propriedades **name, description, price e category** um novo produto será armazenado no banco de dados. Lembrando que a categoria já deve estar cadastrada na base de dados no momento da requisição para cadastro de um novo produto.
+
+```json
+{
+	"name": "Produto 1",
+	"description":"Descrição do produto 1",
+	"price":99.99,
+	"category": {"id": 1}
+}
+```
+E, ao realizar um HTTP GET para URL [http://localhost:8080/products](http://localhost:8080/products) uma lista de produtos no formato JSON será exibida como resultado.
+
+### Extras : Implementando casos de teste para autenticação
+No pacote de testes **br.edu.utfpr.pb.pw44s.server** será criada a classe **LoginControllerTest**, que irá conter 5 casos de teste, para validar as tentativas de autenticação com dados incorretos, com dados corretos e também se o token gerado após a autenticação está sendo enviado no corpo da requisição. E, para testar se o token de autenticação está funcionando após a autenticação foi criada a classe **LoginController**.
+
+#### LoginController
+```java
+package br.edu.utfpr.pb.pw44s.server.controller;  
+  
+import br.edu.utfpr.pb.pw44s.server.dto.UserDTO;  
+import br.edu.utfpr.pb.pw44s.server.model.User;  
+import br.edu.utfpr.pb.pw44s.server.service.AuthService;  
+import org.springframework.web.bind.annotation.GetMapping;  
+import org.springframework.web.bind.annotation.RequestMapping;  
+import org.springframework.web.bind.annotation.RestController;  
+  
+import java.security.Principal;  
+  
+@RestController  
+@RequestMapping("login")  
+public class LoginController {  
+  
+    private final AuthService authService;  
+  
+    public LoginController(AuthService authService) {  
+        this.authService = authService;  
+    }  
+  
+	//Retorna um objeto UserDTO com os dados do usuário autenticado.
+    @GetMapping("user-info")  
+    public UserDTO getUserInfo(Principal principal) {  
+        return new UserDTO((User) authService.loadUserByUsername(principal.getName()));  
+    }  
+}
+```
+
+#### LoginControllerTest
+```java
+package br.edu.utfpr.pb.pw44s.server;  
+  
+import br.edu.utfpr.pb.pw44s.server.dto.UserDTO;  
+import br.edu.utfpr.pb.pw44s.server.model.User;  
+import br.edu.utfpr.pb.pw44s.server.repository.UserRepository;  
+import br.edu.utfpr.pb.pw44s.server.security.SecurityConstants;  
+import br.edu.utfpr.pb.pw44s.server.security.dto.AuthenticationResponse;  
+import br.edu.utfpr.pb.pw44s.server.service.UserService;  
+import org.junit.jupiter.api.BeforeEach;  
+import org.junit.jupiter.api.Test;  
+import org.springframework.beans.factory.annotation.Autowired;  
+import org.springframework.boot.test.context.SpringBootTest;  
+import org.springframework.boot.test.web.client.TestRestTemplate;  
+import org.springframework.http.*;  
+import org.springframework.test.context.ActiveProfiles;  
+  
+import static org.assertj.core.api.Assertions.assertThat;  
+  
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)  
+@ActiveProfiles("test")  
+public class LoginControllerTest {  
+    private static final String URL_LOGIN = "/login";  
+    private static final String URL_USER_INFO = "/login/user-info";  
+  
+    @Autowired  
+	TestRestTemplate testRestTemplate;  
+    @Autowired  
+	UserRepository userRepository;  
+    @Autowired  
+	UserService userService;  
+  
+    @BeforeEach  
+	public void cleanup() {  
+        userRepository.deleteAll();  
+        testRestTemplate.getRestTemplate().getInterceptors().clear();  
+    }  
+  
+	//Testa se ao realizar uma tentativa de autenticação sem informar as credenciais (username, password) a API irá retornar o HTTP Status UNAUTHORIZED
+    @Test  
+	public void postLogin_withoutUserCredentials_receiveUnauthorized() {  
+        ResponseEntity<Object> response = login(Object.class);  
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);  
+    }  
+	//Testa se ao realizar uma tentativa de autenticação com as credenciais (username, password) incorretas a API irá retornar o HTTP Status UNAUTHORIZED
+    @Test  
+	public void postLogin_withInvalidUserCredentials_receiveUnauthorized() {  
+        ResponseEntity<Object> response = login(createValidUser(), Object.class);  
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);  
+    }  
+
+	//Testa se ao realizar uma tentativa de autenticação com as credenciais (username, password) corretas a API irá retornar o HTTP Status OK
+    @Test  
+	public void postLogin_withValidUserCredentials_receiveOK() {  
+        userService.save(createValidUser());  
+        ResponseEntity<Object> response = login(createValidUser(), Object.class);  
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);  
+    }  
+    
+	//Testa se ao realizar uma tentativa de autenticação com as credenciais (username, password) corretas a API irá retornar o Token no corpo da resposta da requisição
+    @Test  
+	public void postLogin_withValidUserCredentials_receiveToken() {  
+        userService.save(createValidUser());  
+        ResponseEntity<AuthenticationResponse> response = login(createValidUser(), AuthenticationResponse.class);  
+        assertThat(response.getBody().getToken()).isNotNull();  
+    }  
+
+	//Testa se ao realizar uma tentativa de acesso à URL /login/user-info com um token válido adicionado no cabeçalho da requisição a API irá retornar um objeto do tipo UserDTO
+    @Test  
+	public void postLogin_withValidUserCredentials_receiveLoggedInUserDTO() {  
+        User user = userService.save(createValidUser());  
+        ResponseEntity<AuthenticationResponse> responseToken = login(createValidUser(), AuthenticationResponse.class);  
+        ResponseEntity<UserDTO> response = getUserInfo(responseToken.getBody().getToken(), UserDTO.class);  
+        assertThat(response.getBody().getUsername()).isEqualTo(user.getUsername());  
+    }  
+  
+    private User createValidUser() {  
+        User user = new User();  
+        user.setUsername("test-user");  
+        user.setDisplayName("test-display");  
+        user.setPassword("P4ssword");  
+        return user;  
+    }  
+  
+	//HTTP POST para realizar login sem credenciais
+    public <T> ResponseEntity<T> login(Class<T> responseType) {  
+        return testRestTemplate.postForEntity(URL_LOGIN, null, responseType);  
+    }  
+	//HTTP POST para realizar login com credenciais  
+    public <T> ResponseEntity<T> login(Object request, Class<T> responseType) {  
+        return testRestTemplate.postForEntity(URL_LOGIN, request, responseType);  
+    }  
+	//HTTP GET para URL /login/user-info, antes efetuando a autenticação, adicionando o token no cabeçalho da requisição.
+    public <T> ResponseEntity<T> getUserInfo(String token, Class<T> responseType) {  
+        HttpEntity<String> entity = new HttpEntity<String>("parameters",createHttpHeaders(token));  
+        return testRestTemplate.exchange(URL_USER_INFO, HttpMethod.GET, entity, responseType);  
+    }  
+	// Cria o cabeçalho da requisição para ser enviado ao servidor junto com o token recebido após a autenticação.
+    public HttpHeaders createHttpHeaders(String accessToken) {  
+        HttpHeaders headers = new HttpHeaders();  
+        headers.setContentType(MediaType.APPLICATION_JSON);  
+        headers.add(SecurityConstants.HEADER_STRING,SecurityConstants.TOKEN_PREFIX + accessToken);  
+        return headers;  
+    }  
+  
+}
+```
+
+
 
 # Referências
 [1] Spring Framework, https://spring.io/.

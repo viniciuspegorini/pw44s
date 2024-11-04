@@ -4,7 +4,7 @@ import { ButtonWithProgress } from "@/components/ButtonWithProgress";
 import AuthService from "@/service/AuthService";
 import { Input } from "@/components/Input";
 import { Link, useNavigate } from "react-router-dom";
-import "./style.scss";
+import "./style.css";
 
 export function LoginPage() {
   const [form, setForm] = useState({

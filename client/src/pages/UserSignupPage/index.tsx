@@ -5,7 +5,7 @@ import { ButtonWithProgress } from "../../components/ButtonWithProgress";
 import { Input } from "../../components/Input";
 import AuthService from "@/service/AuthService";
 
-import "./style.scss";
+import "./style.css";
 
 export function UserSignupPage() {
   const [form, setForm] = useState<IUserSignUp>({

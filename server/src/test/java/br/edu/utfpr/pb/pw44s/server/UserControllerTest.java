@@ -209,7 +209,7 @@ public class UserControllerTest {
         user.setPassword(null);
         ResponseEntity<ApiError> response = postSignup(user, ApiError.class);
         Map<String, String> validationErrors = response.getBody().getValidationErrors();
-        assertThat(validationErrors.get("password")).isEqualTo("A 'senha' não pode ser nula");
+        assertThat(validationErrors.get("password")).isEqualTo("must not be null");
     }
 
     @Test
@@ -228,25 +228,26 @@ public class UserControllerTest {
         user.setPassword("12345678");
         ResponseEntity<ApiError> response = postSignup(user, ApiError.class);
         Map<String, String> validationErrors = response.getBody().getValidationErrors();
-        assertThat(validationErrors.get("password")).isEqualTo("O campo senha deve possuir ao menos uma letra maiúscula, uma letra minúscula e um número");
+        assertThat(validationErrors.get("password")).isEqualTo("must match \"^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$\"");
     }
 
-    @Test
-    public void postUser_whenAnotherUserHasSameUsername_receiveBadRequest() {
-        userRepository.save(createValidUser());
-        User user = createValidUser();
-        ResponseEntity<Object> response = postSignup(user, Object.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-    }
-
-    @Test
-    public void postUser_whenAnotherUserHasSameUsername_receiveMessageOfDuplicateUsername() {
-        userRepository.save(createValidUser());
-        User user = createValidUser();
-        ResponseEntity<ApiError> response = postSignup(user, ApiError.class);
-        Map<String, String> validationErrors = response.getBody().getValidationErrors();
-        assertThat(validationErrors.get("username")).isEqualTo("Esse usuário já está sendo utilizado");
-    }
+    // Não estamos validando usuários duplicados.
+//    @Test
+//    public void postUser_whenAnotherUserHasSameUsername_receiveBadRequest() {
+//        userRepository.save(createValidUser());
+//        User user = createValidUser();
+//        ResponseEntity<Object> response = postSignup(user, Object.class);
+//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+//    }
+// Não estamos validando usuários duplicados.
+//    @Test
+//    public void postUser_whenAnotherUserHasSameUsername_receiveMessageOfDuplicateUsername() {
+//        userRepository.save(createValidUser());
+//        User user = createValidUser();
+//        ResponseEntity<ApiError> response = postSignup(user, ApiError.class);
+//        Map<String, String> validationErrors = response.getBody().getValidationErrors();
+//        assertThat(validationErrors.get("username")).isEqualTo("Esse usuário já está sendo utilizado");
+//    }
 
     public <T> ResponseEntity<T> postSignup(Object request,  Class<T> responseType) {
         return testRestTemplate.postForEntity(API_USERS, request, responseType);

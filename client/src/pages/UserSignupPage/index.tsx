@@ -1,19 +1,27 @@
+/* 
+	O ChangeEvent será utilizado para tipar o parâmetro do método onChange, que será utilizado para recuperar os valores digitados nos campos de texto ao cadastrar um novo usuário.
+	O hook[4] useState será utilizado para manter os valores informados pelo usuário nos campos de texto no estado (state[3]) da aplicação.	
+	IUserSignUp - interface utilizada para tipar os objeto que armazena os dados de usuário
+	AuthService - contém as funções para realizar as requisições HTTP para a API REST. No caso do cadastro de usuário uma requisição do tipo HTTP POST
+*/
 import { ChangeEvent, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { IUserSignUp } from "@/commons/interfaces";
-import { ButtonWithProgress } from "../../components/ButtonWithProgress";
-import { Input } from "../../components/Input";
+import { ButtonWithProgress } from "@/components/ButtonWithProgress";
+import { Input } from "@/components/Input";
 import AuthService from "@/service/AuthService";
 
 import "./style.css";
 
 export function UserSignupPage() {
+  /* Criação de um objeto chamado `form` no state para armazenar o username e passord do usuário */
   const [form, setForm] = useState<IUserSignUp>({
     displayName: "",
     username: "",
     password: "",
     passwordRepeat: "",
   });
+  /* Criação de um objeto chamado `errors` no state para armazenar os erros de validação retornados pelo servidor */
   const [errors, setErrors] = useState({
     displayName: "",
     username: "",
@@ -34,6 +42,7 @@ export function UserSignupPage() {
     }
   }, [form]);
 
+  /* função criada para monitorar o evento Change dos componentes input */
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { value, name } = event.target;
     setForm((previousForm) => {
@@ -42,6 +51,7 @@ export function UserSignupPage() {
         [name]: value,
       };
     });
+    /* Limpa o valor do erro relacionado à propriedade do input que está sendo editada */
     setErrors((previousErrors) => {
       return {
         ...previousErrors,
@@ -50,7 +60,9 @@ export function UserSignupPage() {
     });
   };
 
+  /* trata o click o botão para cadastrar um novo usuário */
   const onClickSignup = async () => {
+    /* recupera o valor do state e cria um objeto do tipo IUserSignUp */
     const user: IUserSignUp = {
       displayName: form.displayName,
       username: form.username,
@@ -58,12 +70,14 @@ export function UserSignupPage() {
       passwordRepeat: form.passwordRepeat,
     };
     setPendingApiCall(true);
-
+    /* Chama o método signup do service AuthService, passando o usuário que será enviado via POST para API */
     const response = await AuthService.signup(user);
 
+    /* Em caso de sucesso navega para a raiz do projeto */
     if (response.status === 200 || response.status === 201) {
       navigate("/");
-    } else if (response) {
+    } else if (response) { 
+      /* Em caso de erro preenche o conjunto de erros armazenado no State com os dados vindos da validação realizada na API. */
       if (response.data && response.data.validationErrors) {
         setErrors(response.data.validationErrors);
       }
@@ -72,6 +86,7 @@ export function UserSignupPage() {
     setPendingApiCall(false);
   };
 
+  /*Retorna o TSX com o formulário de cadastro. */
   return (
     <main className="form-signup w-100 m-auto">
       <form>
@@ -79,17 +94,17 @@ export function UserSignupPage() {
           <h1 className="h3 mb-3 fw-normal">Novo usuário</h1>
         </div>
         <div className="form-floating">
-          <Input
-            name="displayName"
-            label="Informe o seu nome"
-            className="form-control"
+          <input
             type="text"
-            placeholder="Informe seu nome"
+            className={errors.displayName ? "is-invalid form-control" : "form-control"} 
+            placeholder="Informe o seu nome"
             onChange={onChange}
             value={form.displayName}
-            hasError={errors.displayName ? true : false}
-            error={errors.displayName}
+            name="displayName"
+            id="displayName"
           />
+          <label htmlFor="displayName">Informe o seu nome</label>
+          {errors.displayName && <div className="invalid-feedback">{errors.displayName}</div>}
         </div>
         <div className="form-floating">
           <Input

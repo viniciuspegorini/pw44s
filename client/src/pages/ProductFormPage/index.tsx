@@ -22,7 +22,7 @@ export function ProductFormPage() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { findAll } = CategoryService;
-  const { save, findOne } = ProductService;
+  const { save, findById } = ProductService;
 
   // Executa uma vez ao carregar o componente
   useEffect(() => {
@@ -42,7 +42,7 @@ export function ProductFormPage() {
 
     if (id) {
       // ao editar um produto, busca ele na API e carrega no objeto form que está no state.
-      const responseProduct = await findOne(parseInt(id));
+      const responseProduct = await findById(parseInt(id));
       if (responseProduct.status === 200) {
         reset(responseProduct.data);
         setApiError("");

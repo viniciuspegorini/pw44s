@@ -32,7 +32,7 @@ export function ProductFormPageV2() {
     description: "",
     category: { id: undefined, name: "" },
   });
-  const { save, findOne } = ProductService;
+  const { save, findById } = ProductService;
   const { findAll } = CategoryService;
 
   // Executa ao carregar o componente
@@ -51,7 +51,7 @@ export function ProductFormPageV2() {
     }
     if (id) {
       // ao editar um produto, busca ele no back-end e carrega no objeto form que está no state.
-      const response = await findOne(parseInt(id));
+      const response = await findById(parseInt(id));
       if (response.status === 200) {
         setEntity({
           id: response.data.id,

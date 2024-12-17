@@ -27,9 +27,7 @@ const login = async (user: IUserLogin) => {
   try {
     response = await api.post("/login", user);
     localStorage.setItem("token", JSON.stringify(response.data.token));
-    api.defaults.headers.common[
-      "Authorization"
-    ] = `Bearer ${response.data.token}`;
+    api.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
   } catch (err: any) {
     response = err.response;
   }

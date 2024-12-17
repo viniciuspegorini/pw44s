@@ -54,8 +54,10 @@ public class WebSecurity {
         http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
         // desabilita o uso de csrf
         http.csrf(AbstractHttpConfigurer::disable);
+
         // Adiciona configuração de CORS
         http.cors(cors -> corsConfigurationSource());
+
         //define o objeto responsável pelo tratamento de exceção ao entrar com credenciais inválidas
         http.exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(authenticationEntryPoint));
 

@@ -23,7 +23,7 @@ const findAll = async (): Promise<any> => {
   return response;
 };
 
-const findOne = async (id: number): Promise<any> => {
+const findById = async (id: number): Promise<any> => {
   let response;
   try {
     response = await api.get(`${productURL}/${id}`);
@@ -46,7 +46,7 @@ const remove = async (id: number): Promise<any> => {
 const ProductService = {
   save,
   findAll,
-  findOne,
+  findById,
   remove,
 };
 

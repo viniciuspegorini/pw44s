@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "./style.css";
 
 export function LoginPage() {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<IUserLogin>({
     username: "",
     password: "",
   });

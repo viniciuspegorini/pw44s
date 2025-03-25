@@ -1,4 +1,4 @@
-# Aulas das disciplinas de Programação para Web - PW25S e PW44S - Turma 5SI
+# Aulas das disciplinas de Programação para Web - PW44S - Turma 4SI
 
 ## Back-end 
 
@@ -8,8 +8,8 @@ A API REST será desenvolvida utilizando o *framework* **Spring**.
 	- JDK 21 ou superior
 	- IDE:
 		- ItelliJ IDEA
-		- Spring Tools Suite 4
-		- Eclipe for JavaEE ...
+		- Spring Tools Suite
+		- Eclipe for JavaEE, etc...
 	- SDBG:
 		- Postgresql
 	- Ferramenta para testar a API:
@@ -25,8 +25,7 @@ O Cliente web desenvolvido utilizando a biblioteca **React**.
 ### Softwares
 	- IDE:
 		- Visual Studio Code
-		- Web Storm
-		- Atom...
+		- Web Storm, etc...
 	- Git
 	- Node.js
 	- Docker

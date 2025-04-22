@@ -1,14 +1,14 @@
-# *Front-end* com React
+# Criando uma Aplicação React com TypeScript utilizando Vite
 
-Neste projeto será desenvolvida a camada de visualização da solução proposta na disciplina. A aplicação web será desenvolvida utilizando a biblioteca React e algumas bibliotecas auxiliares.
+Neste projeto será desenvolvida a camada de visualização (*front-end*) da solução web proposta na disciplina PW44S - Programação para Web - Turma 4SI da Universidade Tecnológica Federal do Paraná - Campus Pato Branco. A aplicação web será desenvolvida utilizando a biblioteca React com auxílio de algumas bibliotecas.
 
-## React
+## <img src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/react.png" alt="UTFPR Logo" width="20" /> React
 
-O React é uma biblioteca JavaScript para criar interfaces de usuário. O React é **declarativo** fazendo com que a criação de UIs interativas seja uma tarefa fácil. Uma das premissas do React é que o desenvolvedor crie *views* simplificadas para cada estado da aplicação, e o React irá atualizar e renderizar de forma eficiente apenas os componentes necessários na medida em que os dados mudam. A criação de *views* declarativas fazem com que seu código seja mais previsível e simples de depurar [[1](#Referências)].
+O React é uma biblioteca JavaScript para criar interfaces de usuário. O React é **declarativo** fazendo com que a criação de interfaces de usuários (UIs) interativas seja uma tarefa fácil. Uma das premissas do React é que o desenvolvedor crie *views* simplificadas para cada estado da aplicação, e o React irá atualizar e renderizar de forma eficiente apenas os componentes necessários na medida em que os dados mudam. A criação de *views* declarativas fazem com que seu código seja mais previsível e simples de depurar [[1](#Referências)].
 
 O React assim como outras bibliotecas e *frameworks* JavaScript é baseado em componentes. O que facilita gerenciar de maneira mais eficaz os diferentes módulos da aplicação. O React permite criar componentes encapsulados que gerenciam seu próprio estado, para então combina-lo para formar UIs complexas.
 
-No React toda lógica do componente é escrita em JavaScript ou TypeScript e não em templates, permitindo ao desenvolvedor passar diversos tipos de dados ao longo da sua aplicação e ainda manter o estado da aplicação fora do DOM.
+No React toda lógica do componente é escrita em JavaScript ou TypeScript e não em *templates*, permitindo ao desenvolvedor passar diversos tipos de dados ao longo da sua aplicação e ainda manter o estado da aplicação fora do DOM.
 
 ## O JSX - JavaScript XML ou JavaScript Syntax Extension
 
@@ -33,25 +33,93 @@ const element = <h1>Olá!</h1>;
 //JS
 const element = React.createElement('h1', null, 'Olá!');
 ```
-## Criação da estrutura do projeto *front-end*
+
+
+## 📦 Requisitos
+
+Antes de começar, certifique-se de que você tem os seguintes itens instalados:
+- IDE: 
+	- <img width="20" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/visual_studio_code.png" alt="Visual Studio Code" title="Visual Studio Code"/> [Visual Studio Code](https://code.visualstudio.com/) ou 
+	- <img width="20" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/webstorm.png" alt="WebStorm" title="WebStorm"/> [Web Storm](https://www.jetbrains.com/webstorm/)
+- <img src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/node_js.png" alt="Node" width="20" /> [Node.js](https://nodejs.org/) (versão 18 ou superior)
+- <img src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/npm.png" alt="Npm" width="20" /> [npm](https://www.npmjs.com/) instalado
+
+## 🛠️ Criação do Projeto com Vite
+
+### 1. <img width="20" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/vite.png" alt="Vite" title="Vite"/> Vite
 
 Para criação do projeto será utilizado o Vite [2], que é uma ferramenta de construção para projetos web que visa fornecer uma experiência de desenvolvimento mais rápida e com uma quantidade menor de arquivos e configurações necessárias.
 Para criar o projeto basta ter instalado no computador o **node.js** versão **18 ou superior**, então basta executar no terminal o comando:
 
-```cmd
-npm create vite@latest
+```bash
+npm create vite@latest client -- --template react-ts
 ```
 
-Então informar o nome do projeto: **client**, a biblioteca: **React** e a linguagem de programação: **TypeScript**.
+Em que o nome do projeto será: **client**, a biblioteca: **React** e a linguagem de programação: **TypeScript**.
 
-Na sequência é importante instalar as dependências do projeto, bastando executar no terminal dois comandos, o primeiro para entrar na pasta da aplicação criada e o segundo para instalar as dependências:
+### 2. Acessar a pasta do projeto
 
-```cmd
+Acessando a pasta:
+
+```bash
 cd client
+```
 
+### 3. Instalar as dependências
+
+Para instalar as dependências:
+```bash
 npm install
 ```
-Após finalizado esse processo abrir a pasta do projeto (*client*) no editor ou IDR que será utilizado no desenvolvimento do projeto.
+
+### 4. Iniciar o servidor de desenvolvimento
+
+Para iniciar a aplicação basta executar:
+
+```bash
+npm run dev
+```
+
+O terminal irá gerar uma resposta semelhante a essa:
+```cmd
+PS C:\dev\client> npm run dev
+
+> client@0.0.0 dev
+> vite
+
+  VITE v6.4.1  ready in 279 ms
+
+  ➜  Local:   http://127.0.0.1:5173/
+  ➜  Network: use --host to expose
+```
+Na mensagem gerada é possível visualizar que a aplicação foi iniciada e está sendo executada na porta **5173**. Portanto, para testar a aplicação em um navegador basta acessar o endereço: [http://127.0.0.1:5173/](http://127.0.0.1:5173/)  ou [http://localhost:5173/](http://localhost:5173/). A página que irá abrir possui um botão que incrementa um contador a cada clique, essa página será alterada durante o desenvolvimento do projeto. Uma característica importante do projeto criado, é que ao alterarmos qualquer item do código **JSX** do componente **App.tsx** ele será automaticamente atualizado no navegador ao salvar o arquivo, não necessitando reiniciar o servidor toda vez que uma nova alteração é feita no código.
+
+#### 🧪 Scripts disponíveis
+-   `dev` - Inicia o servidor de desenvolvimento.
+    
+-   `build` - Gera a versão de produção do projeto.
+    
+-   `preview` - Visualiza localmente a *build* de produção.
+
+
+#### 🗂️ Estrutura inicial
+```
+client/
+├── public/
+├── src/
+│   ├── assets/
+│   ├── App.tsx, App.css
+│   ├── index.css
+│   ├── main.tsx
+│   └── vite-env.d.ts
+├── eslint.config.js
+├── index.html
+├── package.json
+├── tsconfig.json
+└── vite.config.ts
+```
+
+Após finalizado esse processo abrir a pasta do projeto (*client*) no editor ou IDE que será utilizado no desenvolvimento do projeto.
 
 Entendendo a estrutura do projeto criado:
 - **node_modules**: pasta com as dependências do projeto.
@@ -67,72 +135,176 @@ Entendendo a estrutura do projeto criado:
 - **vite.config.ts**: define as configurações para o Vite, incluindo opções de construção, *plugins* e comportamento do servidor de desenvolvimento.
 
 
-### Executando o projeto
+## ⌨️Desenvolvimento da aplicação
 
-Para executar o projeto basta abrir o terminal na pasta do projeto e executar o comando:
+### 1. ⚒️ Ajustando a estrutura inicial do projeto
 
-```cmd
-npm run dev
-```
-O terminal irá gerar uma resposta semelhante a essa:
+Antes de iniciar o desenvolvimento do projeto serão removidos alguns conteúdos presentes no projeto padrão criado com Vite e alguns ajustes no CSS. Ajustar o arquivo **index.css**, que ficará com o seguinte conteúdo:
 
-```cmd
-PS C:\dev\client> npm run dev
+```css
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;  
+}
 
-> client@0.0.0 dev
-> vite
-
-
-  VITE v3.2.0  ready in 480 ms
-
-  ➜  Local:   http://127.0.0.1:5173/
-  ➜  Network: use --host to expose
-```
-Na mensagem gerada é possível visualizar que a aplicação foi iniciada e está sendo executada na porta **5173**. Portanto, para testar a aplicação em um navegador basta acessar o endereço: [http://127.0.0.1:5173/](http://127.0.0.1:5173/)  ou [http://localhost:5173/](http://localhost:5173/). A página que irá abrir possui um botão que incrementa um contador a cada clique, essa página será alterada durante o desenvolvimento do projeto. Uma característica importante do projeto criado, é que ao alterarmos qualquer item do código **JSX** do componente **App.tsx** ele será automaticamente atualizado no navegador ao salvar o arquivo, não necessitando reiniciar o servidor toda vez que uma nova alteração é feita no código.
-
-### Iniciando o desenvolvimento da aplicação
-
-O primeiro passo a ser realizado será alterar o conteúdo dos arquivos **App.tsx** e **App.css**.  O conteúdo do arquivo **App.css** será todo removido, deixando o arquivo em branco. E o arquivo **App.tsx** ficará com o seguinte conteúdo:
-
-```ts
-export function App() {
-	return (
-		<div>
-			<h1>Bem vindo!</h1>
-		</div>
-	)
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
 }
 ```
 
-Como o projeto criado com Vite possui [Hot Module Replacement (HMR)](https://vite.dev/guide/features.html#hot-module-replacement) basta ir para página aberta no navegador e visualizar o resultado das alterações efetuadas. 
+Ajustar o arquivo **App.css**, que ficará com o seguinte conteúdo:
 
-#### Adicionando o estilo da aplicação (CSS)
-
-Para melhorar a visualização e usabilidade da aplicação será utilizada a biblioteca de estilização **Bootstrap** [10]. O primeiro passo é adicionar a dependência da biblioteca ao projeto, primeiro deve ser parada a execução do projeto **client** executando um **Ctrl+C**, então deve ser executado no terminal o comando:
-
-```cmd
-npm i bootstrap @popperjs/core
+```css
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
 ```
-Após a execução do comando a dependência da biblioteca será adicionada no arquivo `package.json` e o CSS poderá ser importado no arquivo **main.tsx** que ficará com o seguinte conteúdo:
+
+Ajustar o arquivo **App.tsx**, que ficará com o seguinte conteúdo:
+```jsx
+import './App.css'
+
+function App() {
+
+  return (
+    <>
+      <h1>Bem vindo!</h1>
+    </>
+  )
+}
+
+export default App
+```
+
+Agora que foram removidos os trechos de código do projeto padrão podemos adicionar as bibliotecas que serão utilizadas no desenvolvimento do projeto.
+
+---
+### 2. 🎨 Bibliotecas - instalação e configuração
+
+As bibliotecas para React permitem adicionar funcionalidades extras para aplicação, por meio de soluções prontas e testadas. Permite também o desenvolvimento mais rápido uma vez que soluções para requisições HTTP, validação de formulários, rotas, componentes de UI já estão prontas para uso dentro da aplicação. Neste projeto serão utilizadas as bibliotecas:
+-   `PrimeReact` - Componentes de interface de usuário (UI).    
+-   `Prime Icons` - Biblioteca com conjunto de ícones.
+ -  `Prime Flex` - CSS responsivo.    
+-   `React Router` - Gerenciamento de rotas da aplicação.
+-   `Axios` - Cliente HTTP, utilizado nas chamadas à API REST.
+-   `React Hook Form` - Gerenciamento dos formulários da aplicação.
+-   `@types/node` - Definições de tipo para muitas bibliotecas node.1
+
+
+#### 2.1 <img src="https://primefaces.org/cdn/primereact/images/favicon.ico" width="20px" /> PrimeReact
+
+Instalando a biblioteca:
+
+```bash
+npm install primereact
+```
+Ajustando o componente main.tsx, adicionando o **PrimeReactProvider**:
 
 ```jsx
-import React from  'react'
-import ReactDOM from  'react-dom/client'
-import { App } from  './App'
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter } from  'react-router-dom';
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-	<React.StrictMode>
-		<App  />
-	</React.StrictMode>
-)
-```
-A linha `import  'bootstrap/dist/css/bootstrap.min.css'` irá permitir que todos os componentes do projeto possam utilizar as classes CSS presentes na biblioteca Bootstrap.
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import App from "./App.tsx";
 
-#### Configurando o *import* de componentes
+import { PrimeReactProvider } from "primereact/api";
+
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <PrimeReactProvider>
+      <App />
+    </PrimeReactProvider>
+  </StrictMode>
+);
+```
+
+#### 2.2 Prime Icons
+
+Instalando a biblioteca:
+```bash
+npm install primeicons
+```
+Ajustando o componente main.tsx, basta adicionar o CSS:
+```jsx
+//...
+import 'primeicons/primeicons.css'
+
+createRoot(document.getElementById("root")!).render(
+//...
+);
+```
+
+#### 2.3 Prime Flex
+
+Instalando a biblioteca:
+```bash
+npm install primeflex
+```
+Ajustando o componente main.tsx, basta adicionar o CSS:
+```jsx
+//...
+import 'primeflex/primeflex.css';
+
+createRoot(document.getElementById("root")!).render(
+//...
+);
+```
+
+#### 2.4 React Router
+
+Instalando a biblioteca:
+```bash
+ npm install react-router-dom
+```
+Ajustando o componente main.tsx, basta adicionar o **BrowserRouter**:
+```jsx
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import App from "./App.tsx";
+import { PrimeReactProvider } from "primereact/api";
+import "primereact/resources/themes/lara-light-indigo/theme.css"; //theme
+import "primereact/resources/primereact.min.css"; //core css
+
+import { BrowserRouter } from "react-router-dom";
+
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <BrowserRouter>
+      <PrimeReactProvider>
+        <App />
+      </PrimeReactProvider>
+    </BrowserRouter>
+  </StrictMode>
+);
+```
+
+#### 2.5 Axios
+
+Instalando a biblioteca:
+```bash
+ npm install axios
+```
+No momento nenhuma configuração adicional será necessária para o funcionamento do Axios.
+
+#### 2.6 React Hook Form
+
+Instalando a biblioteca:
+```bash
+npm install react-hook-form
+```
+No momento nenhuma configuração adicional será necessária para o funcionamento da biblioteca React Hook Form.
+
+#### 2.7 @types/node
 
 Continuando a configuração do projeto, agora será otimizado o processo de importar os componentes na aplicação, instalando a dependência de desenvolvimento *@types/node*.
-
 ```cmd
 npm i --include=dev @types/node
 ```
@@ -153,7 +325,6 @@ export default defineConfig({
 })
 ```
 Assim, todos a importação de componentes agora, pode ser realizadas a partir do diretório raiz, desde que o caminho usado no *import* inicie-se por '@'. Para finalizar basta configurar o arquivo **tsconfig.app.json** adicionando o conteúdo abaixo na propriedade *compilerOptions*:
-
 ```json
 ...
 "compilerOptions": {
@@ -166,508 +337,293 @@ Assim, todos a importação de componentes agora, pode ser realizadas a partir d
 ...
 ```
 
-### Criando o componente HomePage
+---
 
-O componente **HomePage** será o primeiro componente a ser criado na aplicação. Esse componente será criado dentro da pasta **/src/pages/HomePage**, essa estrutura de pastas não existe e deverá ser criada. Dentro da pasta **HomePage** deverá ser criado o arquivo **index.tsx**, com o seguinte conteúdo:
+### 3. 🏠Criando o componente para página Home
 
+O componente **HomePage** será o primeiro componente a ser criado na aplicação. Esse componente será criado dentro da pasta **/src/pages/home**, essa estrutura de pastas não existe e deverá ser criada. Dentro da pasta **/home** deverá ser criado o arquivo **index.tsx**, com o seguinte conteúdo:
 ```jsx
-export function HomePage() {
+export const HomePage = () => {
   return (
     <>
-      <main className="container">
-        <div className="text-center">
-          <h1 className="h3 mb-3 fw-normal">HOME PAGE</h1>
-        </div>
-      </main>
+      <h1>Bem-vindo à Página Inicial</h1>
     </>
   );
-}
+};
 ```
 
-Com o componente **HomePage** criado, agora é necessário exibi-lo para os usuários, para isso será necessário substituir o componente que está sendo renderizado no arquivo **main.tsx** com o código:
-
+Com o componente **HomePage** criado, agora é necessário exibi-lo para os usuários, para isso será necessário alterar o conteúdo co componente **App.tsx** com o código:
 ```jsx
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import './index.css'
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { HomePage } from './pages/HomePage'
+import './App.css'
+import { HomePage } from './pages/home'
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-      <HomePage/>
-  </React.StrictMode>
-)
-```
-
-Com o primeiro componente criado, agora o processo será repetido, criando os componentes para cadastro de usuário e autenticação. O React permite exibir um componente a cada momento ou fazer uma pilha de componentes, mas como cada componente que será criado irá representar uma funcionalidade específica da aplicação, será necessário controlar a exibição dos componentes de acordo com as rotas (URL) solicitadas pelo usuário, por exemplo, ao acessar http://localhost:5473/login será exibido o componente de autenticação, ao ao acessar http://localhost:5473/ será exibido o componente HomePage.
-
-### Configurando as rotas para os componentes da aplicação
-
-Para controlar as rotas da aplicação será utilizada a biblioteca React Router [5]. Assim, de acordo com a URL informada no navegador um componente será renderizado para o usuário. Será necessário parar a execução do projeto e adicionar a dependência ao projeto utilizando o **npm**, basta executar no terminal:
-
-```cmd
-npm install react-router-dom
-```
-
-Com o React Router instalado o próximo passo é configurar as rotas da aplicação para os componentes que precisam de autenticação (CRUDs de categorias e produtos, que serão criados) e os que não precisam (cadastro de novos usuários e autenticação). Antes disso é necessário criar o ponto de partida para que o React Router controle as demais rotas do sistema, adicionando o *provider* **BrowserRouter** no código do arquivo **main.tsx**:
-
-```ts
-import  React  from  'react'
-import  ReactDOM  from  'react-dom/client'
-import { App } from  '@/App'
-import  'bootstrap/dist/css/bootstrap.min.css'
-import { BrowserRouter } from  'react-router-dom';
-
-ReactDOM.createRoot(document.getElementById('root') as  HTMLElement).render(
-	<React.StrictMode>
-		<BrowserRouter>
-			<App  />
-		</BrowserRouter>
-	</React.StrictMode>
-)
-```
-
-#### Criando o componente BaseRoutes
-
-Para criação do componente será criada uma pasta chamada **/src/routes** e dentro uma pasta chamada **BaseRoutes** com um arquivo **index.tsx** dentro. O componente **BaseRoutes** vai ser o ponto de entrada dos usuários da aplicação. Nesse componente as rotas para cada componente da aplicação serão configuradas. 
-
-Utilizando os componentes Routes e Route do React Router será passado como parâmetro o caminho (*path*) e o componente que será renderizado (*element*) ao chamar a URL. Ou seja, ao informar a URL **/login** no navegador, o componente que será renderizado será o **LoginPage**.
-
-```jsx
-import { Route, Routes } from "react-router-dom";
-import { HomePage } from "@/pages/HomePage";
-
-export function BaseRoutes() {
+function App() {
   return (
     <>
-      <Routes>
-			<Route path="/home" element={<HomePage />} />
-            <Route path="/" element={<HomePage />} />
-      </Routes>
+      <HomePage />
     </>
-  );
+  )
 }
+export default App
 ```
 
-Também será necessário alterar o componente **App**, adicionando o componente **BaseRoutes**, conforme o código abaixo:
+Com o primeiro componente criado, agora o processo será repetido, criando os componentes para cadastro de usuário e autenticação. O React permite exibir um componente a cada momento ou fazer uma pilha de componentes, mas como cada componente que será criado irá representar uma funcionalidade específica da aplicação, será necessário controlar a exibição dos componentes de acordo com as rotas (URL) solicitadas pelo usuário, por exemplo, ao acessar o endereço [http://localhost:5473/login ](http://localhost:5473/login), por exemplo, será exibida a página de autenticação, ao ao acessar o endereço [http://localhost:5473/](http://localhost:5473/) será exibido o componente HomePage.
 
-```jsx
-import { BaseRoutes } from "@/routes/BaseRoutes";
+O próximo passo será criar o componente para cadastro de usuário, mas antes disso será necessário configurar a biblioteca Axios para que possam ser realizadas as requisições HTTP para a API.
 
-export function App() {
-  return (
-    <>
-      <BaseRoutes />
-    </>
-  );
-}
+### 4.  🌎Configuração do Axios para as requisições HTTP
+
+Para realizar as requisições HTTP para API será utilizado o cliente HTTP Axios, a configuração consiste em definir uma URL padrão para API, que será adicionada no arquivo **/src/lib/axios.ts**. A API desenvolvida com Spring Framework está sendo executada no endereço `http://localhost:8080` caso a porta da API tenha sido alterada na aplicação **server**, também deverá ser alterada nesse trecho de código.
+```ts
+import  axios  from  'axios';
+
+export  const  api  =  axios.create({
+	baseURL:  'http://localhost:8080',
+});
 ```
 
-E, após esse passo será possível acessar a URL da aplicação no endereço: [http://127.0.0.1:5173/](http://127.0.0.1:5173/)  ou [http://localhost:5173/](http://127.0.0.1:5173/). O componente home pode ser acessado também pela rota **/home**, conforme o componente **BaseRoutes**.
+Com o Axios configurado agora os *services* que precisam fazer requisições HTTP para API podem ser configurados.
 
+### 5.  🧑Cadastro de usuário
 
-### Cadastro de usuários e outros componentes 
+O cadastro de usuários será composto pela página de cadastro de usuários, representada pelo componente **RegisterPage**. A definição do tipo de objeto que será enviado para API (**IUserRegister**) e pela camada de serviço que será responsável por realizar a requisição HTTP para a API (**AuthService**).
 
-Agora será iniciado o desenvolvimento dos componentes da aplicação. A aplicação que será desenvolvida irá consumir os recursos da API REST criada nas aulas em que foi desenvolvido o lado servidor da aplicação Web, para isso será necessário realizar requisições HTTP ao servidor. Para o cadastro de usuários será necessário criar uma interface para representar o objeto que será enviado ao servidor, instalar a dependência da biblioteca Axios, que será utilizada para realizar as requisições HTTP ao servidor e por fim, criar o componente que será utilizado como formulário para preenchimento dos dados do usuário. E, para abordar um pouco mais do conceito de componentes, serão criados um componente do tipo Input e um componente do tipo Button que serão utilizados na tela de cadastro de usuário.
+#### 5.1 Interfaces IUserRegister e IResponse
 
-#### Criando o componente Input
-
-O componente Input vai ter comportamento semelhante à uma tag input HTML. Esse componente irá ser criado dentro da pasta **/src/components/Input/** no arquivo **index.tsx**.
-
-```jsx
-import { ChangeEvent } from "react";
-
-interface IInputProps {
-  name: string;
-  className: string;
-  label: string;
-  type: string;
-  placeholder: string;
-  value: string;
-  hasError: boolean;
-  error: string;
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
-}
-
-export function Input({
-  name,
-  className,
-  label,
-  type,
-  placeholder,
-  value,
-  hasError,
-  error,
-  onChange,
-}: IInputProps) {
-  let inputClassName = className;
-  if (hasError) {
-    inputClassName += hasError ? " is-invalid" : " is-valid";
-  }
-
-  return (
-    <>
-      <input
-        type={type}
-        className={inputClassName}
-        placeholder={placeholder}
-        onChange={onChange}
-        value={value}
-        name={name}
-      />
-      {label && <label htmlFor={name}>{label}</label>}
-      {hasError && <div className="invalid-feedback">{error}</div>}
-    </>
-  );
-}
-```
-#### Criando o componente ButtonWithProgress
-
-O componente ButtonWithProgress vai ter comportamento semelhante à uma tag button HTML. Esse componente irá ser criado dentro da pasta **/src/components/ButtonWithProgress/** no arquivo **index.tsx**.
-
-```jsx
-interface IButtonWithProgress {
-  className: string;
-  disabled: boolean;
-  pendingApiCall: boolean;
-  text: string;
-  onClick: () => void;
-}
-
-export function ButtonWithProgress({
-  className,
-  disabled,
-  pendingApiCall,
-  text,
-  onClick
-}: IButtonWithProgress) {
-
-  return (
-    <button
-      disabled={disabled}
-      className={className || "btn btn-primary"}
-      onClick={onClick}
-    >
-      {pendingApiCall && (
-        <div
-          className="spinner-border text-light-spinner spinner-border-sm mr-sm-1"
-          role="status"
-        >
-          <span className="visually-hidden">Aguarde...</span>
-        </div>
-      )}
-      {text}
-    </button>
-  );
-}
-```
-
-#### Instalando e configurando o Axios
-
-Para instalar o Axios para executar no console o comando:
-
-```cmd
-npm i axios
-```
-Com isso as dependências necessárias estarão configuradas no arquivo package.json e disponíveis para uso no projeto. O próximo passo será criar um arquivo para configurar e compartilhar o Axios para todo o projeto. Para isso criar um arquivo chamado **axios.ts** e criar a **/src/lib**, sendo o caminho completo **/src/lib/axios.ts**:
+As interfaces **IUserRegister** e **IResponse** serão definidas no arquivo **/src/commons/types.ts** (o arquivo e estrutura de pasta deverão ser criados) com os atributos necessários para o cadastro de um novo usuário na API, conforme o código:
 
 ```ts
-import axios from 'axios'
+export  interface  IUserRegister {
+	displayName:  string;
+	username:  string;
+	password:  string;
+}
 
-export  const api = axios.create({
-    baseURL: "http://localhost:8080", // URL base para as requisições
-})
-```
-Dessa maneira configuramos um Singleton do axios, que pode ser utilizando em toda a aplicação, tendo como URL base `http://localhost:8080`, o qual é o endereço que o servidor em que foi  criada a API REST.
-
-#### Interface IUserSignUp
-
-Para representar o objeto que irá conter as propriedades do usuário será criada a interface IUserSignUp. Deve ser criada uma pasta chamada **commons** dentro da pasta raiz (**/src**), e dentro dessa pasta um arquivo chamado **interfaces.ts**, ficando o seguinte caminho: **/src/commons/interfaces.ts** o arquivo terá o seguinte conteúdo:
-
-```ts
-export interface IUserSignup {
-    displayName: string;
-    username: string;
-    password: string;
-    passwordRepeat: string;
+export  interface  IResponse {
+	status?:  number;
+	success?:  boolean;
+	message?:  string;
+	data?:  object
 }
 ```
-#### Criando o serviço para realizar requisições HTTP AuthService
+A interface **IResponse** representa a reposta da requisição HTTP enviada pelo servidor e será utilizada dentro dos componente para recuperar o *status* da requisição e também os dados enviados pelo servidor, por meio da propriedade *data*.
 
-O arquivo **AuthService.ts** irá conter as funções para realizar o cadastro e a autenticação na API. Inicialmente será implementada a função **signup** que será responsável por realizar uma requisição HTTP do tipo POST para API. As requisições HTTP serão realizadas utilizando a biblioteca **Axios**, conforme configuração realizada.
+#### 5.2 Service AuthService
 
+As chamadas HTTP serão realizadas por meio de *services* com o objetivo de deixar o código mais organizado e de fácil manutenção. Para isso, será criada a pasta **/src/services/** e dentro o arquivo **auth-service.ts**. No arquivo *auth-service.ts* será implementado a função assíncrona *signup()* que será responsável por realizar um HTTP POST para API com um objeto JSON representando um usuário.
 ```ts
-import { IUserLogin, IUserSignUp } from "@/commons/interfaces";
+import { IUserRegister, IResponse } from "@/commons/types";
 import { api } from "@/lib/axios";
 
 /**
- * Função para cadastrar um novo usuário
- * @param user - Dados do usuário que será cadastrado do tipo IUserSignUp
+ * Função para realizar uma requisição HTTP para API para cadastrar um novo usuário
+ * @param user - Dados do usuário que será cadastrado do tipo IUserRegister
  * @returns - Retorna a resposta da API
  */
-const signup = async (user: IUserSignUp): Promise<any> => {
-  let response;
+const signup = async (user: IUserRegister): Promise<IResponse> => {
+  let response = {} as IResponse;
   try {
-    response = await api.post("/users", user);
+    const data = await api.post("/users", user);
+    response = {
+      status: 200,
+      success: true,
+      message: "Usuário cadastrado com sucesso",
+      data: data.data,
+    };  
   } catch (err: any) {
-    response = err.response;
+    response = {
+      status: 400,
+      success: false,
+      message: "Usuário não pode ser cadastrado",
+      data: err.response.data,
+    };
   }
   return response;
 };
-
-const  AuthService  = {
-	signup,
+const AuthService = {
+  signup,
 };
-
-export  default  AuthService;
+export default AuthService;
 ```
 
-#### Componente de cadastro de usuário
+Definindo a função com *async*/*await* podemos lidar com **código assíncrono**, uma vez que a requisição HTTP não irá ocorrer de maneira instantânea. O `async` transforma uma função em uma Promise automaticamente. E, o `await` pausa a execução da função até a Promise ser resolvida.
 
-Agora será desenvolvido o componente que irá representar o cadastro de um novo usuário, para isso será necessário criar dentro da pasta **/src** a pasta **/src/pages/UserSignUpPage**. Na pasta **pages** serão criados todos os componentes que serão renderizados ao usuário. Dentro da pasta **UserSignUpPage** criar os arquivos **index.tsx** e **index.css**, com o seguinte conteúdo  (comentários no código):
-
-```ts
-/* 
-	O ChangeEvent será utilizado para tipar o parâmetro do método onChange, que será utilizado para recuperar os valores digitados nos campos de texto ao cadastrar um novo usuário.
-	O Hook[4] useState será utilizado para manter os valores informados pelo usuário nos campos de texto no estado (State[3]) da aplicação.	
-	IUserSignUp - interface utilizada para tipar os objeto que armazena os dados de usuário
-	AuthService - contém as funções para realizar as requisições HTTP para a API REST. No caso do cadastro de usuário uma requisição do tipo HTTP POST
-*/
-import { ChangeEvent, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { IUserSignUp } from "@/commons/interfaces";
-import { ButtonWithProgress } from "@/components/ButtonWithProgress";
-import { Input } from "@/components/Input";
-import AuthService from "@/service/AuthService";
-import "./style.css";
-
-export function UserSignupPage() {
-  /* Criação de um objeto chamado `form` no state para armazenar o username e passord do usuário */
-  const [form, setForm] = useState<IUserSignUp>({
-    displayName: "",
-    username: "",
-    password: "",
-    passwordRepeat: "",
-  });
-  /* Criação de um objeto chamado `errors` no state para armazenar os erros de validação retornados pelo servidor */
-  const [errors, setErrors] = useState({
-    displayName: "",
-    username: "",
-    password: "",
-  });
-  const [pendingApiCall, setPendingApiCall] = useState(false);
-  const [passwordRepeatError, setPasswordRepeatError] = useState("");
-  const [apiError, setApiError] = useState("");
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (form.password || form.passwordRepeat) {
-      setPasswordRepeatError(
-        form.password === form.passwordRepeat
-          ? ""
-          : "As senhas devem ser iguais"
-      );
-    }
-  }, [form]);
-
-  /* função criada para monitorar o evento Change dos componentes input */
-  const onChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { value, name } = event.target;
-    setForm((previousForm) => {
-      return {
-        ...previousForm,
-        [name]: value,
-      };
-    });
-    /* Limpa o valor do erro relacionado à propriedade do input que está sendo editada */
-    setErrors((previousErrors) => {
-      return {
-        ...previousErrors,
-        [name]: undefined,
-      };
-    });
-  };
-
-  /* trata o click o botão para cadastrar um novo usuário */
-  const onClickSignup = async () => {
-    /* recupera o valor do state e cria um objeto do tipo IUserSignUp */
-    const user: IUserSignUp = {
-      displayName: form.displayName,
-      username: form.username,
-      password: form.password,
-      passwordRepeat: form.passwordRepeat,
-    };
-    setPendingApiCall(true);
-    /* Chama o método signup do service AuthService, passando o usuário que será enviado via POST para API */
-    const response = await AuthService.signup(user);
-
-    /* Em caso de sucesso navega para o componente LoginPage (acessando a url `/login`), esse componente ainda não foi criado, portanto inicialmente será exibida uma página em branco.  */
-    if (response.status === 200 || response.status === 201) {
-      navigate("/login");
-    } else if (response) { 
-      /* Em caso de erro preenche o conjunto de erros armazenado no State com os dados vindos da validação realizada na API. */
-      if (response.data && response.data.validationErrors) {
-        setErrors(response.data.validationErrors);
-      }
-      setApiError("Ocorreu um erro ao salvar o usuário.");
-    }
-    setPendingApiCall(false);
-  };
-
-  /*Retorna o TSX com o formulário de cadastro. */
-  return (
-    <main className="form-signup w-100 m-auto">
-      <form>
-        <div className="text-center">
-          <h1 className="h3 mb-3 fw-normal">Novo usuário</h1>
-        </div>
-        <div className="form-floating">
-          <input
-            type="text"
-            className={errors.displayName ? "is-invalid form-control" : "form-control"} 
-            placeholder="Informe o seu nome"
-            onChange={onChange}
-            value={form.displayName}
-            name="displayName"
-            id="displayName"
-          />
-          <label htmlFor="displayName">Informe o seu nome</label>
-          {errors.displayName && <div className="invalid-feedback">{errors.displayName}</div>}
-        </div>
-        <div className="form-floating">
-          <Input
-            name="username"
-            label="Informe o usuário"
-            className="form-control"
-            type="text"
-            placeholder="Informe o usuário"
-            onChange={onChange}
-            value={form.username}
-            hasError={errors.username ? true : false}
-            error={errors.username}
-          />
-        </div>
-        <div className="form-floating">
-          <Input
-            name="password"
-            label="Informe a senha"
-            className="form-control"
-            type="text"
-            placeholder="Informe a senha"
-            onChange={onChange}
-            value={form.password}
-            hasError={errors.password ? true : false}
-            error={errors.password}
-          />
-        </div>
-        <div className="form-floating">
-          <Input
-            name="passwordRepeat"
-            label="Confirme sua senha"
-            className="form-control"
-            type="password"
-            placeholder="Informe sua senha"
-            onChange={onChange}
-            value={form.passwordRepeat}
-            hasError={passwordRepeatError ? true : false}
-            error={passwordRepeatError ? passwordRepeatError : ""}
-          />
-        </div>
-        {apiError && (
-          <div className="col-12 mb-3">
-            <div className="alert alert-danger">{apiError}</div>
-          </div>
-        )}
-
-        <ButtonWithProgress
-          className="w-100 btn btn-lg btn-primary mb-3"
-          onClick={onClickSignup}
-          disabled={pendingApiCall || passwordRepeatError ? true : false}
-          text="Cadastrar"
-          pendingApiCall={pendingApiCall}
-        />
-
-        <div className="text-center">
-          Já possui cadastro? <br />
-          <Link className="link-primary" to="/">
-            Login
-          </Link>
-        </div>
-      </form>
-    </main>
-  );
-}
+Para resolver o problema de validação do *eslint* nos objetos do tipo *any* vamos deixar global a configuração `@typescript-eslint/no-explicit-any`, no arquivo *.eslintrc** que está na pasta raiz, ajustar:
+```json
+rules: {
+    "@typescript-eslint/no-explicit-any": "off"
+},
 ```
 
-Arquivo **index.css**:
-```css
-.form-signup {
-  max-width: 400px;
-  padding: 15px;
-}
+#### 5.2 RegisterPage
 
-.form-signup .form-floating:focus-within {
-  z-index: 2;
-}
-
-.form-signup input {
-  margin-bottom: 10px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-}
-
-.form-signup input[type="text"] {
-  margin-bottom: 10px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-}
-
-.form-signup input[type="password"] {
-  margin-bottom: 10px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
-```
-
-Com o cadastro de usuário criado, agora é necessário exibir o componente que acabou de ser criado na página. Para isso será necessário ajustar o componente **BaseRoutes** que irá ficar com o código:
-
+O componente **RegisterPage** será criado dentro da pasta **/src/pages/register**, essa estrutura de pastas não existe e deverá ser criada. Dentro da pasta **/register** deverá ser criado o arquivo **index.tsx**. O formulário irá utilizar os componentes de UI do PrimeReact e React Hook Forma para controlar o estado do formulário.
 ```jsx
-import { Route, Routes } from "react-router-dom";
-import { UserSignupPage } from "@/pages/UserSignupPage";
-import { HomePage } from "@/pages/HomePage";
+import { useForm, Controller } from "react-hook-form";
+import { InputText } from "primereact/inputtext";
+import { Password } from "primereact/password";
+import { Button } from "primereact/button";
+import { Card } from "primereact/card";
+import { Link, useNavigate } from "react-router-dom";
+import { classNames } from "primereact/utils";
+import { useRef, useState } from "react";
+import { IUserRegister } from "@/commons/types";
+import AuthService from "@/services/auth-service";
+import { Toast } from "primereact/toast";
 
-export function BaseRoutes() {
+export const RegisterPage = () => {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<IUserRegister>({
+    defaultValues: { username: "", password: "", displayName: "" },
+  }); // Formulário controlado com React Hook Form
+  const { signup } = AuthService; // Método no authService que realiza uma requisição HTTP POST para /users na API
+  const [loading, setLoading] = useState(false); // Objeto que controla o estado da requisição HTTP
+  const navigate = useNavigate(); // Hook do React Touter para redirecionar o usuário para uma nova rota
+  const toast = useRef<Toast>(null); // Hook para possibilitar o uso do componente Toast para exibir as mensagens de sucesso ou erro.
+
+  const onSubmit = async (data: IUserRegister) => { // Função assíncrona para realizar o envio dos dados para API
+    setLoading(true);
+    try {
+      const response = await signup(data);
+      if (response.status === 200 && response.data) {
+        toast.current?.show({
+          severity: "success",
+          summary: "Sucesso",
+          detail: "Usuário cadastrado com sucesso.",
+          life: 3000,
+        });
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000);
+      } else {
+        toast.current?.show({
+          severity: "error",
+          summary: "Erro",
+          detail: "Falha ao cadastrar usuário.",
+          life: 3000,
+        });
+      }
+    } catch {
+      toast.current?.show({
+        severity: "error",
+        summary: "Erro",
+        detail: "Falha ao cadastrar usuário.",
+        life: 3000,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+  return (
+    <div className="flex justify-center items-start pt-30 px-4 bg-gray-100 dark:bg-gray-900">
+      <Toast ref={toast} />
+      <Card title="Registrar Conta" className="w-full max-w-md">
+        <form onSubmit={handleSubmit(onSubmit)} className="p-fluid space-y-4">
+          <div>
+            <label className="block mb-2">Nome de Exibição</label>
+            <Controller
+              name="displayName"
+              control={control}
+              rules={{ required: "Campo obrigatório" }}
+              render={({ field }) => (
+                <InputText
+                  {...field}
+                  className={classNames({ "p-invalid": errors.displayName })}
+                  placeholder="Ex: João das Neves"
+                />
+              )}
+            />
+            {errors.displayName && (
+              <small className="p-error">{errors.displayName.message}</small>
+            )}
+          </div>
+          <div>
+            <label className="block mb-2">Usuário</label>
+            <Controller
+              name="username"
+              control={control}
+              rules={{ required: "Campo obrigatório" }}
+              render={({ field }) => (
+                <InputText
+                  {...field}
+                  className={classNames({ "p-invalid": errors.username })}
+                  placeholder="Ex: jsnow"
+                />
+              )}
+            />
+            {errors.username && (
+              <small className="p-error">{errors.username.message}</small>
+            )}
+          </div>
+          <div>
+            <label className="block mb-2">Senha</label>
+            <Controller
+              name="password"
+              control={control}
+              rules={{
+                required: "Campo obrigatório",
+                minLength: { value: 6, message: "Mínimo 6 caracteres" },
+              }}
+              render={({ field }) => (
+                <Password
+                  {...field}
+                  toggleMask
+                  feedback={false}
+                  className={classNames({ "p-invalid": errors.password })}
+                />
+              )}
+            />
+            {errors.password && (
+              <small className="p-error">{errors.password.message}</small>
+            )}
+          </div>
+          <Button
+            type="submit"
+            label="Registrar"
+            loading={loading || isSubmitting}
+            disabled={loading || isSubmitting}
+            className="w-full mt-3"
+          />
+          <div className="text-center mt-3">
+            <small>
+              Já tem uma conta?{" "}
+              <Link to="/login" className="text-primary">
+                Fazer login
+              </Link>
+            </small>
+          </div>
+        </form>
+      </Card>
+    </div>
+  );
+};
+```
+Para verificar e testar o componente criado, podemos editar o componente **App.tsx** com o seguinte conteúdo:
+```jsx
+import "./App.css";
+import { RegisterPage } from "./pages/register";
+
+function App() {
   return (
     <>
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/signup" element={<UserSignupPage />} />
-
-        {/* Protected Routes */}
-		<Route path="/home" element={<HomePage />} />
-        <Route path="/" element={<HomePage />} />
-      </Routes>
+      <RegisterPage />
     </>
   );
 }
+export default App;
 ```
+---
 
-Agora é possível executar novamente a aplicação executando no terminal o comando:
+### 6. 🔐 Autenticação
 
-```cmd
-npm run dev
-```
+Com o processo de criação de um novo usuário finalizado, o próximo passo é permitir a autenticação desse usuário na aplicação, para isso será criado o componente **LoginPage** que vai conter o formulário para o usuário informar os dados de **username** e **password**. 
 
-E, após esse passo será possível acessar a URL da aplicação no endereço: [http://127.0.0.1:5173/](http://127.0.0.1:5173/)  ou [http://localhost:5173/](http://127.0.0.1:5173/) e testar a funcionalidade de cadastro de usuário. Lembrando que para o cadastro de usuário funcionar, a API REST desenvolvida no projeto da pasta **server** deve ser executada.
+#### 6.1 Atualizando o AuthService e type.ts com a lógica para Autenticação
 
-### Autenticação
-
-Com o processo de criação de um novo usuário finalizado, o próximo passo é permitir a autenticação desse usuário no sistema, para isso será criado o componente **LoginPage** que vai conter o formulário para o usuário informar o seu **username** e **password**. 
-
-#### Atualizando o arquivo AuthService com a função de login
-
-O primeiro passo antes da criação do componente é realizar a alteração do arquivo AuthService.ts adicionando a função responsável por realizar a requisição HTTP POST contendo um JSON com os atributos **username e password**. Para o processo de autenticação do usuário também será necessário criar a interface **IUserLogin** para representar o objeto que será enviado ao servidor, essa alteração será realizada no arquivo **interfaces.ts** na pasta */src/commons*:
+Será necessário criar a interface **IUserLogin** para representar o objeto que será enviado para API, essa alteração será realizada no arquivo */src/commons/types.ts*:
 
 ```ts
 //...
@@ -675,26 +631,36 @@ export  interface  IUserLogin {
 	username:  string;
 	password:  string;
 }
-//...
 ```
 
-Além da função para autenticar o usuário, também será criada uma função para verificar se o usuário está autenticado e outra para efetuar o *logout* do usuário, assim, arquivo AuthService.ts irá ficar com o seguinte conteúdo:
+Agora será realizada a alteração do arquivo auth-service.ts adicionando a função responsável por realizar a requisição HTTP POST contendo um JSON com os atributos **username e password**:
 
 ```ts
-import { IUserLogin, IUserSignUp } from "@/commons/interfaces";
+import { IUserRegister, IUserLogin, IResponse } from "@/commons/types";
 import { api } from "@/lib/axios";
 
 /**
  * Função para cadastrar um novo usuário
- * @param user - Dados do usuário que será cadastrado do tipo IUserSignUp
+ * @param user - Dados do usuário que será cadastrado do tipo IUserRegister
  * @returns - Retorna a resposta da API
  */
-const signup = async (user: IUserSignUp): Promise<any> => {
-  let response;
+const signup = async (user: IUserRegister): Promise<IResponse> => {
+  let response = {} as IResponse;
   try {
-    response = await api.post("/users", user);
+    const data = await api.post("/users", user);
+    response = {
+      status: 200,
+      success: true,
+      message: "Usuário cadastrado com sucesso",
+      data: data.data,
+    };  
   } catch (err: any) {
-    response = err.response;
+    response = {
+      status: 400,
+      success: false,
+      message: "Usuário não pode ser cadastrado",
+      data: err.response.data,
+    };
   }
   return response;
 };
@@ -706,423 +672,672 @@ const signup = async (user: IUserSignUp): Promise<any> => {
  * Além disso salva o token no localStorage e adiciona o token no cabeçalho da requisição
  */
 const login = async (user: IUserLogin) => {
-  let response;
+  let response = {} as IResponse;
   try {
-    response = await api.post("/login", user);
-    localStorage.setItem("token", JSON.stringify(response.data.token));
-    api.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
+    const data = await api.post("/login", user);
+    response = {
+      status: 200,
+      success: true,
+      message: "Login bem-sucedido",
+      data: data.data,
+    };
   } catch (err: any) {
-    response = err.response;
+    response = {
+      status: 401,
+      success: false,
+      message: "Usuário ou senha inválidos",
+      data: err.response.data,
+    };
   }
   return response;
-};
-
-/**
- * Função para verificar se o usuário está autenticado
- * @returns - Retorna true se o usuário estiver autenticado, caso contrário false
- * além de adicionar o token no cabeçalho da requisição
- */
-const isAuthenticated = () => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    api.defaults.headers.common["Authorization"] = `Bearer ${JSON.parse(
-      token
-    )}`;
-  }
-  return token ? true : false;
-};
-
-/**
- * Função para realizar o logout do usuário
- * Remove o token do localStorage 
- */
-const logout = () => {
-  localStorage.removeItem("token");
 };
 
 const AuthService = {
   signup,
   login,
-  isAuthenticated,
-  logout,
 };
 export default AuthService;
 ```
 
-Com a camada responsável por realizar as requisições HTTP implementada será possível criar o componente responsável por exibir o formulário de entrada de dados e o CSS responsável pela estilização, na pasta **/src/pages/LoginPage/** serão criados os arquivos **index.tsx** e **style.css**:
+Com a camada responsável por realizar as requisições HTTP implementada será possível criar o componente responsável por exibir o formulário de entrada de dados na pasta **/src/pages/login/** será criado o arquivo **index.tsx**:
+
+```jsx
+import { useRef, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { InputText } from "primereact/inputtext";
+import { Password } from "primereact/password";
+import { Button } from "primereact/button";
+import { Card } from "primereact/card";
+import { Link, useNavigate } from "react-router-dom";
+import { IUserLogin } from "@/commons/types";
+import AuthService from "@/services/auth-service";
+import { Toast } from "primereact/toast";
+
+export const LoginPage = () => {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<IUserLogin>({ defaultValues: { username: "", password: "" } });  
+  const navigate = useNavigate();
+  const { login } = AuthService;
+  const toast = useRef<Toast>(null);
+  const [loading, setLoading] = useState(false);
+
+  const onSubmit = async (userLogin: IUserLogin) => {
+    setLoading(true);
+    try {
+      const response = await login(userLogin);
+      if (response.status === 200 && response.data) {                
+        toast.current?.show({
+          severity: "success",
+          summary: "Sucesso",
+          detail: "Login efetuado com sucesso.",
+          life: 3000,
+        });
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
+      } else {
+        toast.current?.show({
+          severity: "error",
+          summary: "Erro",
+          detail: "Falha ao efetuar login.",
+          life: 3000,
+        });
+      }
+    } catch {
+      toast.current?.show({
+        severity: "error",
+        summary: "Erro",
+        detail: "Falha ao efetuar login.",
+        life: 3000,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+  return (
+    <div className="flex justify-content-center align-items-center min-h-screen p-4">
+      <Toast ref={toast} />
+      <Card title="Login" className="w-full sm:w-20rem shadow-2">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-column gap-3"
+        >
+          <div>
+            <label htmlFor="username" className="block mb-2">
+              Usuário
+            </label>
+            <Controller
+              name="username"
+              control={control}
+              rules={{ required: "Informe o nome de usuário" }}
+              render={({ field }) => (
+                <InputText
+                  id="username"
+                  {...field}
+                  className={errors.username ? "p-invalid w-full" : "w-full"}
+                />
+              )}
+            />
+            {errors.username && (
+              <small className="p-error">{errors.username.message}</small>
+            )}
+          </div>
+          <div>
+            <label htmlFor="password" className="block mb-2">
+              Senha
+            </label>
+            <Controller
+              name="password"
+              control={control}
+              rules={{ required: "Informe a senha" }}
+              render={({ field }) => (
+                <Password
+                  id="password"
+                  {...field}
+                  toggleMask
+                  feedback={false}
+                  className={errors.password ? "p-invalid w-full" : "w-full"}
+                  inputClassName="w-full"
+                />
+              )}
+            />
+            {errors.password && (
+              <small className="p-error">{errors.password.message}</small>
+            )}
+          </div>
+          <Button
+            type="submit"
+            label="Entrar"
+            icon="pi pi-sign-in"
+            className="w-full"
+            loading={loading || isSubmitting}
+            disabled={loading || isSubmitting}
+          />
+        </form>
+        <div className="text-center mt-3">
+          <small>
+            Não tem uma conta?{" "}
+            <Link to="/register" className="text-primary">
+              Criar conta
+            </Link>
+          </small>
+        </div>
+      </Card>
+    </div>
+  );
+};
+```
+Para verificar e testar o componente criado, podemos editar o componente **App.tsx** com o seguinte conteúdo:
+```jsx
+import "./App.css";
+import { LoginPage} from "./pages/register";
+
+function App() {
+  return (
+    <>
+      <LoginPage />
+    </>
+  );
+}
+export default App;
+```
+---
+
+### 7. 🔂 Criando o contexto da aplicação
+Após termos autenticado o usuário será necessário utilizar o *token* JWT no cabeçalho das requisições HTTP para API que necessitam de autenticação. Para manter o usuário autenticado na aplicação será utilizada a React Context API e também será realizada uma alteração no objeto do axios.
+
+A **React Context API** é uma ferramenta nativa do React que pode ser utilizada para compartilhar dados entre componentes sem precisar passar _props_ manualmente em cada nível da árvore de componentes. Neste projeto será utilizada pois vários componentes precisam acessar os dados de autenticação, mas também poderia ser utilizada para armazenar dados como temas ou configurações globais.
+
+#### 7.1 Criando as interfaces para os dados de autenticação
+Após autenticar o usuário a API envia como resposta o *token* de autenticação via objeto JSON, que será definido no arquivo  **/src/commons/types.ts**:
 
 ```ts
-import React, { ChangeEvent, useState } from "react";
-import { IUserLogin } from "@/commons/interfaces";
-import { ButtonWithProgress } from "@/components/ButtonWithProgress";
-import AuthService from "@/service/AuthService";
-import { Input } from "@/components/Input";
-import { Link, useNavigate } from "react-router-dom";
-import "./style.css";
+export interface Authorities {
+  authority: string;
+}
 
-export function LoginPage() {
-  const [form, setForm] = useState<IUserLogin>({
-    username: "",
-    password: "",
-  });
+export interface AuthenticatedUser {
+  displayName: string;
+  username: string;
+  authorities: Authorities[];
+}
 
-  const [pendingApiCall, setPendingApiCall] = useState(false);
-  const [disableSubmit, setDisableSubmit] = useState(true);
+export interface AuthenticationResponse {
+  token: string;
+  user: AuthenticatedUser;
+}
+```
+#### 7.2 Criando o contexto e *hook* de autenticação
 
-  const [apiError, setApiError] = useState("");
+Nessa etapa serão criados os arquivos **/src/context/AuthContext.tsx** e **/src/context/hooks/use-auth.ts**. O arquivo **AuthContext.tsx** terá o seguinte conteúdo:
+
+```jsx
+import { createContext, ReactNode, useEffect, useState } from "react";
+import { AuthenticatedUser, AuthenticationResponse } from "@/commons/types";
+import { api } from "@/lib/axios";
+import { useNavigate } from "react-router-dom";
+
+interface AuthContextType {
+  authenticated: boolean;
+  authenticatedUser?: AuthenticatedUser;
+  handleLogin: (authenticationResponse: AuthenticationResponse) => Promise<any>;
+  handleLogout: () => void;
+}
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+const AuthContext = createContext({} as AuthContextType);
+
+export const AuthProvider = ({ children }: AuthProviderProps) => {
+  const [authenticated, setAuthenticated] = useState(false);
+  const [authenticatedUser, setAuthenticatedUser] =
+    useState<AuthenticatedUser>();
   const navigate = useNavigate();
 
-  const { login } = AuthService;
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    const storedToken = localStorage.getItem("token");
 
-  const onChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { value, name } = event.target;
-    setForm((previousForm) => {
-      return {
-        ...previousForm,
-        [name]: value,
-      };
-    });
-    if (form.username === "" || form.password === "") {
-      setDisableSubmit(true);
-    } else {
-      setDisableSubmit(false);
+    if (storedUser && storedToken) {
+      setAuthenticatedUser(JSON.parse(storedUser));
+      setAuthenticated(true);
+      api.defaults.headers.common["Authorization"] = `Bearer ${JSON.parse(
+        storedToken
+      )}`;
+      navigate("/");
     }
-    setApiError("");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleLogin = async (
+    authenticationResponse: AuthenticationResponse
+  ) => {
+    try {
+      localStorage.setItem(
+        "token",
+        JSON.stringify(authenticationResponse.token)
+      );
+      localStorage.setItem("user", JSON.stringify(authenticationResponse.user));
+      api.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${authenticationResponse.token}`;
+
+      setAuthenticatedUser(authenticationResponse.user);
+      setAuthenticated(true);
+    } catch {
+      setAuthenticatedUser(undefined);
+      setAuthenticated(false);
+    }
   };
 
-  const onClickLogin = async () => {
-    setPendingApiCall(true);
+  const handleLogout = async () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    api.defaults.headers.common["Authorization"] = "";
 
-    const userLogin: IUserLogin = {
-      username: form.username,
-      password: form.password,
-    };
-    const response = await login(userLogin);
-    if (response.status === 200) {
-      setPendingApiCall(false);
-      navigate("/home");
-    } else {
-      setApiError(
-        "Falha ao autenticar no sistema, verifique os dados informados"
-      );
-      setPendingApiCall(false);
-    }
+    setAuthenticated(false);
+    setAuthenticatedUser(undefined);
   };
 
   return (
+    <AuthContext.Provider
+      value={{ authenticated, authenticatedUser, handleLogin, handleLogout }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export { AuthContext };
+``` 
+
+E o conteúdo do arquivo **use-auth.ts**:
+
+```ts
+import { AuthContext } from "@/context/AuthContext";
+import { useContext } from "react";
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth precisa estar dentro de AuthProvider");
+  }
+  return context;
+};
+```
+
+Agora será necessário ajusta o **AuthProvider** no arquivo *main.tsx*:
+```jsx
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
+
+import App from "@/App.tsx";
+
+import { PrimeReactProvider } from "primereact/api";
+import { BrowserRouter } from "react-router-dom";
+
+import "primereact/resources/themes/lara-light-indigo/theme.css"; //theme
+import "primereact/resources/primereact.min.css"; //core css
+import "primeicons/primeicons.css"; //icons
+import "primeflex/primeflex.css"; //flex utilities
+import { AuthProvider } from "@/context/AuthContext";
+
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <BrowserRouter>
+      <PrimeReactProvider>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </PrimeReactProvider>
+    </BrowserRouter>
+  </StrictMode>
+);
+```
+
+Com o **AuthProvider** configurado, o próximo passo será desenvolver o componente de autenticação.
+
+#### 7.3 Utilizando o contexto dentro do componente LoginPage
+
+```jsx
+//...
+import { AuthenticationResponse, IUserLogin } from  "@/commons/types"; //adicionar a importação do AuthenticationResponse
+import { useAuth } from  "@/context/hooks/use-auth"; // adicionar a importação do hook useAuth
+//...
+export  const  LoginPage  = () => {
+//...
+  const { handleLogin } =  useAuth(); // A função handleLogin será utilizada para atualizar o contexto com o usuário autenticado.
+  const onSubmit = async (userLogin: IUserLogin) => {
+    setLoading(true);
+    try {
+      const response = await login(userLogin);
+      if (response.status === 200 && response.data) {
+        const authenticationResponse = response.data as AuthenticationResponse; // Define o objeto com token após a autenticação
+        handleLogin(authenticationResponse); // o contexto é atualizado com os dados da autenticação
+        toast.current?.show({
+          severity: "success",
+          summary: "Sucesso",
+          detail: "Login efetuado com sucesso.",
+          life: 3000,
+        });
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
+      } else {
+        toast.current?.show({
+          severity: "error",
+          summary: "Erro",
+          detail: "Falha ao efetuar login.",
+          life: 3000,
+        });
+      }
+    } catch {
+      toast.current?.show({
+        severity: "error",
+        summary: "Erro",
+        detail: "Falha ao efetuar login.",
+        life: 3000,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+//...	
+```
+
+Com isso o contexto da aplicação e o componente de autenticação estão criados e podemos iniciar a configuração das rotas da aplicação.
+
+---
+### 8. 🔗 Configurando as rotas da aplicação
+
+Para controlar as rotas da aplicação será utilizada a biblioteca React Router [5]. Assim, de acordo com a URL informada no navegador um componente será renderizado para o usuário.
+
+Como React Router já está instalado basta configurar as rotas da aplicação para os componentes que precisam de autenticação (CRUDs de categorias e produtos, que serão criados ainda e página Home) e os que não precisam (cadastro de usuários e autenticação, já criados). 
+
+Para o funcionamento do React Router serão criados dois componentes o **RequireAuth** que será utilizado para filtrar os componentes que necessitam de autenticação para serem acessados e o **AppRoutes** que irá conter todas as rotas da aplicação, mantendo a relação entre as rotas e os componentes que devem ser renderizados pelo React. 
+
+#### 8.1 Componente RequireAuth
+
+Para verificar quais rotas necessitam de autenticação e melhorar a experiência do usuário será criado o componente  **RequireAuth** dentro de **/src/components/require-auth/index.tsx**:
+
+```jsx
+import { useContext } from "react";
+import { useLocation, Navigate, Outlet } from "react-router-dom";
+import { AuthContext } from "@/context/AuthContext";
+
+export function RequireAuth() {
+  const { authenticated } = useContext(AuthContext);
+  const location = useLocation();
+
+  return authenticated ? (
     <>
-      <main className="form-signin w-100 m-auto">
-        <form>
-          <div className="text-center">
-            <h1 className="h3 mb-3 fw-normal">Autenticação</h1>
-          </div>
-          <div className="form-floating">
-            <Input
-              label="Usuário"
-              className="form-control"
-              type="text"
-              placeholder="username"
-              value={form.username}
-              onChange={onChange}
-              name="username"
-              hasError={false}
-              error=""
-            />
-          </div>
-          <div className="form-floating">
-            <Input
-              label="Senha"
-              className="form-control"
-              type="password"
-              placeholder="Your password"
-              value={form.password}
-              onChange={onChange}
-              name="password"
-              hasError={false}
-              error=""
-            />
-          </div>
+      <Outlet />
+    </>
+  ) : (
+    <Navigate to="/login" state={{ from: location }} replace />
+  );
+}
+```
 
-          <div className="checkbox mb-3">
-            <label>
-              <input type="checkbox" value="remember-me" /> Lembrar
-            </label>
-          </div>
-          {apiError && (
-            <div className="col-12 mb-3">
-              <div className="alert alert-danger">{apiError}</div>
-            </div>
-          )}
-          <ButtonWithProgress
-            className="w-100 btn btn-lg btn-primary mb-3"
-            onClick={onClickLogin}
-            disabled={pendingApiCall || disableSubmit}
-            text="Autenticar"
-            pendingApiCall={pendingApiCall}
+#### 8.2 Componente AppRoutes
+
+Criar o arquivo **/src/routes/app-routes/index.tsx** que irá conter o componente **AppRoutes**:
+
+```jsx
+import { Route, Routes } from "react-router-dom";
+import { LoginPage } from "@/pages/login";
+import { RegisterPage } from "@/pages/register";
+import { HomePage } from "@/pages/home";
+import { RequireAuth } from "@/components/require-auth";
+
+export function AppRoutes() {
+  return (
+    <Routes>
+      {/* public routes */}
+      <Route path="login" element={<LoginPage />} />
+      <Route path="register" element={<RegisterPage />} />
+
+      {/* protected routes */}
+      <Route element={<RequireAuth />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/home" element={<HomePage />} />
+      </Route>
+    </Routes>
+  );
+}
+```
+---
+### 9. ⚓ Criando os componentes de Menu e Layout
+
+Para melhorar a navegação e usabilidade da aplicação será criado um menu superior (**TopMenu**) e um componente que irá ser o *layout* principal da aplicação (**Layout**).
+
+#### 9.1 Componente TopMenu
+
+O componente TopMenu irá conter o menu superior da aplicação com os links para os diferentes componentes (Home, Lista e Cadastro de Categoria, Lista e Cadastro de Produtos. Além de exibir a possibilidade de troca de tema (claro, escuro).
+```jsx
+import React, { useEffect, useState } from "react";
+import { Menubar } from "primereact/menubar";
+import { MenuItem } from "primereact/menuitem";
+import { Avatar } from "primereact/avatar";
+import { Button } from "primereact/button";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/hooks/use-auth";
+import { InputSwitch } from "primereact/inputswitch";
+
+const TopMenu: React.FC = () => {
+  const navigate = useNavigate();
+  const user = "user@email.com";
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    return localStorage.getItem("theme") === "dark";
+  });
+  const { authenticated, handleLogout } = useAuth();
+
+  useEffect(() => {
+    const themeLink = document.getElementById("theme-link") as HTMLLinkElement;
+    themeLink.href = darkMode
+      ? "https://unpkg.com/primereact/resources/themes/lara-dark-blue/theme.css"
+      : "https://unpkg.com/primereact/resources/themes/lara-light-blue/theme.css";
+    localStorage.setItem("theme", darkMode ? "dark" : "light");
+  }, [darkMode]);
+
+  const handleLogoutClick = () => {
+    handleLogout();
+    navigate("/login");
+  };
+
+  const items: MenuItem[] = authenticated
+    ? [
+        { label: "Home", icon: "pi pi-home", command: () => navigate("/") },        
+      ]
+    : [];
+
+  const start = (
+    <div
+      className="flex align-items-center gap-2 cursor-pointer"
+      onClick={() => navigate("/")}
+    >
+      <img
+        src="/assets/images/utfpr-logo-nb.png"
+        alt="Logo"
+        height={32}
+        style={{ objectFit: "contain" }}
+      />
+      <span className="font-bold text-lg hidden sm:block">PW44S</span>
+    </div>
+  );
+
+  const end = (
+    <div className="flex align-items-center gap-3">
+      <div className="flex items-center gap-2">
+        <i
+          className={`pi pi-sun ${
+            darkMode ? "text-gray-400" : "text-yellow-500"
+          }`}
+          style={{ marginTop: "5px" }}
+        />
+        <InputSwitch
+          checked={darkMode}
+          onChange={(e) => setDarkMode(e.value ?? false)}
+        />
+        <i
+          className={`pi pi-moon ${
+            darkMode ? "text-blue-300" : "text-gray-400"
+          }`}
+          style={{ marginTop: "5px" }}
+        />
+      </div>
+
+      {authenticated && (
+        <>
+          <span className="font-semibold hidden sm:block">{user}</span>
+          <Avatar
+            image="https://api.dicebear.com/9.x/bottts-neutral/svg?seed=Caleb"
+            shape="square"
           />
-          <div className="text-center">
-            Não possui cadastro? <br />
-            <Link className="link-primary" to="/signup">
-              Cadastrar-se
-            </Link>
-          </div>
+          <Button
+            icon="pi pi-sign-out"
+            className="p-button-text"
+            onClick={handleLogoutClick}
+          />
+        </>
+      )}
+    </div>
+  );
 
-          <p className="mt-5 mb-3 text-muted">UTFPR &copy; 2010–2024</p>
-        </form>
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        width: "100%",
+        zIndex: 1000,
+        backgroundColor: "var(--surface-ground)",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+      }}
+      className="fixed top-0 left-0 w-full z-50"
+    >
+      <Menubar model={items} start={start} end={end} />
+    </div>
+  );
+};
+
+export default TopMenu;
+```
+
+Agora é necessário ajustar o *link* para o tema CSS no arquivo *main.tsx*, que vai ficar com o seguinte conteúdo:
+```jsx
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
+
+import App from "@/App.tsx";
+
+import { PrimeReactProvider } from "primereact/api";
+import { BrowserRouter } from "react-router-dom";
+
+import "primereact/resources/themes/lara-light-indigo/theme.css"; //theme
+import "primereact/resources/primereact.min.css"; //core css
+import "primeicons/primeicons.css"; //icons
+import "primeflex/primeflex.css"; //flex utilities
+import { AuthProvider } from "@/context/AuthContext";
+
+const themeId = "theme-link";
+const themeHref =
+  "https://unpkg.com/primereact/resources/themes/lara-light-blue/theme.css";
+const link = document.createElement("link");
+link.id = themeId;
+link.rel = "stylesheet";
+link.href = themeHref;
+document.head.appendChild(link);
+
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <BrowserRouter>
+      <PrimeReactProvider>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </PrimeReactProvider>
+    </BrowserRouter>
+  </StrictMode>
+);
+```
+
+#### 9.2 Componente Layout
+
+O componente de Layout será utilizado como base para todas as outras páginas da aplicação, podem ser adicionado componentes de menu, menu lateral, rodapé, entre outros. No caso da aplicação desenvolvida será adicionado apenas o menu superior. Dentro de **src/components/layout/index.ts**.
+
+```jsx
+import { Outlet } from "react-router-dom";
+import TopMenu from "@/components/top-menu";
+
+export function Layout() {
+  return (
+    <>
+      <TopMenu />
+      <main style={{ paddingTop: "40px" }}>
+        <Outlet />
       </main>
     </>
   );
 }
 ```
-Arquivo **style.css**:
-
-```css
-.form-signin {
-  max-width: 330px;
-  padding: 15px;
-}
-
-.form-signin .form-floating:focus-within {
-  z-index: 2;
-}
-
-.form-signin input[type="text"] {
-  margin-bottom: 5px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-}
-
-.form-signin input[type="password"] {
-  margin-bottom: 10px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
-```
-
-Por fim, será necessário exibir o componente **LoginPage** na página principal, para isso basta alterar o arquivo **main.tsx**:
-```jsx
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import './index.css'
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { LoginPage } from './pages/LoginPage'
-
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-      <LoginPage />
-  </React.StrictMode>
-)
-```
-
-Para testar o processo de autenticação, basta adicionar a rota para o componente **LoginPage** no componente **BaseRoutes** e após renderizado o componente de autenticação, preencher os dois campos do formulário com os dados de **username** e **password** informados na página de cadastro. Atualização do componente **BaseRoutes**:
+O componente **Layout** será utilizado no componente **AppRoutes**, assim todas as rotas da aplicação exibirão os componentes seguindo as mesmas características.
 
 ```jsx
 import { Route, Routes } from "react-router-dom";
-import { LoginPage } from "@/pages/LoginPage";
-import { HomePage } from "@/pages/HomePage";
+import { LoginPage } from "@/pages/login";
+import { RegisterPage } from "@/pages/register";
+import { HomePage } from "@/pages/home";
+import { RequireAuth } from "@/components/require-auth";
+import { Layout } from "@/components/layout";
 
-export function BaseRoutes() {
+export function AppRoutes() {
   return (
-    <>
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<UserSignupPage />} />
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        {/* public routes */}
+        <Route path="login" element={<LoginPage />} />
+        <Route path="register" element={<RegisterPage />} />
 
-        {/* Protected Routes */}
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/" element={<HomePage />} />
-
-      </Routes>
-    </>
-  );
-}
-```
-
-Com isso o componente para realizar o cadastro e autenticação no sistema estão finalizados. O próximo passo é gerenciar as rotas que possuem ou não permissão de acesso para usuários não autenticados, para controlar o acesso às rotas entre usuários autenticados e não autenticados será criado o componente **AuthenticatedRoutes**.
-
-#### Criando o componente AuthenticatedRoutes 
-
-O componente **AuthenticatedRoutes** irá validar se o usuário está autenticado ou não, caso esteja autenticado será exibido o componente solicitado, caso contrário será exibida a tela de autenticação (componente **LoginPage**).
-
-Caso a rota solicitada seja para cadastrar-se ou autenticar-se, será exibido o respectivo componente ao usuário. Agora, caso a rota que o usuário deseja acessar necessite de autenticação, ela será tratada no componente **AuthenticatedRoutes **, em que é verificado se o usuário está autenticado por meio da função **isAuthenticated()** do **AuthService**. A função apresentada abaixo utiliza o token *JWT* vindo da **API** no momento da autenticação. Durante o processo de autenticação o **token** foi adicionado no `localStorage` e nesse momento recuperado para verificar se o usuário autenticou-se.
-
-```jsx
-import { Navigate, Outlet, useLocation } from "react-router-dom";
-import AuthService from "@/service/AuthService";
-import { NavBar } from "@/components/NavBar";
-
-export function AuthenticatedRoutes() {
-  // O método isAuthenticated do AuthService retorna se o usuário está autenticado
-  const isAuthenticated = AuthService.isAuthenticated();
-  const location = useLocation();
-  
-  //Caso o usuário esteja autenticado é exibido o componente <Outlet />, que faz parte do React Router e irá fazer o render do componente solicitado pelo usuário que irá estar descrito no componente <BaseRoutes />
-  return isAuthenticated ? (
-    <>
-      <Outlet />
-    </>
-  ) : (
-    <Navigate to="/login" state={{ from: location }} replace />
-  );
-}
-```
-
-Com a criação do componente **AuthenticatedRoutes** é necessário ajustá-lo ao componente **BaseRoutes** que é o local em que estão configuradas as rotas da aplicação. O código do componente **BaseRoutes** irá ficar com o seguinte conteúdo:
-
-```jsx
-import { Route, Routes } from "react-router-dom";
-import { LoginPage } from "@/pages/LoginPage";
-import { UserSignupPage } from "@/pages/UserSignupPage";
-import { AuthenticatedRoutes } from "../AuthenticatedRoutes";
-import { HomePage } from "@/pages/HomePage";
-
-export function BaseRoutes() {
-  return (
-    <>
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<UserSignupPage />} />
-        {/* Protected Routes */}
-        <Route element={<AuthenticatedRoutes />}>
-            <Route path="/home" element={<HomePage />} />
-            <Route path="/" element={<HomePage />} />
+        {/* protected routes */}
+        <Route element={<RequireAuth />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/home" element={<HomePage />} />
         </Route>
-      </Routes>
-    </>
+      </Route>
+    </Routes>
   );
 }
 ```
 
-Nota-se que agora o componente **HomePage** poderá ser acessado apenas pelos usuários que estiverem autenticados no sistema, pois o componente **AuthenticatedRoutes ** filtra o acesso dos usuários. As demais rotas (*/login* e */signup*) continuam com acesso para qualquer usuário, estando autenticados ou não.
-Visando melhorar a usabilidade da página o próximo passo será criar uma barra de navegação para comportar as URLs de acesso aos demais componentes que vão ser desenvolvidos na aplicação, por isso será criado o componente **NavBar**.
+Agora e possível se cadastrar, autenticar e navegar pelos componentes da aplicação, o próximo passo será desenvolver os CRUDs de Categoria e Produto.
 
-#### Criando e exibindo o componente NavBar
+---
+### 10. 🏷️ CRUD de Categorias
 
-O componente **NavBar** será criado na pasta **/src/components** e irá exibir o link de acesso a cada um dos componentes de lista de dados que será criado (componentes para as listas de Categorias e Produtos). Para isso, criar a pasta **/src/components/NavBar** e dentro dela um arquivo chamado **index.tsx**. Inicialmente estará funcionando apenas o link para HomePage,. As rotas são apresentadas no menu por meio do componente **NavLink** do **React Router**, nesse componente é informado a rota do componente que será renderizado. O componente NavBar também conta com o botão de Sair, que ao ser clicado será limpado o valor do token do localstorage e o usuário será direcionado para tela de autenticação (LoginPage).
+#### 10.1 Interface e *Service* de Categoria
+O primeiro passo será criar a interface **ICategory**, que representa uma categoria. A interface será desenvolvida no arquivo **/src/commons/types.ts**, bastando adicionar ao arquivo:
 
-Para esse componente também será necessário copiar a logo marca da UTFPR para dentro da pasta **/src/assets** como pode ser observado no código: `import logo from "@/assets/utfpr-logo.png";`.
-
-```jsx
-import { Link, NavLink } from "react-router-dom";
-import logo from "@/assets/utfpr-logo.png";
-import AuthService from "@/service/AuthService";
-
-export function NavBar() {
-  const onClickLogout = () => {
-    AuthService.logout();
-    window.location.reload();
-  };
-
-  return (
-    <div className="bg-white shadow-sm mb-2">
-      <div className="container">
-        <nav className="navbar navbar-light navbar-expand">
-          <Link to="/" className="navbar-brand">
-            <img src={logo} width="60" alt="UTFPR" />
-          </Link>
-          <ul className="navbar-nav me-auto mb-2 mb-md-0">
-            <li className="nav-item">
-              <NavLink
-                to="/"
-                className={(navData) =>
-                  navData.isActive ? "nav-link active" : "nav-link"
-                }
-              >
-                Home
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink
-                to="/categories"
-                className={(navData) =>
-                  navData.isActive ? "nav-link active" : "nav-link"
-                }
-              >
-                Categorias
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink
-                to="/products"
-                className={(navData) =>
-                  navData.isActive ? "nav-link active" : "nav-link"
-                }
-              >
-                Produtos
-              </NavLink>
-            </li>
-
-            <li className="nav-item">
-              <NavLink
-                to="/products-v2"
-                className={(navData) =>
-                  navData.isActive ? "nav-link active" : "nav-link"
-                }
-              >
-                Produtos V2
-              </NavLink>
-            </li>
-
-            <li className="nav-item">
-              <button className="btn btn-light" onClick={onClickLogout}>
-                &times; Sair
-              </button>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </div>
-  );
+```ts
+//...
+export  interface  ICategory {
+	id?:  number;
+	name:  string;
 }
 ```
-No componente **NavBar** é possível observar que já existem atalhos para os componentes que representam a Lista de Categorias e Produdos, os quais ainda não foram criados, por isso ao clicar nos links será exibido uma página em branco, esses componentes serão criados no decorrer do projeto. 
+Agora será desenvolvido o *service* **CategoryService**, para que possam ser realizadas requisições HTTP para a API. Criar o arquivo **/src/services/category-service.ts**:
 
-O componente **NavBar** foi criado mas ainda não está sendo exibido em nenhum lugar. Como  as rotas que será exibidas dependem da autenticação do usuário esse componente será exibido dentro do componente **AuthenticatedRoutes** que ficará com o seguinte código:
-
-```jsx
-import { Navigate, Outlet, useLocation } from "react-router-dom";
-import AuthService from "@/service/AuthService";
-import { NavBar } from "@/components/NavBar";
-
-export function AuthenticatedRoutes() {
-  const isAuthenticated = AuthService.isAuthenticated();
-  const location = useLocation();
-  
-  return isAuthenticated ? (
-    <>
-      <NavBar />
-      <Outlet />
-    </>
-  ) : (
-    <Navigate to="/login" state={{ from: location }} replace />
-  );
-}
-```
-
-Agora que o cadastro de usuário, autenticação, página home e barra de navegação estão prontos o próximo passo será criar o CRUD de Categorias e Produtos. O desenvolvimento das próximas etapas será iniciado pela lista de Categorias, então o cadastro de categorias e por fim a lista e cadastro de produtos.
-
-### Lista de Categorias
-
-Para criar o CRUD de categoria o primeiro passo será criar a interface que irá representar uma categoria no arquivos **/src/commons/interfaces.ts**. Após será criado o service de categoria dentro da pasta **/src/service** com o arquivo **CategoryService.ts**. Esse service vai ter as funções **save, 	findAll, remove e	findById**, todas utilizam o **axios** por meio do objeto **api**. Todas essas requisições necessitam de autenticação, entretanto, como o **token jwt** já foi adicionado ao cabeçalho das requisições na função **isAuthenticaded**, não é necessário fazer isso novamente. 
-
-#### Ajustando o arquivo interfaces.ts
-
-```jsx
-//... demais interfaces
-export interface ICategory {
-    id?: number;
-    name: string;
-}
-``` 
-
-#### Arquivo CategoryService.ts
-
-O arquivo **CategoryService.ts** será implementado com todas as funções que serão utilizadas nos componentes de lista e cadastro de categorias. Serão realizadas requisições HTTP do tipo GET, POST e DELETE para URL `/categories` da API.
-
-```jsx
-import { ICategory } from "@/commons/interfaces";
+```ts
+import { ICategory, IResponse } from "@/commons/types";
 import { api } from "@/lib/axios";
 
 // URL base para as requisições de categoria
@@ -1133,12 +1348,23 @@ const categoryURL = "/categories";
  * @param category - Dados da categoria que será salva
  * @returns - Retorna uma Promise com a resposta da API
  **/
-const save = async (category: ICategory): Promise<any> => {
-  let response;
+const save = async (category: ICategory): Promise<IResponse> => {
+  let response = {} as IResponse;
   try {
-    response = await api.post(categoryURL, category);
+    const data = await api.post(categoryURL, category);
+    response = {
+      status: 200,
+      success: true,
+      message: "Categoria salva com sucesso!",
+      data: data.data,
+    };
   } catch (err: any) {
-    response = err.response;
+    response = {
+      status: err.response.status,
+      success: false,
+      message: "Falha ao salvar categoria",
+      data: err.response.data,
+    };
   }
   return response;
 };
@@ -1148,12 +1374,23 @@ const save = async (category: ICategory): Promise<any> => {
  * @returns - Retorna uma Promise com a resposta da API
  * com a lista de categorias
  **/
-const findAll = async (): Promise<any> => {
-  let response;
+const findAll = async (): Promise<IResponse> => {
+  let response = {} as IResponse;
   try {
-    response = await api.get(categoryURL);
+    const data = await api.get(categoryURL);
+    response = {
+      status: 200,
+      success: true,
+      message: "Lista de categorias carregada com sucesso!",
+      data: data.data,
+    };
   } catch (err: any) {
-    response = err.response;
+    response = {
+      status: err.response.status,
+      success: false,
+      message: "Falha ao carregar a lista de categorias",
+      data: err.response.data,
+    };
   }
   return response;
 };
@@ -1163,12 +1400,23 @@ const findAll = async (): Promise<any> => {
  * @param id - Recebe o id da categoria que será removida
  * @returns - Retorna uma Promise com a resposta da API
  */
-const remove = async (id: number): Promise<any> => {
-  let response;
+const remove = async (id: number): Promise<IResponse> => {
+  let response = {} as IResponse;
   try {
-    response = await api.delete(`${categoryURL}/${id}`);
+    const data = await api.delete(`${categoryURL}/${id}`);
+    response = {
+      status: 200,
+      success: true,
+      message: "Categoria removida com sucesso!",
+      data: data.data,
+    };
   } catch (err: any) {
-    response = err.response;
+    response = {
+      status: err.response.status,
+      success: false,
+      message: "Falha ao remover categoria",
+      data: err.response.data,
+    };
   }
   return response;
 };
@@ -1178,12 +1426,23 @@ const remove = async (id: number): Promise<any> => {
  * @param id - Recebe o id da categoria que será buscada
  * @returns - Retorna uma Promise com a resposta da API
  */
-const findById = async (id: number): Promise<any> => {
-  let response;
+const findById = async (id: number): Promise<IResponse> => {
+  let response = {} as IResponse;
   try {
-    response = await api.get(`${categoryURL}/${id}`);
+    const data = await api.get(`${categoryURL}/${id}`);
+    response = {
+      status: 200,
+      success: true,
+      message: "Categoria carregada com sucesso!",
+      data: data.data,
+    };
   } catch (err: any) {
-    response = err.response;
+    response = {
+      status: err.response.status,
+      success: false,
+      message: "Falha ao carregar categoria",
+      data: err.response.data,
+    };
   }
   return response;
 };
@@ -1199,26 +1458,31 @@ const CategoryService = {
 export default CategoryService;
 ```
 
-O componente **CategoryListPage** será criado dentro da pasta **/src/pages/CategoryListPage/index.tsx**. Por meio do **Hook** **useEffect** do React será chamada a função *loadData()* na qual será chamada a função *findAll()* do **CategoryService**, a lista de categorias será adicionada na variável de estado **data**, que será utilizada para exibir as linhas da tabela com as categorias que estão armazenadas no banco de dados.
+#### 10.2  Lista de Categorias
+
+Com a interface e *service* criados, podemos criar o componente que será utilizado para exibir a lista das categorias vindas da API. O componente **CategoryListPage** será criado dentro de **/src/pages/category-list/index.tsx**:
 
 ```jsx
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { ICategory } from "@/commons/interfaces";
-import CategoryService from "@/service/CategoryService";
+import { useEffect, useRef, useState } from "react";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import { Button } from "primereact/button";
+import { ICategory } from "@/commons/types";
+import CategoryService from "@/services/category-service";
+import { useNavigate } from "react-router-dom";
+import { Toast } from "primereact/toast";
 
-export function CategoryListPage() {
-  // variável de estado para armazenar a lista de categorias
+export const CategoryListPage = () => {
   const [data, setData] = useState<ICategory[]>([]);
-  // variável de estado para armazenar a mensagem de erro da API
-  const [apiError, setApiError] = useState<String>("");
-  // funções do service de categoria
   const { findAll, remove } = CategoryService;
+  const navigate = useNavigate();
+  const toast = useRef<Toast>(null);
 
   // hook do react para executar ações ao carregar o componente
   // carrega a lista de categorias
   useEffect(() => {
     loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // função para carregar a lista de categorias
@@ -1226,1038 +1490,978 @@ export function CategoryListPage() {
     const response = await findAll();
 
     if (response.status === 200) {
-      setData(response.data);
-      setApiError("");
+      setData(Array.isArray(response.data) ? response.data : []);
     } else {
-      setApiError("Falha ao carregar lista de categorias.");
+      toast.current?.show({
+        severity: "error",
+        summary: "Erro",
+        detail: "Não foi possível carregar a lista de categorias.",
+        life: 3000,
+      });
     }
   };
 
-  // função para remover uma categoria
-  const onClickRemove = async (id?: number) => {
-    if (id) {
-      const response = await remove(id);
-      if (response.status === 204) {
-        loadData();
-        setData(
-          data.filter((category) => {
-            return category.id !== id;
-          })
-        );
-      } else {
-        setApiError("Falha ao remover o registro.");
+  const handleEdit = (category: ICategory) => {
+    navigate(`/categories/${category.id}`);
+  };
+
+  const handleDelete = async (category: ICategory) => {
+    if (confirm(`Tem certeza que deseja excluir "${category.name}"?`)) {
+      if (category.id) {
+        try {
+          await remove(category.id);
+          setData((prev) => prev.filter((c) => c.id !== category.id));
+          toast.current?.show({
+            severity: "success",
+            summary: "Sucesso",
+            detail: "Registro removido com sucesso",
+            life: 3000,
+          });
+        } catch {
+          toast.current?.show({
+            severity: "error",
+            summary: "Erro",
+            detail: "Não foi possível remover o registro.",
+            life: 3000,
+          });
+        }
       }
     }
   };
 
-  return (
-    <>
-      <main className="container">
-        <div className="text-center">
-          <span className="h3 mb-3 fw-normal">Lista de Categorias</span>
-        </div>
-        <Link className="btn btn-success" to="/categories/new">
-          Nova Categoria
-        </Link>
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <td>#</td>
-              <td>Nome</td>
-              <td>Editar</td>
-              <td>Remover</td>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((category: ICategory) => (
-              <tr key={category.id}>
-                <td>{category.id}</td>
-                <td>{category.name}</td>
-                <td>
-                  <Link
-                    className="btn btn-primary"
-                    to={`/categories/${category.id}`}
-                  >
-                    Editar
-                  </Link>
-                </td>
-                <td>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => onClickRemove(category.id)}
-                  >
-                    Remover
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {apiError && <div className="alert alert-danger">{apiError}</div>}
-      </main>
-    </>
+  const actionTemplate = (rowData: ICategory) => (
+    <div className="flex gap-2">
+      <Button
+        icon="pi pi-pencil"
+        className="p-button-sm p-button-text"
+        onClick={() => handleEdit(rowData)}
+        tooltip="Editar"
+      />
+      <Button
+        icon="pi pi-trash"
+        className="p-button-sm p-button-text p-button-danger"
+        onClick={() => handleDelete(rowData)}
+        tooltip="Excluir"
+      />
+    </div>
   );
+
+  return (
+    <div className="card">
+      <Toast ref={toast} />
+      <h2 className="text-xl mb-3">Lista de Categorias</h2>
+      <DataTable
+        value={data}
+        stripedRows
+        emptyMessage="Nenhuma categoria encontrada."
+      >
+        <Column field="id" header="ID" style={{ width: "10%" }} />
+        <Column field="name" header="Nome" />
+        <Column body={actionTemplate} header="Ações" style={{ width: "20%" }} />
+      </DataTable>
+    </div>
+  );
+};
+```
+Para que o componente **CategoryListPage** seja exibido devemos adicionar a nova rota ao componente **AppRoutes**:
+```jsx
+//...
+import { CategoryListPage } from "@/pages/category-list";
+
+export function AppRoutes() {
+//...
+        {/* protected routes */}
+        <Route element={<RequireAuth />}>
+		  //...
+          <Route path="/categories" element={<CategoryListPage />} />
+        </Route>
+//...
 }
 ```
- Com o componente finalizado será necessário criar a rota para esse componente no componente **BaseRoutes**:
+Para finalizar a lista de categorias será necessário adicionar o atalho para página ao componente **TopMenu**, ajustando apenas a contante *items* que armazena um *array* com os itens de menu que serão apresentados no topo da página:
+
 ```jsx
-import { Route, Routes } from "react-router-dom";
-import { LoginPage } from "@/pages/LoginPage";
-import { UserSignupPage } from "@/pages/UserSignupPage";
-import { AuthenticatedRoutes } from "../AuthenticatedRoutes";
-import { HomePage } from "@/pages/HomePage";
-import { CategoryListPage } from "@/pages/CategoryListPage";
-
-export function BaseRoutes() {
-  return (
-    <>
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<UserSignupPage />} />
-
-        {/* Protected Routes */}
-        <Route element={<AuthenticatedRoutes />}>
-            <Route path="/home" element={<HomePage />} />
-            <Route path="/" element={<HomePage />} />
-            <Route path="/categories" element={<CategoryListPage />} />
-            
-      </Routes>
-    </>
-  );
-}
-```
-Finalizado essa etapa será possível visualizar o componente na tela ao clicar no atalho da NavBar.
-
-### Cadastro de Categorias
-
-Para o cadastro e edição de categorias será criado o componente **CategoryFormPage**, que ficara no arquivo **/src/pages/CategoryFormPage/index.tsx**, nessa etapa do projeto será utilizado o React Hook Form para o gerenciamento e validação do formulário. Para instalar a biblioteca para a execução do projeto e no terminal executar o comando:
-
-```cmd
-npm install react-hook-form
+	/...
+	const items: MenuItem[] = authenticated
+    ? [
+        { label: "Home", icon: "pi pi-home", command: () => navigate("/") },
+        {
+          label: "Categorias",
+          icon: "pi pi-box",
+          items: [
+            {
+              label: "Listar",
+              icon: "pi pi-list",
+              command: () => navigate("/categories"),
+            },            
+          ],
+        },        
+      ]
+    : [];
+   //...
 ```
 
-Com a biblioteca instalada será possível desenvolver o componente **CategoryFormPage**:
-```jsx
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { ICategory } from "@/commons/interfaces";
-import CategoryService from "@/service/CategoryService";
-import { useForm } from "react-hook-form";
+#### 10.3  Cadastro e edição de Categorias
+Com a interface, *service* e o componente de lista criados, podemos criar o componente que será utilizado para cadastro e edição de categorias. O componente **CategoryFormPage** será criado dentro de **/src/pages/category-form/index.tsx**:
 
-export function CategoryFormPage() {
-  // hook useForm do react-hook-forms que irá controlar o estado do formulário.
+```jsx
+import { useEffect, useState, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { Toast } from "primereact/toast";
+import { ICategory, IResponse } from "@/commons/types";
+import CategoryService from "@/services/category-service";
+import { Controller, useForm } from "react-hook-form";
+import { InputText } from "primereact/inputtext";
+import { Button } from "primereact/button";
+
+export const CategoryFormPage = () => {
+  const { id } = useParams<{ id: string }>();
+  const [loading, setLoading] = useState(false);
+  const [category, setCategory] = useState<ICategory | undefined>(undefined);
   const {
+    control,
     handleSubmit,
-    register,
-    formState: { errors, isSubmitting },
     reset,
-  } = useForm<ICategory>();
-  // váriavel de estado para armazenar a mensagem de erro da API.
-  const [apiError, setApiError] = useState("");
-  // hook do react-router-dom para navegação entre as páginas.
+    formState: { errors, isSubmitting },
+  } = useForm<ICategory>({
+    defaultValues: { name: "" },
+  });
+  const toast = useRef<Toast>(null);
   const navigate = useNavigate();
-  // hook do react-router-dom para capturar o id da URL.
-  const { id } = useParams();
-  // funções do serviço de categoria.
-  const { save, findById } = CategoryService;
+  const { findById, save } = CategoryService;
 
-  /* 
-  hook do react para executar ações ao carregar o componente.
-  se o id estiver preenchido, carrega os dados da categoria.
-  */
+  const isEdit = !!id;
+
   useEffect(() => {
-    if (id) {
-      loadData(parseInt(id));
-    }
-  }, []);
+    loadCategory();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
-  // função para carregar os dados da categoria.
-  const loadData = async (id: number) => {
-    const response = await findById(id);
-    if (response.status === 200) {
-      reset(response.data);
-    } else {
-      setApiError("Falha ao carregar o registro.");
+  const loadCategory = async () => {
+    if (isEdit) {
+      setLoading(true);
+      const response = (await findById(parseInt(id!))) as IResponse;
+      try {
+        if (response.status === 200) {
+          setCategory(response.data as ICategory);
+          reset(response.data as ICategory);
+        } else {
+          toast.current?.show({
+            severity: "error",
+            summary: "Erro",
+            detail: "Falha ao carregar o registro.",
+            life: 3000,
+          });
+        }
+      } catch {
+        setCategory(undefined);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
-  // função para salvar a categoria.
   const onSubmit = async (data: ICategory) => {
-    const response = await save(data);
-    if (response.status === 201 || response.status === 200) {
-      navigate("/categories");
-    } else {
-      setApiError("Falha ao carregar o registro.");
+    setLoading(true);
+    try {
+      const response = await save(data);
+      if (
+        (response.status === 201 || response.status === 200) &&
+        response.data
+      ) {
+        toast.current?.show({
+          severity: "success",
+          summary: "Sucesso",
+          detail: "Categoria salva com sucesso.",
+          life: 3000,
+        });
+        setTimeout(() => {
+          navigate("/categories");
+        }, 1000);
+      } else {
+        toast.current?.show({
+          severity: "error",
+          summary: "Erro",
+          detail: "Não foi possível salvar o registro.",
+          life: 3000,
+        });
+      }
+    } catch {
+      toast.current?.show({
+        severity: "error",
+        summary: "Erro",
+        detail: "Não foi possível salvar o registro.",
+        life: 3000,
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <>
-      <main className="container row justify-content-center">
-        <form
-          className="form-floating col-md-6"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <div className="text-center   mb-3">
-            <span className="h3 fw-normal">Cadastro de Categoria</span>
-          </div>
-          <div className="form-floating mb-3">
-            <input type="hidden" {...register("id")} />
-            <input
-              className={"form-control" + (errors.name ? " is-invalid" : "")}
-              placeholder="Informe o nome"
-              type="text"
-              {...register("name", {
-                required: "O campo nome é obrigatório.",
-                minLength: {
-                  value: 2,
-                  message: "O tamanho deve ser entre 2 e 100 caracteres.",
-                },
-                maxLength: {
-                  value: 100,
-                  message: "O tamanho deve ser entre 2 e 100 caracteres.",
-                },
-              })}
+    <div className="container mx-auto px-4 pt-24 max-w-xl">
+      <Toast ref={toast} />
+      <h2 className="text-2xl mb-4">
+        {isEdit ? "Editar Categoria" : "Nova Categoria"}
+      </h2>
+      {!isEdit || category ? (
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-fluid">
+          <div>
+            <label htmlFor="name" className="block mb-2">
+              Nome da Categoria
+            </label>
+            <Controller
+              name="name"
+              control={control}
+              rules={{ required: "O nome é obrigatório" }}
+              render={({ field }) => (
+                <InputText
+                  id="name"
+                  {...field}
+                  placeholder="Digite o nome da categoria"
+                />
+              )}
             />
-            <label htmlFor="name">Nome</label>
             {errors.name && (
-              <div className="invalid-feedback">{errors.name.message}</div>
+              <small className="p-error">{errors.name.message}</small>
             )}
           </div>
-          {apiError && <div className="alert alert-danger">{apiError}</div>}
-          <button
-            className="w-100 btn btn-lg btn-primary mb-3"
-            disabled={isSubmitting ? true : false}
-          >
-            Salvar
-          </button>
+          <div className="flex justify-end gap-2 mt-4">
+            <Button
+              type="button"
+              label="Cancelar"
+              className="p-button-secondary"
+              onClick={() => navigate("/categories")}
+              loading={loading || isSubmitting}
+              disabled={loading || isSubmitting}
+            />
+            <Button
+              type="submit"
+              label={isEdit ? "Atualizar" : "Salvar"}
+              loading={loading || isSubmitting}
+              disabled={loading || isSubmitting}
+            />
+          </div>
         </form>
-      </main>
-    </>
+      ) : (
+        <p>Carregando...</p>
+      )}
+    </div>
   );
-}
+};
 ```
 
-Após criado o componente será necessário adicionar as rotas para acessá-lo. Nesse caso serão criadas duas rotas a `/categories/new` para o cadastro de uma nova categoria e `/categories/:id` para edição de uma categoria de acordo com o campo ID (chave primária). Para criação das rotas para adicionar junto às rotas privadas da aplicação o seguinte código:
+Para que o componente **CategoryListPage** seja exibido devemos adicionar a nova rota ao componente **AppRoutes**:
+```jsx
+//...
+import { CategoryListPage } from "@/pages/category-list";
+import { CategoryFormPage } from  "@/pages/category-form";
+
+export function AppRoutes() {
+//...
+        {/* protected routes */}
+        <Route element={<RequireAuth />}>
+		  //...
+          <Route path="/categories" element={<CategoryListPage />} />
+          <Route  path="/categories/new"  element={<CategoryFormPage  />}  />
+		  <Route  path="/categories/:id"  element={<CategoryFormPage  />}  />
+        </Route>
+//...
+}
+```
+Para finalizar o cadastro de categorias será necessário adicionar o atalho para página ao componente **TopMenu**, ajustando apenas a contante *items* que armazena um *array* com os itens de menu que serão apresentados no topo da página:
 
 ```jsx
-{//...}
-	<Route  path="/categories/new"  element={<CategoryFormPage  />}  />
-	<Route  path="/categories/:id"  element={<CategoryFormPage  />}  />
-{//...}
+	/...
+	const items: MenuItem[] = authenticated
+    ? [
+        { label: "Home", icon: "pi pi-home", command: () => navigate("/") },
+        {
+          label: "Categorias",
+          icon: "pi pi-box",
+          items: [
+            {
+              label: "Listar",
+              icon: "pi pi-list",
+              command: () => navigate("/categories"),
+            },
+            {
+              label: "Novo",
+              icon: "pi pi-plus",
+              command: () => navigate("/categories/new"),
+            },                        
+          ],
+        },        
+      ]
+    : [];
+   //...
 ```
 
-O componente de cadastro de categorias poderá ser acessado tanto pelo botão de nova categoria quanto pelo botão de editar no cadastro de categoria. Na próxima etapa será desenvolvido o CRUD de Produtos.
+Com o componente **CategoryFormPage** criado finalizamos o CRUD de categorias. O próximo passo será o desenvolvimento do CRUD de produtos.
 
+---
+### 11. 📱CRUD de Produtos
 
-### Lista de Produtos
-A lista e cadastro de produtos segue a mesma lógica dos componentes de categorias. Sendo os componentes **ProductListPage**, **ProductFormPage** e o service **ProductService** responsáveis pelo correto funcionamento dessas telas.
-
-Será necessário criar a interface IProduct no arquivo **/src/commons/interfaces.ts**:
-
+#### 11.1 Interface e *Service* de Produto
+O primeiro passo será criar a interface **IProduct **, que representa uma produto. A interface será desenvolvida no arquivo **/src/commons/types.ts**, bastando adicionar ao arquivo:
 ```ts
+//...
 export interface IProduct {
-    id?: number;
-    name: string;
-    description: string;
-    price: number;
-    category: ICategory;
+  id?: number;
+  name: string;
+  description: string;
+  price: number;
+  category: ICategory;
+  imageName?: string;
+  contentType?: string;
 }
 ```
-
-O **ProductService** assim como no service de categorias, irá conter o as funções para realizar as requisições HTTP para API REST, seguindo a mesma implementação com as funções *findAll, save, findById e remove.
+Agora será desenvolvido o *service* **ProductService**, para que possam ser realizadas requisições HTTP para a API. Criar o arquivo **/src/services/product-service.ts**:
 
 ```ts
-import { IProduct } from "@/commons/interfaces";
+import { IProduct, IResponse } from "@/commons/types";
 import { api } from "@/lib/axios";
 
-const productURL = "/products";
+// URL base para as requisições de produtos
+const categoryURL = "/products";
 
-const save = async (product: IProduct): Promise<any> => {
-  let response;
+/**
+ * Função para salvar um produto
+ * @param category - Dados do produto que será salvo
+ * @returns - Retorna uma Promise com a resposta da API
+ **/
+const save = async (category: IProduct): Promise<IResponse> => {
+  let response = {} as IResponse;
   try {
-    response = await api.post(productURL, product);
+    const data = await api.post(categoryURL, category);
+    response = {
+      status: 200,
+      success: true,
+      message: "Produto salvo com sucesso!",
+      data: data.data,
+    };
   } catch (err: any) {
-    response = err.response;
+    response = {
+      status: err.response.status,
+      success: false,
+      message: "Falha ao salvar produto",
+      data: err.response.data,
+    };
   }
   return response;
 };
 
-const findAll = async (): Promise<any> => {
-  let response;
+/**
+ * Função para buscar todos os produtos
+ * @returns - Retorna uma Promise com a resposta da API
+ * com a lista de produtos
+ **/
+const findAll = async (): Promise<IResponse> => {
+  let response = {} as IResponse;
   try {
-    response = await api.get(productURL);
+    const data = await api.get(categoryURL);
+    response = {
+      status: 200,
+      success: true,
+      message: "Lista de produtos carregada com sucesso!",
+      data: data.data,
+    };
   } catch (err: any) {
-    response = err.response;
+    response = {
+      status: err.response.status,
+      success: false,
+      message: "Falha ao carregar a lista de produtos",
+      data: err.response.data,
+    };
   }
   return response;
 };
 
-const findById = async (id: number): Promise<any> => {
-  let response;
+/**
+ * Função para remover um produto
+ * @param id - Recebe o id do produto que será removido
+ * @returns - Retorna uma Promise com a resposta da API
+ */
+const remove = async (id: number): Promise<IResponse> => {
+  let response = {} as IResponse;
   try {
-    response = await api.get(`${productURL}/${id}`);
+    const data = await api.delete(`${categoryURL}/${id}`);
+    response = {
+      status: 200,
+      success: true,
+      message: "Produto removido com sucesso!",
+      data: data.data,
+    };
   } catch (err: any) {
-    response = err.response;
+    response = {
+      status: err.response.status,
+      success: false,
+      message: "Falha ao remover o produto",
+      data: err.response.data,
+    };
   }
   return response;
 };
 
-const remove = async (id: number): Promise<any> => {
-  let response;
+/**
+ * Função para buscar um produto pelo id
+ * @param id - Recebe o id do produto que será buscado
+ * @returns - Retorna uma Promise com a resposta da API
+ */
+const findById = async (id: number): Promise<IResponse> => {
+  let response = {} as IResponse;
   try {
-    response = await api.delete(`${productURL}/${id}`);
+    const data = await api.get(`${categoryURL}/${id}`);
+    response = {
+      status: 200,
+      success: true,
+      message: "Produto carregado com sucesso!",
+      data: data.data,
+    };
   } catch (err: any) {
-    response = err.response;
+    response = {
+      status: err.response.status,
+      success: false,
+      message: "Falha ao carregar o produto",
+      data: err.response.data,
+    };
   }
   return response;
 };
 
+// Objeto que exporta todas as funções
 const ProductService = {
   save,
   findAll,
-  findOne,
   remove,
+  findById,
 };
 
 export default ProductService;
 ```
 
-Com o service implementado dentro da pasta **src/pages/ProductListPage/index.tsx** será implementado o componente **ProductListPage**:
+#### 11.2  Lista de Produtos
+
+Com a interface e *service* criados, podemos criar o componente que será utilizado para exibir a lista dos produtos vindos da API. O componente **ProductListPage** será criado dentro de **/src/pages/product-list/index.tsx**:
 
 ```jsx
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { IProduct } from "@/commons/interfaces";
-import ProductService from "@/service/ProductService";
+import { useEffect, useRef, useState } from "react";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import { Button } from "primereact/button";
+import { IProduct } from "@/commons/types";
+import ProductService from "@/services/product-service";
+import { useNavigate } from "react-router-dom";
+import { Toast } from "primereact/toast";
 
-export function ProductListPage() {
+export const ProductListPage = () => {
   const [data, setData] = useState<IProduct[]>([]);
-  const [apiError, setApiError] = useState("");
-  const [showDeleteMessage, setShowDeleteMessage] = useState(false);
   const { findAll, remove } = ProductService;
+  const navigate = useNavigate();
+  const toast = useRef<Toast>(null);
 
+  // hook do react para executar ações ao carregar o componente
+  // carrega a lista de produtos
   useEffect(() => {
     loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // função para carregar a lista de produtos
   const loadData = async () => {
     const response = await findAll();
+
     if (response.status === 200) {
-      setData(response.data);
-      setApiError("");
+      setData(Array.isArray(response.data) ? response.data : []);
     } else {
-      setApiError("Falha ao carregar a lista de produtos");
+      toast.current?.show({
+        severity: "error",
+        summary: "Erro",
+        detail: "Não foi possível carregar a lista de produtos.",
+        life: 3000,
+      });
     }
   };
 
-  const onRemove = async (id: number) => {
-    const response = await remove(id);
-    if (response.status === 204) {
-      setShowDeleteMessage(true);
+  const handleEdit = (product: IProduct) => {
+    navigate(`/products/${product.id}`);
+  };
 
-      data.filter((product) => {
-        return product.id !== id;
-      });
-
-      setTimeout(() => {
-        setShowDeleteMessage(false);
-      }, 1500);
-      setApiError("");
-    } else {
-      setApiError("Falha ao remover o produto");
+  const handleDelete = async (product: IProduct) => {
+    if (confirm(`Tem certeza que deseja excluir "${product.name}"?`)) {
+      if (product.id) {
+        try {
+          await remove(product.id);
+          setData((prev) => prev.filter((c) => c.id !== product.id));
+          toast.current?.show({
+            severity: "success",
+            summary: "Sucesso",
+            detail: "Registro removido com sucesso",
+            life: 3000,
+          });
+        } catch {
+          toast.current?.show({
+            severity: "error",
+            summary: "Erro",
+            detail: "Não foi possível remover o registro.",
+            life: 3000,
+          });
+        }
+      }
     }
+  };
+
+  const actionTemplate = (rowData: IProduct) => (
+    <div className="flex gap-2">
+      <Button
+        icon="pi pi-pencil"
+        className="p-button-sm p-button-text"
+        onClick={() => handleEdit(rowData)}
+        tooltip="Editar"
+      />
+      <Button
+        icon="pi pi-trash"
+        className="p-button-sm p-button-text p-button-danger"
+        onClick={() => handleDelete(rowData)}
+        tooltip="Excluir"
+      />
+    </div>
+  );
+
+  const priceTemplate = (rowData: IProduct) => {
+    return rowData.price.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
   };
 
   return (
-    <main className="container">
-      <div className="text-center">
-        <span className="h3 mb-3 fw-normal">Lista de Produtos</span>
-      </div>
-      <div className="text-center">
-        <Link className="btn btn-success" to="/products/new">
-          Novo Produto
-        </Link>
-      </div>
-      <table className="table table-striped">
-        <thead>
-          <tr>
-            <th>Código</th>
-            <th>Nome</th>
-            <th>Preço</th>
-            <th>Categoria</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((product: IProduct) => (
-            <tr key={product.id}>
-              <td>{product.id}</td>
-              <td>{product.name}</td>
-              <td>{product.price}</td>
-              <td>{product.category!.name}</td>
-              <td>
-                <Link
-                  className="btn btn-primary"
-                  to={`/products/${product.id}`}
-                >
-                  Editar
-                </Link>
-
-                <button
-                  className="btn btn-danger"
-                  onClick={() => onRemove(product.id!)}
-                >
-                  Remover
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      {apiError && <div className="alert alert-danger">{apiError}</div>}
-      {showDeleteMessage && (
-        <div className="alert alert-success">
-          Registro removido com sucesso!
-        </div>
-      )}
-    </main>
+    <div className="container mx-auto px-4 pt-24">
+      <Toast ref={toast} />
+      <h2 className="text-2xl mb-4">Lista de Produtos</h2>
+      <DataTable value={data} stripedRows>
+        <Column field="id" header="ID" style={{ width: "5%" }} />
+        <Column field="name" header="Nome" />
+        <Column field="description" header="Descrição" />
+        <Column header="Preço" body={priceTemplate} style={{ width: "15%" }} />
+        <Column field="category.name" header="Categoria" />
+        <Column body={actionTemplate} header="Ações" style={{ width: "15%" }} />
+      </DataTable>
+    </div>
   );
+};
+```
+Para que o componente **ProductListPage** seja exibido devemos adicionar a nova rota ao componente **AppRoutes**:
+```jsx
+//...
+import { ProductListPage } from  "@/pages/product-list";
+
+export function AppRoutes() {
+//...
+        {/* protected routes */}
+        <Route element={<RequireAuth />}>
+		  //...
+          <Route path="/products" element={<ProductListPage />} />
+        </Route>
+//...
 }
 ```
 
-Seguindo o mesmo ciclo de desenvolvimento utilizado nos componentes de categoria, agora será necessário criar a rota para acessar o componente **ProductListPage** no componente **BaseRoutes** junto com as demais rotas privadas:
-
-```jsx:
-{//...}
-	<Route  path="/products"  element={<ProductListPage  />}  /> 
-{//...}
-```
-
-### Cadastro de Produtos
-
-Como o service e interface de produto já estão implementados, basta criar o componente **ProductFormPage** :
+Para finalizar a lista de produtos será necessário adicionar o atalho para página ao componente **TopMenu**, ajustando apenas a contante *items* que armazena um *array* com os itens de menu que serão apresentados no topo da página:
 
 ```jsx
-import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { ICategory, IProduct } from "@/commons/interfaces";
-import CategoryService from "@/service/CategoryService";
-import ProductService from "@/service/ProductService";
-import { useForm } from "react-hook-form";
+	/...
+    const items: MenuItem[] = authenticated
+      ? [
+        { label: "Home", icon: "pi pi-home", command: () => navigate("/") },
+        {
+          label: "Categorias",
+          icon: "pi pi-box",
+          items: [
+            {
+              label: "Listar",
+              icon: "pi pi-list",
+              command: () => navigate("/categories"),
+            },
+            {
+              label: "Novo",
+              icon: "pi pi-plus",
+              command: () => navigate("/categories/new"),
+            },
+          ],
+        },
+        {
+          label: "Produtos",
+          icon: "pi pi-box",
+          items: [
+            {
+              label: "Listar",
+              icon: "pi pi-list",
+              command: () => navigate("/products"),
+            },
+          ],
+        },
+      ]
+    : [];
+   //...
+```
 
-export function ProductFormPage() {
-  // hook useForm do react-hook-forms que irá controlar o estado do formulário.
-  const {
-    handleSubmit,
-    register,
-    formState: { errors, isSubmitting },
-    reset,
-  } = useForm<IProduct>();
-  // controla a situação da requisição HTTP que está sendo realizada ao servidor ao cadastrar um novo produto.
-  const [pendingApiCall, setPendingApiCall] = useState(false);
-  // apiError controla a exibição das mensagem de erro que ocorrem ao realizar uma requisição HTTP para o servidor.
-  const [apiError, setApiError] = useState("");
-  // lista de categorias utilizada para carregar o select
-  const [categories, setCategories] = useState<ICategory[]>([]);
+#### 11.3  Cadastro e edição de Produtos
+
+Com a interface, *service* e o componente de lista criados, podemos criar o componente que será utilizado para cadastro e edição de produtos. O componente **ProductFormPage** será criado dentro de **/src/pages/product-form/index.tsx**:
+
+```jsx
+import { useForm, Controller } from "react-hook-form";
+import { InputText } from "primereact/inputtext";
+import { InputNumber } from "primereact/inputnumber";
+import { Dropdown } from "primereact/dropdown";
+import { Button } from "primereact/button";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { ICategory, IProduct, IResponse } from "@/commons/types";
+import { Toast } from "primereact/toast";
+import CategoryService from "@/services/category-service";
+import ProductService from "@/services/product-service";
+
+export const ProductFormPage = () => {
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { id } = useParams();
+  const toast = useRef<Toast>(null);
+  const [loading, setLoading] = useState(false);
+  const [product, setProduct] = useState<IProduct | undefined>(undefined);
+
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<IProduct>({
+    defaultValues: { name: "", description: "", price: 0, category: undefined },
+  });
   const { findAll } = CategoryService;
-  const { save, findById } = ProductService;
+  const { findById, save } = ProductService;
 
-  // Executa uma vez ao carregar o componente
+  const isEdit = !!id;
+
+  // Simula carregamento de categorias e, se for edição, do produto
   useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
-    // Busca a lista de categorias na API
-    const responseCategories = await findAll();
-    if (responseCategories.status === 200) {
-      // caso sucesso, adiciona a lista de categorias na variável de estado categories
-      setCategories(responseCategories.data);
-      setApiError("");
-    } else {
-      setApiError("Falha ao carregar a combo de categorias.");
-    }
-
-    if (id) {
-      // ao editar um produto, busca ele na API e carrega no objeto form que está no state.
-      const responseProduct = await findById(parseInt(id));
-      if (responseProduct.status === 200) {
-        reset(responseProduct.data);
-        setApiError("");
+    // Simula fetch categorias
+    const loadCategories = async () => {
+      const response = await findAll();
+      if (response.data && Array.isArray(response.data)) {
+        setCategories(response.data as ICategory[]);
       } else {
-        setApiError("Falha ao carregar o produto");
+        setCategories([]);
       }
-    } else {
-      // ao cadastrar um novo produto, valoriza no objeto form a primeira categoria do select
-      reset((previousForm) => {
-        return {
-          ...previousForm,
-          category: { id: categories[0]?.id, name: "" },
-        };
-      });
+    };
+    loadCategories();
+
+    loadProduct();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]); // Adiciona id como dependência para recarregar o produto se o id mudar
+
+  const loadProduct = async () => {
+    if (isEdit) {
+      setLoading(true);
+      const response = (await findById(parseInt(id!))) as IResponse;
+      try {
+        if (response.status === 200) {
+          setProduct(response.data as IProduct);
+          reset(response.data as IProduct);
+        } else {
+          toast.current?.show({
+            severity: "error",
+            summary: "Erro",
+            detail: "Falha ao carregar o registro.",
+            life: 3000,
+          });
+        }
+      } catch {
+        setProduct(undefined);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
   const onSubmit = async (data: IProduct) => {
-    const product: IProduct = {
-      ...data,
-      category: { id: data.category.id, name: "" },
-    };
-    if (id) {
-      product.id = parseInt(id);
-    }
-    const response = await save(product);
-    if (response.status === 200 || response.status === 201) {
-      navigate("/products");
-    } else {
-      setApiError("Falha ao salvar o produto.");
+    setLoading(true);
+    try {
+      const response = await save(data);
+      if (
+        (response.status === 201 || response.status === 200) &&
+        response.data
+      ) {
+        toast.current?.show({
+          severity: "success",
+          summary: "Sucesso",
+          detail: "Registro salvo com sucesso.",
+          life: 3000,
+        });
+        setTimeout(() => {
+          navigate("/products");
+        }, 1000);
+      } else {
+        toast.current?.show({
+          severity: "error",
+          summary: "Erro",
+          detail: "Não foi possível salvar o registro.",
+          life: 3000,
+        });
+      }
+    } catch {
+      toast.current?.show({
+        severity: "error",
+        summary: "Erro",
+        detail: "Não foi possível salvar o registro.",
+        life: 3000,
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <>
-      <main className="container row justify-content-center">
-        <form
-          className="form-floating col-md-6"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <div className="text-center">
-            <h1 className="h3 mb-3 fw-normal">Cadastro de Produto</h1>
-          </div>
-          <div className="form-floating mb-3">
-            <input
-              type="text"
-              className={"form-control" + (errors.name ? " is-invalid" : "")}
-              placeholder="Informe o nome"
-              {...register("name", {
-                required: "O campo nome é obrigatório.",
-                minLength: {
-                  value: 2,
-                  message: "O tamanho deve ser entre 2 e 100 caracteres.",
-                },
-                maxLength: {
-                  value: 100,
-                  message: "O tamanho deve ser entre 2 e 100 caracteres.",
-                },
-              })}
+    <div className="container mx-auto px-4 pt-24 max-w-2xl">
+      <Toast ref={toast} />
+
+      <h2 className="text-2xl font-bold mb-4">
+        {isEdit ? "Editar Produto" : "Cadastrar Produto"}
+      </h2>
+      {!isEdit || product ? (
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div>
+            <label className="block mb-1">Nome</label>
+            <Controller
+              name="name"
+              control={control}
+              rules={{ required: "Nome é obrigatório" }}
+              render={({ field }) => (
+                <InputText {...field} className="w-full" />
+              )}
             />
-            <label htmlFor="name">Nome</label>
             {errors.name && (
-              <div className="invalid-feedback">{errors.name.message}</div>
+              <p className="text-red-500 text-sm">{errors.name.message}</p>
             )}
           </div>
-          <div className="form-floating mb-3">
-            <input
-              type="text"
-              className={"form-control" + (errors.price ? " is-invalid" : "")}
-              placeholder="Informe o preço"
-              {...register("price", {
-                required: "O campo preço é obrigatório.",
-              })}
+
+          <div>
+            <label className="block mb-1">Descrição</label>
+            <Controller
+              name="description"
+              control={control}
+              rules={{ required: "Descrição é obrigatória" }}
+              render={({ field }) => (
+                <InputText {...field} className="w-full" />
+              )}
             />
-            <label htmlFor="price">Preço</label>
-            {errors.price && (
-              <div className="invalid-feedback">{errors.price.message}</div>
-            )}
-          </div>
-          <div className="form-floating mb-3">
-            <textarea
-              className={
-                "form-control" + (errors.description ? " is-invalid" : "")
-              }
-              placeholder="Informe a descrição"
-              {...register("description", {
-                required: "O campo descrição é obrigatório.",
-              })}
-            ></textarea>
-            <label htmlFor="description">Descrição</label>
             {errors.description && (
-              <div className="invalid-feedback d-block">
+              <p className="text-red-500 text-sm">
                 {errors.description.message}
-              </div>
+              </p>
             )}
           </div>
-          <div className="form-floating mb-3">
-            <select
-              className={
-                "form-control" + (errors.category ? " is-invalid" : "")
-              }
-              {...register("category.id", {
-                required: "O campo descrição é obrigatório.",
-              })}
-            >
-              {/* Monta a lista de options do Select de acordo com a lista de categorias vindas do servidor */}
-              {categories.map((category: ICategory) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-            <label htmlFor="category">Categoria</label>
+
+          <div>
+            <label className="block mb-1">Preço</label>
+            <Controller
+              name="price"
+              control={control}
+              rules={{ required: "Preço é obrigatório" }}
+              render={({ field }) => (
+                <InputNumber
+                  value={field.value}
+                  onValueChange={(e) => field.onChange(e.value)}
+                  className="w-full"
+                  mode="currency"
+                  currency="BRL"
+                  locale="pt-BR"
+                />
+              )}
+            />
+            {errors.price && (
+              <p className="text-red-500 text-sm">{errors.price.message}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="block mb-1">Categoria</label>
+            <Controller
+              name="category"
+              control={control}
+              rules={{ required: "Categoria é obrigatória" }}
+              render={({ field }) => (
+                <Dropdown
+                  {...field}
+                  options={categories}
+                  optionLabel="name"
+                  placeholder="Selecione uma categoria"
+                  className="w-full"
+                />
+              )}
+            />
             {errors.category && (
-              <div className="invalid-feedback d-block">
-                {errors.category.message}
-              </div>
+              <p className="text-red-500 text-sm">{errors.category.message}</p>
             )}
           </div>
-          {apiError && <div className="alert alert-danger">{apiError}</div>}
-          <div className="text-center mb-3">
-            <button
+
+          <div className="flex justify-end gap-2 mt-4">
+            <Button
+              type="button"
+              label="Cancelar"
+              className="p-button-secondary"
+              onClick={() => navigate("/products")}
+              loading={loading || isSubmitting}
+              disabled={loading || isSubmitting}
+            />
+            <Button
               type="submit"
-              className="btn btn-primary"
-              disabled={pendingApiCall ? true : false}
-            >
-              Salvar
-            </button>
-          </div>
-          <div className="text-center">
-            <Link to="/products" className="nav nav-link">
-              Voltar
-            </Link>
+              label={isEdit ? "Atualizar" : "Salvar"}
+              loading={loading || isSubmitting}
+              disabled={loading || isSubmitting}
+            />
           </div>
         </form>
-      </main>
-    </>
-  );
-}
-```
-Para que o componente **ProductFormPage** possa ser visualizado ao clicar no botão `NovoProduto` ou `Editar` na tela de lista de produtos, basta adicionar o componente à lista de rotas:
-
-```jsx
-{//...}
-	<Route  path="/products/new"  element={<ProductFormPage  />}  />
-	<Route  path="/products/:id"  element={<ProductFormPage  />}  />
-{//...}
-```
-Com a adição das rotas estão finalizados os componentes da aplicação. Nesse momento é possível realizar o CRUD de Categorias e Produtos. O próximo passo será criar um segundo conjunto de componentes para representar o CRUD de Produtos, entretanto, utilizando uma biblioteca externa de componentes para camada visual.
-
-### CRUD de Produtos com a Biblioteca para Formulário (React Hook Forms [7]), Interface Gráfica (Chakra UI [8]) e ícones (React Icons [9])
-
-Até o momento as únicas bibliotecas externas ao react que foram utilizadas para o desenvolvimento das funcionalidades foram o Axios para auxiliar nas requisições HTTP o React Router para auxiliar na criação das rotas para exibição dos componentes e a bibliteca **React Hook Form** para auxiliar no gerenciamento do preenchimento dos formulários e sua validação. Agora será adicionada a biblioteca **Chakra UI** que fornece componentes de interface gráfica para utilizarmos nos componentes desenvolvidos e, a biblioteca **React Icons** que fornece itens que podem ser utilizados nas interfaces exibidas aos usuários. Essas bibliotecas serão utilizadas nos componentes **ProductListPage** e **ProductFormPage**.
-
-Para instalar  a bibliteca **React Icons**, basta executar no terminal:
-
-```cmd
-npm i react-icons
-```
-
-E, para instalar  a bibliteca **Chakra UI** e suas dependências, basta executar no terminal:
-
-```cmd
-npm i @chakra-ui/react@2.10.4 @emotion/react@^11 @emotion/styled@^11 framer-motion@^6
-```
-Depois de intalar o Chakra UI, é necessário adicionar o `ChakraProvider` na raiz da aplicação. Para isso, o componente **App.tsx** passará a ter o seguinte conteúdo:
-
-```ts
-import { ChakraProvider } from  '@chakra-ui/react'
-import { BaseRoutes } from  './routes/BaseRoutes'
-
-export  function App() {
-	return (
-		<ChakraProvider>
-			<BaseRoutes  />
-		</ChakraProvider>
-	)
-}
-```
-
-Agora é possível utilizar as funcionalidades disponíveis nesses bibliotecas nos componentes desenvolvidos. Abaixo está o código do componente **ProductListPageV2**, que exibe uma lista de produtos. Diferente dos componentes de lista anteiores, agora a tabela exibida não é mais uma tag HTML `<table>` e sim um componente do **Chakra UI** `<Table>`, que permite personalizações, por exemplo, o menu exibido com as ações de editar e remover, os quais também são componentes do Chakra UI e possuem ícones vindos do **React Icons**, como pode ser observado nas importações das dependências. 
-
-O processo para busca dos dados, por meio do **ProductService** e de criação da tabela, percorrendo a lista vinda da API, é semelhante ao componente de lista de categorias, mudando apenas o componente que será exibido ao usuário, nesse caso a `<Table>` do Chakra UI.
-
-```jsx
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import ProductService from "@/service/ProductService";
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  TableCaption,
-  TableContainer,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  IconButton,
-} from "@chakra-ui/react";
-import {
-  BsThreeDotsVertical,
-  BsPencilSquare,
-  BsTrash,
-  BsPlusCircle,
-} from "react-icons/bs";
-import { IProduct } from "@/commons/interfaces";
-
-export function ProductListPageV2() {
-  const [data, setData] = useState<IProduct[]>([]);
-  const [apiError, setApiError] = useState("");
-  const navigate = useNavigate();
-  const { findAll, remove } = ProductService;
-
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
-    const response = await findAll();
-    if (response.status === 200) {
-      setData(response.data);
-      setApiError("");
-    } else {
-      setApiError("Falha ao carregar a lista de produtos.");
-    }
-  };
-
-  const onEdit = (url: string) => {
-    navigate(url);
-  };
-
-  const onRemove = async (id: number) => {
-    const response = await remove(id);
-    if (response.status === 200 || response.status === 204) {
-      setData(
-        data.filter((product) => {
-          return product.id !== id;
-        })
-      );
-      console.log(data);
-      setApiError("");
-    } else {
-      setApiError("Falha ao remover o produto.");
-    }
-  };
-
-  return (
-    <div className="container">
-      <h1 className="fs-2 mb-4 text-center">Lista de Produto V2</h1>
-      <div className="text-center">
-        <Link
-          className="btn btn-success btn-icon mb-3"
-          to="/products-v2/new"
-          title="Novo Produto"
-          style={{ display: "inline-block" }}
-        >
-          <BsPlusCircle style={{ display: "inline-block" }} /> Novo Produto
-        </Link>
-      </div>
-      <TableContainer>
-        <Table>
-          <TableCaption>Lista de Produtos</TableCaption>
-          <Thead>
-            <Tr>
-              <Th>#</Th>
-              <Th>Nome</Th>
-              <Th isNumeric>Preço</Th>
-              <Th>Categoria</Th>
-              <Th>Ações</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {data.map((product: IProduct) => (
-              <Tr
-                key={product.id}
-                _hover={{ cursor: "pointer", background: "#eee" }}
-              >
-                <Td>{product.id}</Td>
-                <Td>{product.name}</Td>
-                <Td isNumeric>{product.price}</Td>
-                <Td>{product.category?.name}</Td>
-                <Td>
-                  <Menu>
-                    <MenuButton
-                      as={IconButton}
-                      aria-label="Actions"
-                      icon={<BsThreeDotsVertical size={20} />}
-                      variant="ghost"
-                    />
-                    <MenuList>
-                      <MenuItem
-                        icon={<BsPencilSquare />}
-                        onClick={() => onEdit(`/products-v2/${product.id}`)}
-                      >
-                        Editar
-                      </MenuItem>
-                      <MenuItem
-                        icon={<BsTrash />}
-                        onClick={() => onRemove(product.id!)}
-                      >
-                        Remover
-                      </MenuItem>
-                    </MenuList>
-                  </Menu>
-                </Td>
-              </Tr>
-            ))}
-          </Tbody>
-          <Tfoot>
-            <Tr>
-              <Th>#</Th>
-              <Th>Nome</Th>
-              <Th isNumeric>Preço</Th>
-              <Th>Categoria</Th>
-              <Th>Ações</Th>
-            </Tr>
-          </Tfoot>
-        </Table>
-      </TableContainer>
-      {apiError && <div className="alert alert-danger">{apiError}</div>}
+      ) : (
+        <p>Carregando...</p>
+      )}
     </div>
   );
-}
+};
 ```
 
-Já na tela de cadastro de produtos, o componente **ProductFormPageV2**, além dos componentes do Chakra UI e React Icons, também será utilizado novamente o React Hook Form, para controlar o preenchimento do formulário e validação dos campos.
+Para que o componente **ProductListPage** seja exibido devemos adicionar a nova rota ao componente **AppRoutes**:
+```jsx
+//...
+import { ProductListPage } from "@/pages/product-list";
+import { ProductFormPage } from  "@/pages/product-form";
+
+export function AppRoutes() {
+//...
+        {/* protected routes */}
+        <Route element={<RequireAuth />}>
+		  //...
+          <Route path="/categories" element={<ProductListPage />} />
+          <Route  path="/categories/new"  element={<ProductFormPage />}  />
+		  <Route  path="/categories/:id"  element={<ProductFormPage />}  />
+        </Route>
+//...
+}
+```
+Para finalizar o cadastro de produtos será necessário adicionar o atalho para página ao componente **TopMenu**, ajustando apenas a contante *items* que armazena um *array* com os itens de menu que serão apresentados no topo da página:
 
 ```jsx
-import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import {
-  FormErrorMessage,
-  FormLabel,
-  FormControl,
-  Input,
-  Textarea,
-  Select,
-  Button,
-} from "@chakra-ui/react";
-import CategoryService from "@/service/CategoryService";
-import ProductService from "@/service/ProductService";
-import { ICategory, IProduct } from "@/commons/interfaces";
+	/...
+    const items: MenuItem[] = authenticated
+      ? [
+        { label: "Home", icon: "pi pi-home", command: () => navigate("/") },
+        {
+          label: "Categorias",
+          icon: "pi pi-box",
+          items: [
+            {
+              label: "Listar",
+              icon: "pi pi-list",
+              command: () => navigate("/categories"),
+            },
+            {
+              label: "Novo",
+              icon: "pi pi-plus",
+              command: () => navigate("/categories/new"),
+            },
+          ],
+        },
+        {
+          label: "Produtos",
+          icon: "pi pi-box",
+          items: [
+            {
+              label: "Listar",
+              icon: "pi pi-list",
+              command: () => navigate("/products"),
+            },
+            {
+              label: "Novo",
+              icon: "pi pi-plus",
+              command: () => navigate("/products/new"),
+            },
+          ],
+        },
+      ]
+    : [];
+   //...
+```
 
-export function ProductFormPageV2() {
-  const {
-    handleSubmit,
-    register,
-    formState: { errors, isSubmitting },
-    reset,
-  } = useForm<IProduct>();
-  const [apiError, setApiError] = useState("");
-  const navigate = useNavigate();
-  const { id } = useParams();
-  const [categories, setCategories] = useState<ICategory[]>([]);
-  const [entity, setEntity] = useState<IProduct>({
-    id: undefined,
-    name: "",
-    price: 0,
-    description: "",
-    category: { id: undefined, name: "" },
-  });
-  const { save, findById } = ProductService;
-  const { findAll } = CategoryService;
+Com o componente **ProductFormPage** criado finalizamos o CRUD de produtos e o projeto.
 
-  // Executa ao carregar o componente
-  useEffect(() => {
-    loadData();
-  }, []);
+---
 
-  const loadData = async () => {
-    // Busca a lista de categorias
-    const response = await findAll();
-    if (response.status === 200) {
-      setCategories(response.data);
-      setApiError("");
-    } else {
-      setApiError("Falha ao carregar a combo de categorias.");
-    }
-    if (id) {
-      // ao editar um produto, busca ele no back-end e carrega no objeto form que está no state.
-      const response = await findById(parseInt(id));
-      if (response.status === 200) {
-        setEntity({
-          id: response.data.id,
-          name: response.data.name,
-          price: response.data.price,
-          description: response.data.description,
-          category: { id: response.data.category.id, name: "" },
-        });
-        setApiError("");
-      } else {
-        setApiError("Falha ao carregar o produto.");
-      }
-    } else {
-      // ao cadastrar um novo produto, valoriza no objeto form a primeira categoria do select
-      setEntity((previousEntity) => {
-        return {
-          ...previousEntity,
-          category: { id: categories[0]?.id, name: "" },
-        };
-      });
-    }
-  };
+### 12. 🚫Tratando o erro 404 Not Found
 
-  useEffect(() => {
-    reset(entity);
-  }, [entity, reset]);
+Para tratar o erro de página não encontrada no lado cliente da aplicação será desenvolvido o componente NotFound, em: **/src/pages/not-found/index.tsx**.
 
-  const onSubmit = async (data: IProduct) => {
-    const product: IProduct = {
-      ...data,
-      id: entity.id,
-      category: { id: data.category.id, name: "" },
-    };
-    const response = await save(product);
-    if (response.status === 200 || response.status === 201) {
-      navigate("/products-v2");
-    } else {
-      setApiError("Falha ao salvar o produto.");
-    }
-  };
+```jsx
+import { Link } from "react-router-dom";
 
+export function NotFound() {
   return (
-    <div className="container">
-      <h1 className="fs-2 text-center">Cadastro de Produto - V2</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FormControl isInvalid={errors.name && true}>
-          <FormLabel htmlFor="name">Nome</FormLabel>
-          <Input
-            id="name"
-            placeholder="Nome do produto"
-            {...register("name", {
-              required: "O campo nome é obrigatório",
-            })}
-          />
-          <FormErrorMessage>
-            {errors.name && errors.name.message}
-          </FormErrorMessage>
-        </FormControl>
-        <FormControl isInvalid={errors.price && true}>
-          <FormLabel htmlFor="price">Preço</FormLabel>
-          <Input
-            id="price"
-            placeholder="0.0"
-            {...register("price", {
-              required: "O campo preço é obrigatório",
-              min: { value: 0.01, message: "O valor deve ser maior que zero" },
-            })}
-            type="number"
-            step="any"
-          />
-
-          <FormErrorMessage>
-            {errors.price && errors.price.message}
-          </FormErrorMessage>
-        </FormControl>
-
-        <FormControl isInvalid={errors.description && true}>
-          <FormLabel htmlFor="description">Descrição</FormLabel>
-          <Textarea
-            id="description"
-            placeholder="Descrição do produto"
-            {...register("description", {
-              required: "O campo descrição é obrigatório",
-              minLength: {
-                value: 2,
-                message: "O tamanho deve ser entre 2 e 1024 caracteres",
-              },
-              maxLength: {
-                value: 1024,
-                message: "O tamanho deve ser entre 2 e 1024 caracteres",
-              },
-            })}
-            size="sm"
-          />
-          <FormErrorMessage>
-            {errors.description && errors.description.message}
-          </FormErrorMessage>
-        </FormControl>
-
-        <FormControl isInvalid={errors.category && true}>
-          <FormLabel htmlFor="category">Categoria</FormLabel>
-
-          <Select
-            id="category"
-            {...register("category.id", {
-              required: "O campo categoria é obrigatório",
-            })}
-            size="sm"
-          >
-            {categories.map((category: ICategory) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </Select>
-
-          <FormErrorMessage>
-            {errors.description && errors.description.message}
-          </FormErrorMessage>
-        </FormControl>
-        <div className="text-center">
-          <Button
-            mt={4}
-            colorScheme="teal"
-            isLoading={isSubmitting}
-            type="submit"
-          >
-            Salvar
-          </Button>
-        </div>
-      </form>
-      {apiError && <div className="alert alert-danger">{apiError}</div>}
-      <div className="text-center">
-        <Link to="/products-v2">Voltar</Link>
+    <article style={{ padding: "100px" }}>
+      <h1>Oops!</h1>
+      <p>Página não encontrada!</p>
+      <div className="flexGrow">
+        <Link to="/">Home</Link>
       </div>
-    </div>
+    </article>
   );
 }
 ```
-
-Por fim, basta editar o componente **BaseRoutes** com as rotas para os novos componentes, a versão final desse arquivo terá o seguinte conteúdo:
+O qual será adicionado ao componente **AppRoutes**, o componente receberá como ***path*** o valor **\***, assim caso a URL não esteja em nenhuma rota tratada no componente, será exibido o componente **NotFound**.
 
 ```jsx
 import { Route, Routes } from "react-router-dom";
-import { CategoryFormPage } from "@/pages/CategoryFormPage";
-import { ProductListPage } from "@/pages/ProductListPage";
-import { ProductFormPage } from "@/pages/ProductFormPage";
-import { ProductListPageV2 } from "@/pages/ProductListPageV2";
-import { ProductFormPageV2 } from "@/pages/ProductFormPageV2";
-import { LoginPage } from "@/pages/LoginPage";
-import { UserSignupPage } from "@/pages/UserSignupPage";
-import { AuthenticatedRoutes } from "../AuthenticatedRoutes";
-import { HomePage } from "@/pages/HomePage";
-import { CategoryListPage } from "@/pages/CategoryListPage";
+import { Layout } from "@/components/layout";
+import { LoginPage } from "@/pages/login";
+import { RegisterPage } from "@/pages/register";
+import { HomePage } from "@/pages/home";
+import { RequireAuth } from "@/components/require-auth";
+import { CategoryListPage } from "@/pages/category-list";
+import { CategoryFormPage } from "@/pages/category-form";
+import { ProductListPage } from "@/pages/product-list";
+import { ProductFormPage } from "@/pages/product-form";
+import { NotFound } from "@/pages/not-found";
 
-export function BaseRoutes() {
+export function AppRoutes() {
   return (
-    <>
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<UserSignupPage />} />
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        {/* public routes */}
+        <Route path="login" element={<LoginPage />} />
+        <Route path="register" element={<RegisterPage />} />
 
-        {/* Protected Routes */}
-        <Route element={<AuthenticatedRoutes />}>
-            <Route path="/home" element={<HomePage />} />
-            <Route path="/" element={<HomePage />} />
-            <Route path="/categories" element={<CategoryListPage />} />
-            <Route path="/categories/new" element={<CategoryFormPage />} />
-            <Route path="/categories/:id" element={<CategoryFormPage />} />
+        {/* protected routes */}
+        <Route element={<RequireAuth />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/home" element={<HomePage />} />
+          
+          <Route path="/categories" element={<CategoryListPage />} />
+          <Route path="/categories/new" element={<CategoryFormPage />} />
+          <Route path="/categories/:id" element={<CategoryFormPage />} />
 
-            <Route path="/products" element={<ProductListPage />} />
-            <Route path="/products/new" element={<ProductFormPage />} />
-            <Route path="/products/:id" element={<ProductFormPage />} />
-
-            <Route path="/products-v2" element={<ProductListPageV2 />} />
-            <Route path="/products-v2/new" element={<ProductFormPageV2 />} />
-            <Route path="/products-v2/:id" element={<ProductFormPageV2 />} />
+          <Route path="/products" element={<ProductListPage />} />
+          <Route path="/products/new" element={<ProductFormPage />} />
+          <Route path="/products/:id" element={<ProductFormPage />} />
         </Route>
-      </Routes>
-    </>
+
+        {/* catch all */}
+        <Route path="*" element={<NotFound />} />
+      </Route>
+    </Routes>
   );
 }
 ```
-
-# Referências
+---
+# 📚 Referências
 
 [1] React. Disponível em: https://pt-br.reactjs.org/.
 

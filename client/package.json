@@ -5,30 +5,33 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.10.4",
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
-    "@popperjs/core": "^2.11.8",
-    "axios": "^1.6.8",
-    "bootstrap": "^5.3.3",
-    "framer-motion": "^11.13.5",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-hook-form": "^7.39.5",
-    "react-icons": "^4.6.0",
-    "react-router-dom": "^6.4.3"
+    "axios": "^1.8.4",
+    "framer-motion": "^12.6.3",
+    "primeflex": "^4.0.0",
+    "primeicons": "^7.0.0",
+    "primereact": "^10.9.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.55.0",
+    "react-router-dom": "^7.5.0"
   },
   "devDependencies": {
-    "@types/node": "^20.12.11",
-    "@types/react": "^18.0.22",
-    "@types/react-dom": "^18.0.7",
-    "@vitejs/plugin-react": "^2.2.0",
-    "sass": "^1.77.1",
-    "typescript": "^4.6.4",
-    "vite": "^3.2.0"
+    "@eslint/js": "^9.21.0",
+    "@types/node": "^22.14.0",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.21.0",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^15.15.0",
+    "typescript": "~5.7.2",
+    "typescript-eslint": "^8.24.1",
+    "vite": "^6.2.0"
   }
 }

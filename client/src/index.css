@@ -1,8 +1,14 @@
-.form-crud {
-  max-width: 450px;
-  padding: 15px;
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
 }
 
-.form-crud .form-floating:focus-within {
-  z-index: 2;
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 400px;
+  min-height: 100vh;
 }
+

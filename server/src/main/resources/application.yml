@@ -1,5 +1,5 @@
 server:
-  port: 8025
+  port: 8080
 spring:
   profiles:
     active: dev
@@ -18,14 +18,14 @@ spring:
     activate:
       on-profile: dev
   datasource:
-    url: jdbc:h2:mem:pw25s-dev
+    url: jdbc:h2:mem:pw44s-dev
 ---
 spring:
   config:
     activate:
       on-profile: dev-postgres
   datasource:
-    url: jdbc:postgresql://127.0.0.1:5432/pw25s
+    url: jdbc:postgresql://127.0.0.1:5432/pw44s
     username: postgres
     password: postgres
   jpa:

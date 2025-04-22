@@ -51,7 +51,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             //Verifica se o usuário existe no banco de dados, caso não exista uma Exception será disparada
             //e o código será parado de executar nessa parte e o usuário irá receber uma resposta
             //com falha na autenticação (classe: EntryPointUnauthorizedHandler)
-            if (request.getInputStream() != null && request.getInputStream().available() > 0) {
+            if (request.getInputStream() != null || request.getInputStream().available() > 0) {
                 credentials = new ObjectMapper().readValue(request.getInputStream(), User.class);
                 user = (User) authService.loadUserByUsername(credentials.getUsername());
             }

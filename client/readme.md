@@ -1,4 +1,4 @@
-# Criando uma Aplicação React com TypeScript utilizando Vite
+# Criando uma Aplicação Web com Vite utilizando React + TypeScript 
 
 Neste projeto será desenvolvida a camada de visualização (*front-end*) da solução web proposta na disciplina PW44S - Programação para Web - Turma 4SI da Universidade Tecnológica Federal do Paraná - Campus Pato Branco. A aplicação web será desenvolvida utilizando a biblioteca React com auxílio de algumas bibliotecas.
 

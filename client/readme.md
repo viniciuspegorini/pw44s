@@ -135,7 +135,7 @@ Entendendo a estrutura do projeto criado:
 - **vite.config.ts**: define as configurações para o Vite, incluindo opções de construção, *plugins* e comportamento do servidor de desenvolvimento.
 
 
-## ⌨️Desenvolvimento da aplicação
+## ⌨️ Desenvolvimento da aplicação
 
 ### 1. ⚒️ Ajustando a estrutura inicial do projeto
 
@@ -187,6 +187,7 @@ export default App
 Agora que foram removidos os trechos de código do projeto padrão podemos adicionar as bibliotecas que serão utilizadas no desenvolvimento do projeto.
 
 ---
+
 ### 2. 🎨 Bibliotecas - instalação e configuração
 
 As bibliotecas para React permitem adicionar funcionalidades extras para aplicação, por meio de soluções prontas e testadas. Permite também o desenvolvimento mais rápido uma vez que soluções para requisições HTTP, validação de formulários, rotas, componentes de UI já estão prontas para uso dentro da aplicação. Neste projeto serão utilizadas as bibliotecas:
@@ -371,7 +372,9 @@ Com o primeiro componente criado, agora o processo será repetido, criando os co
 
 O próximo passo será criar o componente para cadastro de usuário, mas antes disso será necessário configurar a biblioteca Axios para que possam ser realizadas as requisições HTTP para a API.
 
-### 4.  🌎Configuração do Axios para as requisições HTTP
+---
+
+### 4. 🌎Configuração do Axios para as requisições HTTP
 
 Para realizar as requisições HTTP para API será utilizado o cliente HTTP Axios, a configuração consiste em definir uma URL padrão para API, que será adicionada no arquivo **/src/lib/axios.ts**. A API desenvolvida com Spring Framework está sendo executada no endereço `http://localhost:8080` caso a porta da API tenha sido alterada na aplicação **server**, também deverá ser alterada nesse trecho de código.
 ```ts
@@ -384,7 +387,9 @@ export  const  api  =  axios.create({
 
 Com o Axios configurado agora os *services* que precisam fazer requisições HTTP para API podem ser configurados.
 
-### 5.  🧑Cadastro de usuário
+---
+
+### 5. 🧑Cadastro de usuário
 
 O cadastro de usuários será composto pela página de cadastro de usuários, representada pelo componente **RegisterPage**. A definição do tipo de objeto que será enviado para API (**IUserRegister**) e pela camada de serviço que será responsável por realizar a requisição HTTP para a API (**AuthService**).
 
@@ -615,6 +620,7 @@ function App() {
 }
 export default App;
 ```
+
 ---
 
 ### 6. 🔐 Autenticação
@@ -1054,6 +1060,7 @@ export  const  LoginPage  = () => {
 Com isso o contexto da aplicação e o componente de autenticação estão criados e podemos iniciar a configuração das rotas da aplicação.
 
 ---
+
 ### 8. 🔗 Configurando as rotas da aplicação
 
 Para controlar as rotas da aplicação será utilizada a biblioteca React Router [5]. Assim, de acordo com a URL informada no navegador um componente será renderizado para o usuário.
@@ -1113,6 +1120,7 @@ export function AppRoutes() {
 }
 ```
 ---
+
 ### 9. ⚓ Criando os componentes de Menu e Layout
 
 Para melhorar a navegação e usabilidade da aplicação será criado um menu superior (**TopMenu**) e um componente que irá ser o *layout* principal da aplicação (**Layout**).
@@ -1322,6 +1330,7 @@ export function AppRoutes() {
 Agora e possível se cadastrar, autenticar e navegar pelos componentes da aplicação, o próximo passo será desenvolver os CRUDs de Categoria e Produto.
 
 ---
+
 ### 10. 🏷️ CRUD de Categorias
 
 #### 10.1 Interface e *Service* de Categoria
@@ -1800,6 +1809,7 @@ Para finalizar o cadastro de categorias será necessário adicionar o atalho par
 Com o componente **CategoryFormPage** criado finalizamos o CRUD de categorias. O próximo passo será o desenvolvimento do CRUD de produtos.
 
 ---
+
 ### 11. 📱CRUD de Produtos
 
 #### 11.1 Interface e *Service* de Produto
@@ -2461,6 +2471,7 @@ export function AppRoutes() {
 }
 ```
 ---
+
 # 📚 Referências
 
 [1] React. Disponível em: https://pt-br.reactjs.org/.

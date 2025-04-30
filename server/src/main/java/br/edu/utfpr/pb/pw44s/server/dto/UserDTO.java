@@ -1,20 +1,18 @@
 package br.edu.utfpr.pb.pw44s.server.dto;
 
-import br.edu.utfpr.pb.pw44s.server.model.User;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class UserDTO {
-
-    private Long id;
 
     @NotNull
     @Size(min = 4, max = 50)
@@ -28,25 +26,5 @@ public class UserDTO {
     @Size(min = 6)
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$")
     private String password;
-
-    public UserDTO(User user) {
-        this.id = user.getId();
-        this.displayName = user.getDisplayName();
-        this.username = user.getUsername();
-    }
-
-    public void toDTO(User user) {
-        this.id = user.getId();
-        this.displayName = user.getDisplayName();
-        this.username = user.getUsername();
-    }
-
-    public User toEntity() {
-        User user = new User();
-        user.setId(this.id);
-        user.setDisplayName(this.displayName);
-        user.setUsername(this.username);
-        return user;
-    }
 
 }

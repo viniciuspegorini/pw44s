@@ -51,7 +51,7 @@ public abstract class CrudServiceImpl<T, ID extends Serializable>
     }
 
     @Override
-    public T findOne(ID id) {
+    public T findById(ID id) {
         return getRepository().findById(id).orElse(null);
     }
 
@@ -67,7 +67,7 @@ public abstract class CrudServiceImpl<T, ID extends Serializable>
     }
 
     @Override
-    public void delete(ID id) {
+    public void deleteById(ID id) {
         getRepository().deleteById(id);
     }
 

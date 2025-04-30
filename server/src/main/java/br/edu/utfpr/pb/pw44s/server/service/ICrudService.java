@@ -23,13 +23,13 @@ public interface ICrudService<T, ID extends Serializable> {
 
     void flush();
 
-    T findOne(ID id);
+    T findById(ID id);
 
     boolean exists(ID id);
 
     long count();
 
-    void delete(ID id);
+    void deleteById(ID id);
 
     void delete(Iterable<? extends T> iterable);
 

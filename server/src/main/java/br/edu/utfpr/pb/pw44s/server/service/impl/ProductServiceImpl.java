@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ProductServiceImpl extends CrudServiceImpl<Product, Long>
-            implements IProductService {
+        implements IProductService {
 
     private final ProductRepository productRepository;
 

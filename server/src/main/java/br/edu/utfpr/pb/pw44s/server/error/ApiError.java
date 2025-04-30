@@ -2,7 +2,6 @@ package br.edu.utfpr.pb.pw44s.server.error;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.Date;
 import java.util.Map;
 
@@ -14,7 +13,6 @@ public class ApiError {
     private int status;
     private String message;
     private String url;
-
     private Map<String, String> validationErrors;
 
     public ApiError(int status, String message, String url, Map<String, String> validationErrors) {

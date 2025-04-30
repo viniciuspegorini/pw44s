@@ -192,11 +192,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")  
 public class UserControllerTest {  
     private static final String API_USER = "/users";  
-    @Autowired  
-	private TestRestTemplate testRestTemplate;
+    
+    @Autowired
+    private TestRestTemplate testRestTemplate;
   
     @Test  
-	public void postUser_whenUserIsValid_receiveOk() {  
+    public void postUser_whenUserIsValid_receiveOk() {  
         User user = createValidUser();  
   
         ResponseEntity<Object> response = testRestTemplate.postForEntity(API_USER, user, Object.class);  
@@ -259,8 +260,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {  
   
     @PostMapping  
-	@ResponseStatus(HttpStatus.CREATED)  
-    void createUser() {  
+    @ResponseStatus(HttpStatus.CREATED)  
+    public void createUser() {  
     }  
 }
 ```  
@@ -303,8 +304,8 @@ import lombok.*;
 public class User {  
   
     @Id  
-	@GeneratedValue  
-	private long id;  
+    @GeneratedValue  
+    private long id;  
     private String username;  
     private String displayName;  
     private String password;  
@@ -344,13 +345,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")  
 public class UserControllerTest {  
     private static final String API_USER = "/users";  
+
     @Autowired  
-	private TestRestTemplate testRestTemplate;  
+    private TestRestTemplate testRestTemplate;
     @Autowired  
-	private UserRepository userRepository;  
+    private UserRepository userRepository;  
   
     @Test  
-  public void postUser_whenUserIsValid_receiveOk() {  
+    public void postUser_whenUserIsValid_receiveOk() {  
         User user = createValidUser();  
   
         ResponseEntity<Object> response = testRestTemplate.postForEntity(API_USER, user, Object.class);  
@@ -358,7 +360,7 @@ public class UserControllerTest {
     }  
   
     @Test  
-	public void postUser_whenUserIsValid_userSavedToDatabase() {  
+    public void postUser_whenUserIsValid_userSavedToDatabase() {  
         User user = createValidUser();  
         testRestTemplate.postForEntity(API_USER, user, Object.class);  
         assertThat(userRepository.count()).isEqualTo(1);  
@@ -422,8 +424,8 @@ public class UserController {
     }  
   
     @PostMapping  
-	@ResponseStatus(HttpStatus.CREATED)  
-    void createUser(@RequestBody User user) {  
+    @ResponseStatus(HttpStatus.CREATED)  
+    public void createUser(@RequestBody User user) {  
         this.userService.save(user);  
     }  
       
@@ -439,13 +441,13 @@ package br.edu.utfpr.pb.pw44s.server;
   
 //... Ocultando código repetido... 
 public class UserControllerTest {  
-	//... Ocultando código repetido... 
+    //... Ocultando código repetido... 
 	
-	@Autowired  
-	private UserRepository userRepository;
+    @Autowired  
+    private UserRepository userRepository;
 	    
     @BeforeEach  
-	public void cleanup() {  
+    public void cleanup() {  
         userRepository.deleteAll();  
         testRestTemplate.getRestTemplate().getInterceptors().clear();  
     }  
@@ -475,9 +477,9 @@ Ao abrir o Postam basta clicar em **File > New Tab** e uma nova aba para realiza
 
 ```json  
 {
-	"displayName"  :  "test-displayName",
-	"username"  :  "test-username",
-	"password"  :  "P4ssword"
+    "displayName"  :  "test-displayName",
+    "username"  :  "test-username",
+    "password"  :  "P4ssword"
 }
 ```  
 Adicionado o **JSON** basta clicar em send e a requisição será enviada para a API, o retorno que aparece em **Response** é um **201 CREATED** sem nenhum outro texto, pois é assim que está o código por enquanto. Agora executando novamente o comando **select * from tb_user** no console do banco de dados será possível visualizar o registro do usuário que foi adicionado.
@@ -489,15 +491,15 @@ No próximo teste será retornado ao cliente que chama a API além do *status* H
 ```java  
 //... ocultando código repetido  
 public class UsuarioControllerTest {  
-	//... ocultando código repetido  
-	@Test  
-	public void postUser_whenUserIsValid_receiveSuccessMessage() {  
-	    User user = createValidUser();  
-	    var response = postSignup(user, GenericResponse.class);  
-	    Assertions.assertNotNull(response.getBody());  
-	    assertThat(response.getBody().getMessage()).isNotNull();  
-	}
-	//... ocultando código repetido      
+    //... ocultando código repetido  
+    @Test  
+    public void postUser_whenUserIsValid_receiveSuccessMessage() {  
+        User user = createValidUser();  
+        var response = postSignup(user, GenericResponse.class);  
+        Assertions.assertNotNull(response.getBody());  
+        assertThat(response.getBody().getMessage()).isNotNull();  
+    }
+    //... ocultando código repetido      
 } 
 ```  
 
@@ -520,7 +522,6 @@ public class GenericResponse {
   
 }
 ```  
-
 A próxima alteração de código será realizado no método `createUser()` da classe `UserController`, que agora deverá retornar um objeto do tipo `GenericResponse`. Após essa alteração o teste criado irá passar. Para visualizar o comportamento na prática a requisição pode ser realizada novamente por meio do Postman.
 
 ```java  
@@ -544,7 +545,7 @@ public class UserController {
     }  
   
     @PostMapping  
-	@ResponseStatus(HttpStatus.CREATED)  
+    @ResponseStatus(HttpStatus.CREATED)  
     public ResponseEntity<GenericResponse> createUser(@RequestBody User user) {  
         this.userService.save(user);
           
@@ -558,19 +559,18 @@ public class UserController {
 Com essa etapa finalizada, agora serão adicionadas algumas melhorias no código e na maneira com que os dados são persistidos. Ao fazer uma consulta (***select***) no banco de dados é possível observar que a coluna **password** está sendo armazenada como texto, o que não é uma boa prática. O teste a seguir irá validar se a senha salva no banco está diferente da senha que foi enviada para cadastro, o que sinaliza que ela estará criptografada no banco de dados.
 
 ```java  
-	//...
-	@Test  
-	public void postUser_whenUserIsValid_passwordIsHashedInDatabase() {  
-	    User user = createValidUser();  
+    //...
+    @Test  
+    public void postUser_whenUserIsValid_passwordIsHashedInDatabase() {  
+        User user = createValidUser();  
 	      
-	    testRestTemplate.postForEntity(API_USER, user, GenericResponse.class);  
-	  
-	    List<User> users = userRepository.findAll();  
-	    User userBD = users.getFirst();  
-	  
-	    assertThat(userBD.getPassword()).isNotEqualTo(user.getPassword());  
-	} 
-	//...
+        testRestTemplate.postForEntity(API_USER, user, GenericResponse.class);  
+
+        List<User> users = userRepository.findAll();  
+        User userBD = users.getFirst();  
+        assertThat(userBD.getPassword()).isNotEqualTo(user.getPassword());  
+    } 
+    //...
 ```  
 
 A criptografia da senha será realizada na classe `UserService` para evitar que regras de negócio da aplicação sejam implementadas na classe *controller*. Para criptografia da senha será utilizada a classe `BCryptPasswordEncoder`[6]. Ao executar o método `bCryptPasswordEncoder.encode()` a senha será criptografada antes de ser salva no banco. Ao executar o teste ele vai passar. Para visualizar na prática só executar a requisição via Postman e executar o comando **select * from tb_user** no console do **H2**.
@@ -615,15 +615,15 @@ Nesse primeiro teste será validado o caso de recebimento do atributo `username`
 ```java  
 //...  
 public class UsuarioControllerTest {  
-	//...
-	 @Test  
-	public void postUser_whenUserHasNullUsername_receiveBadRequest() {  
-	    User user = createValidUser();  
-		user.setUsername(null);  
-		ResponseEntity<Object> response = testRestTemplate.postForEntity(API_USER, user, Object.class);  
-	    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);  
-	} 
-	//...
+    //...
+    @Test  
+    public void postUser_whenUserHasNullUsername_receiveBadRequest() {  
+        User user = createValidUser();  
+        user.setUsername(null);  
+        ResponseEntity<Object> response = testRestTemplate.postForEntity(API_USER, user, Object.class);  
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);  
+    } 
+    //...
 }  
 ```  
 
@@ -649,12 +649,12 @@ import lombok.*;
 public class User {  
   
     @Id  
-	@GeneratedValue  
-	private long id;  
+    @GeneratedValue  
+    private long id;  
   
     @NotNull  
-	private String username;  
-	private String displayName;  
+    private String username;  
+    private String displayName;  
     private String password;  
 }
 ```  
@@ -683,7 +683,7 @@ public class UserController {
     }  
   
     @PostMapping  
-	@ResponseStatus(HttpStatus.CREATED)  
+    @ResponseStatus(HttpStatus.CREATED)  
     public ResponseEntity<GenericResponse> createUser(@RequestBody @Valid User user) {  
         this.userService.save(user);  
   
@@ -713,22 +713,22 @@ import lombok.*;
 public class User {
   
     @Id  
-	@GeneratedValue(strategy = GenerationType.IDENTITY)  
+    @GeneratedValue(strategy = GenerationType.IDENTITY)  
     private long id;  
   
     @NotNull  
-	@Size(min = 4, max = 50)  
+    @Size(min = 4, max = 50)  
     @Column(length = 50)  
     private String username;  
   
     @NotNull  
-	@Size(min = 4, max = 50)  
+    @Size(min = 4, max = 50)  
     @Column(length = 50, name = "display_name")  
     private String displayName;  
   
     @NotNull  
-	@Size(min = 6)
-	// A expressão regular da anotação @Pattern valida para que o atributo tenha pelo menos 1 letra maiúscula, 1 letra minúscula e 1 número.  
+    @Size(min = 6)
+    // A expressão regular da anotação @Pattern valida para que o atributo tenha pelo menos 1 letra maiúscula, 1 letra minúscula e 1 número.  
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$")  
     private String password;  
 }
@@ -887,9 +887,9 @@ Por exemplo, ao enviar:
 
 ```json
 {
-	"displayName"  :  null,
-	"username"  :  "aa",
-	"password"  :  "password"
+    "displayName"  :  null,
+    "username"  :  "aa",
+    "password"  :  "password"
 }
 ```
 
@@ -897,15 +897,16 @@ O retorno da API será:
 
 ```json
 {
-	"timestamp":  4102477200,
-	"status":  400,
-	"message":  "Validation error!",
-	"url":  "/users",
-	"validationErrors":  {
-		"password":  "deve corresponder a \"^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$\"",
-		"displayName":  "não deve ser nulo",
-		"username":  "tamanho deve ser entre 4 e 50"
-	}
+    "timestamp":  4102477200,
+    "status":  400,
+    "message":  "Validation error!",
+    "url":  "/users",
+    "validationErrors":  {
+        "password":  "deve corresponder a \"^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$\"",
+        "displayName":  "não deve ser nul
+		o",
+        "username":  "tamanho deve ser entre 4 e 50"
+    }
 }
 ```
 ---
@@ -931,15 +932,15 @@ import lombok.NoArgsConstructor;
 public class UserDTO {  
 
     @NotNull  
-	@Size(min = 4, max = 50)  
+    @Size(min = 4, max = 50)  
     private String username;  
   
     @NotNull  
-	@Size(min = 4, max = 50)  
+    @Size(min = 4, max = 50)  
     private String displayName;  
   
     @NotNull  
-	@Size(min = 6)  
+    @Size(min = 6)  
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$")  
     private String password;  
       
@@ -959,7 +960,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration  
 public class WebConfig {  
     @Bean  
-  public ModelMapper modelMapper() {  
+    public ModelMapper modelMapper() {  
         return new ModelMapper();  
     }  
 }  
@@ -991,7 +992,7 @@ public class UserController {
     }  
   
     @PostMapping  
- @ResponseStatus(HttpStatus.CREATED)  
+    @ResponseStatus(HttpStatus.CREATED)  
     public ResponseEntity<GenericResponse> createUser(@RequestBody @Valid UserDTO userDTO) {  
         this.userService.save(modelMapper.map(userDTO, User.class));  
   
@@ -1045,16 +1046,16 @@ A classe `SecurityConstants` irá conter as constantes utilizadas pelas classes 
 package br.edu.utfpr.pb.pw44s.server.security;  
   
 public class SecurityConstants {  
-	public static final String SECRET = "utfpr"; // secret utilizado para gerar o token  
-	public static final long EXPIRATION_TIME = 86400000; // 1 dia = 60*60*24*1000  
-	public static final String TOKEN_PREFIX = "Bearer "; // tipo da autenticação  
-	public static final String HEADER_STRING = "Authorization"; // header que será passado ao server com o token  
+    public static final String SECRET = "utfpr"; // secret utilizado para gerar o token  
+    public static final long EXPIRATION_TIME = 86400000; // 1 dia = 60*60*24*1000  
+    public static final String TOKEN_PREFIX = "Bearer "; // tipo da autenticação  
+    public static final String HEADER_STRING = "Authorization"; // header que será passado ao server com o token  
 }
 ```  
 
 #### 5.3 Criação da classe EntryPointUnauthorizedHandler
 
-A classe `EntryPointUnauthorizedHandler` implementa a interface `AuthenticationEntryPoint` do *framework* Spring Security e será utilizada para definir o tipo de resposta ao cliente quando ocorrer um erro no processo de autenticação, ao ocorrer a exceção durante a autenticação o Spring irá chamar o método  `commence()` presente na classe.
+A classe `EntryPointUnauthorizedHandler` implementa a interface `AuthenticationEntryPoint` do *framework* Spring Security e será utilizada para definir o tipo de resposta ao cliente quando ocorrer um erro no processo de autenticação. Ao ocorrer a exceção durante a autenticação o Spring irá chamar o método  `commence()` presente na classe.
 
 ```java  
 package br.edu.utfpr.pb.pw44s.server.security;  
@@ -1070,11 +1071,10 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;  
   
 @Component("authenticationEntryPoint")  
-public class EntryPointUnauthorizedHandler  
-        implements AuthenticationEntryPoint {  
+public class EntryPointUnauthorizedHandler implements AuthenticationEntryPoint {  
   
     @Override  
-	public void commence(HttpServletRequest request,  
+    public void commence(HttpServletRequest request,  
                          HttpServletResponse response,  
                          AuthenticationException authException)  
                             throws IOException, ServletException {  
@@ -1120,9 +1120,9 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 @Configuration  
 public class WebSecurity {    
     // Service responsável por buscar um usuário no banco de dados por meio do método loadByUsername()  
-	private final AuthService authService;  
+    private final AuthService authService;  
     // Objeto responsável por realizar o tratamento de exceção quando o usuário informar credenciais incorretas ao autenticar-se.  
-	private final AuthenticationEntryPoint authenticationEntryPoint;  
+    private final AuthenticationEntryPoint authenticationEntryPoint;  
   
     public WebSecurity(AuthService authService, AuthenticationEntryPoint authenticationEntryPoint) {  
         this.authService = authService;  
@@ -1130,63 +1130,64 @@ public class WebSecurity {
     }  
   
     @Bean  
-	@SneakyThrows  
-	public SecurityFilterChain filterChain(HttpSecurity http) {  
+    @SneakyThrows  
+    public SecurityFilterChain filterChain(HttpSecurity http) {  
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.userDetailsService(authService).passwordEncoder(passwordEncoder());  
         
         // authenticationManager -> responsável por gerenciar a autenticação dos usuários  
-		AuthenticationManager authenticationManager = authenticationManagerBuilder.build();  
+        AuthenticationManager authenticationManager = authenticationManagerBuilder.build();  
         //Configuração para funcionar o console do H2.  
-		http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));  
+        http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));  
         // desabilita o uso de csrf  
-		http.csrf(AbstractHttpConfigurer::disable);  
+        http.csrf(AbstractHttpConfigurer::disable);  
   
         // Adiciona configuração de CORS
         http.cors(cors -> corsConfigurationSource());  
   
         //define o objeto responsável pelo tratamento de exceção ao entrar com credenciais inválidas  
-		http.exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(authenticationEntryPoint));  
+        http.exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(authenticationEntryPoint));  
   
         // configura a authorização das requisições  
-		http.authorizeHttpRequests((authorize) -> authorize  
-		        //permite que a rota "/users" seja acessada, mesmo sem o usuário estar autenticado desde que o método HTTP da requisição seja POST  
-				.requestMatchers(antMatcher(HttpMethod.POST, "/users/**")).permitAll()  
-                //permite que a rota "/error" seja acessada por qualquer requisição mesmo o usuário não estando autenticado  
-				.requestMatchers(antMatcher("/error/**")).permitAll()  
-                //permite que a rota "/h2-console" seja acessada por qualquer requisição mesmo o usuário não estando autenticado  
-				.requestMatchers(antMatcher("/h2-console/**")).permitAll()  
-                //as demais rotas da aplicação só podem ser acessadas se o usuário estiver autenticado  
-			.anyRequest().authenticated()  
+        http.authorizeHttpRequests((authorize) -> authorize  
+            //permite que a rota "/users" seja acessada, mesmo sem o usuário estar autenticado desde que o método HTTP da requisição seja POST  
+            .requestMatchers(antMatcher(HttpMethod.POST, "/users/**")).permitAll()  
+            //permite que a rota "/error" seja acessada por qualquer requisição mesmo o usuário não estando autenticado  
+            .requestMatchers(antMatcher("/error/**")).permitAll()  
+            //permite que a rota "/h2-console" seja acessada por qualquer requisição mesmo o usuário não estando autenticado  
+            .requestMatchers(antMatcher("/h2-console/**")).permitAll()  
+            //as demais rotas da aplicação só podem ser acessadas se o usuário estiver autenticado  
+            .anyRequest().authenticated()  
         );  
         http.authenticationManager(authenticationManager)  
-				//Filtro da Autenticação - sobrescreve o método padrão do Spring Security para Autenticação.  
-			.addFilter(new JWTAuthenticationFilter(authenticationManager, authService))  
-            //Filtro da Autorização - - sobrescreve o método padrão do Spring Security para Autorização.  
-			.addFilter(new JWTAuthorizationFilter(authenticationManager, authService))  
-            //Como será criada uma API REST e todas as requisições que necessitam de autenticação/autorização serão realizadas com o envio do token JWT do usuário, não será necessário fazer controle de sessão no *back-end*.  
-			.sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-		);  
-		return http.build();  
-	}  
+            //Filtro da Autenticação - sobrescreve o método padrão do Spring Security para Autenticação.
+            .addFilter(new JWTAuthenticationFilter(authenticationManager, authService))  
+            //Filtro da Autorização - - sobrescreve o método padrão do Spring Security para Autorização.
+            .addFilter(new JWTAuthorizationFilter(authenticationManager, authService))  
+            //Como será criada uma API REST e todas as requisições que necessitam de autenticação/autorização serão realizadas com o envio do token JWT do usuário, não será necessário fazer controle de sessão no *back-end*.
+            .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        );  
+        return http.build();  
+    }  
   
     // Criação do objeto utilizado na criptografia da senha, ele é usado no UserService ao cadastrar um usuário e pelo authenticationManagerBean para autenticar um usuário no sistema.  
-	@Bean  
-	public PasswordEncoder passwordEncoder() {  
-		return new BCryptPasswordEncoder();  
-	}  
+    @Bean  
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();  
+    }  
   
     /* 
-	O compartilhamento de recursos de origem cruzada (CORS) é um mecanismo para integração de aplicativos. O CORS define uma maneira de os aplicativos Web clientes carregados em um domínio interagirem com recursos em um domínio diferente. */  
-	@Bean  
-	public CorsConfigurationSource corsConfigurationSource() {  
+    O compartilhamento de recursos de origem cruzada (CORS) é um mecanismo para integração de aplicativos. O CORS define uma maneira de os aplicativos Web clientes carregados em um domínio interagirem com recursos em um domínio diferente. */  
+    @Bean  
+    public CorsConfigurationSource corsConfigurationSource() {  
         CorsConfiguration configuration = new CorsConfiguration();  
         // Lista das origens autorizadas, no nosso caso que iremos rodar a aplicação localmente o * poderia ser trocado  
-		 // por: http://localhost:porta, em que :porta será a porta em que a aplicação cliente será executada  configuration.setAllowedOrigins(List.of("*"));  
-        // Lista dos métodos HTTP autorizados  
-		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "TRACE", "CONNECT"));  
+        // por: http://localhost:porta, em que :porta será a porta em que a aplicação cliente será executada
+        configuration.setAllowedOrigins(List.of("*"));  
+        // Lista dos métodos HTTP autorizados
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "TRACE", "CONNECT"));  
         // Lista dos Headers autorizados, o Authorization será o header que iremos utilizar para transferir o Token  
-		configuration.setAllowedHeaders(List.of("Authorization","x-xsrf-token",  
+        configuration.setAllowedHeaders(List.of("Authorization","x-xsrf-token",  
                 "Access-Control-Allow-Headers", "Origin",  
                 "Accept", "X-Requested-With", "Content-Type",  
                 "Access-Control-Request-Method",  
@@ -1873,7 +1874,8 @@ public class CategoryController {
     }  
   
     // http://localhost:8080/categories/1  
-	// http://localhost:8080/categories?id=1  @GetMapping("{id}")  
+	// http://localhost:8080/categories?id=1  
+	@GetMapping("{id}")  
     public ResponseEntity<Category> findById(@PathVariable Long id) {  
         Category category = categoryService.findById(id);  
         if (category != null) {  
@@ -2153,7 +2155,8 @@ public class ProductController {
     }  
   
     // http://localhost:8080/products/1  
-	// http://localhost:8080/products?id=1  @GetMapping("{id}")  
+	// http://localhost:8080/products?id=1
+	@GetMapping("{id}")  
     public ResponseEntity<Product> findById(@PathVariable Long id) {  
         Product product = productService.findById(id);  
         if (product != null) {  

@@ -903,8 +903,7 @@ O retorno da API será:
     "url":  "/users",
     "validationErrors":  {
         "password":  "deve corresponder a \"^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$\"",
-        "displayName":  "não deve ser nul
-		o",
+        "displayName":  "não deve ser nulo",
         "username":  "tamanho deve ser entre 4 e 50"
     }
 }

@@ -8,7 +8,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { AuthenticationResponse, IUserLogin } from "@/commons/types";
 import { useAuth } from "@/context/hooks/use-auth";
 import AuthService from "@/services/auth-service";
-import LoadingOverlay from "@/components/loading-overlay";
 import { Toast } from "primereact/toast";
 
 export const LoginPage = () => {
@@ -16,18 +15,19 @@ export const LoginPage = () => {
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<IUserLogin>({ defaultValues: { username: "", password: "" } });
-  const { handleLogin } = useAuth();
+  } = useForm<IUserLogin>({ defaultValues: { username: "", password: "" } });  
   const navigate = useNavigate();
   const { login } = AuthService;
   const toast = useRef<Toast>(null);
   const [loading, setLoading] = useState(false);
+  
+  const { handleLogin } = useAuth();
 
   const onSubmit = async (userLogin: IUserLogin) => {
     setLoading(true);
     try {
       const response = await login(userLogin);
-      if (response.status === 200 && response.data) {
+      if (response.status === 200) {
         const authenticationResponse = response.data as AuthenticationResponse;
         handleLogin(authenticationResponse);
         toast.current?.show({
@@ -47,7 +47,8 @@ export const LoginPage = () => {
           life: 3000,
         });
       }
-    } catch {
+    } catch (error) {
+      console.log(error);
       toast.current?.show({
         severity: "error",
         summary: "Erro",
@@ -131,7 +132,6 @@ export const LoginPage = () => {
           </small>
         </div>
       </Card>
-      {loading && <LoadingOverlay loading={loading} />}
     </div>
   );
 };

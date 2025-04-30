@@ -7,8 +7,8 @@ export function RequireAuth() {
   const location = useLocation();
 
   return authenticated ? (
-    <>
-      <Outlet />
+    <>      
+      <Outlet />      
     </>
   ) : (
     <Navigate to="/login" state={{ from: location }} replace />

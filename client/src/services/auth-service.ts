@@ -15,7 +15,7 @@ const signup = async (user: IUserRegister): Promise<IResponse> => {
       success: true,
       message: "Usuário cadastrado com sucesso",
       data: data.data,
-    };
+    };  
   } catch (err: any) {
     response = {
       status: 400,

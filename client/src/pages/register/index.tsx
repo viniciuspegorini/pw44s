@@ -122,7 +122,6 @@ export const RegisterPage = () => {
               <small className="p-error">{errors.password.message}</small>
             )}
           </div>
-
           <Button
             type="submit"
             label="Registrar"

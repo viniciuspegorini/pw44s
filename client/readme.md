@@ -1,4 +1,4 @@
-# Criando uma Aplicação Web com Vite utilizando React + TypeScript 
+# Criando uma Aplicação React com TypeScript utilizando Vite
 
 Neste projeto será desenvolvida a camada de visualização (*front-end*) da solução web proposta na disciplina PW44S - Programação para Web - Turma 4SI da Universidade Tecnológica Federal do Paraná - Campus Pato Branco. A aplicação web será desenvolvida utilizando a biblioteca React com auxílio de algumas bibliotecas.
 
@@ -135,7 +135,7 @@ Entendendo a estrutura do projeto criado:
 - **vite.config.ts**: define as configurações para o Vite, incluindo opções de construção, *plugins* e comportamento do servidor de desenvolvimento.
 
 
-## ⌨️ Desenvolvimento da aplicação
+## ⌨️Desenvolvimento da aplicação
 
 ### 1. ⚒️ Ajustando a estrutura inicial do projeto
 
@@ -187,7 +187,6 @@ export default App
 Agora que foram removidos os trechos de código do projeto padrão podemos adicionar as bibliotecas que serão utilizadas no desenvolvimento do projeto.
 
 ---
-
 ### 2. 🎨 Bibliotecas - instalação e configuração
 
 As bibliotecas para React permitem adicionar funcionalidades extras para aplicação, por meio de soluções prontas e testadas. Permite também o desenvolvimento mais rápido uma vez que soluções para requisições HTTP, validação de formulários, rotas, componentes de UI já estão prontas para uso dentro da aplicação. Neste projeto serão utilizadas as bibliotecas:
@@ -317,23 +316,23 @@ import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
-	resolve: {
-		alias: {
-			'@': path.resolve(__dirname, 'src')
-		}
-	}
+    plugins: [react()],
+    resolve: {
+        alias: {
+            '@': path.resolve(__dirname, 'src')
+        }
+    }
 })
 ```
 Assim, todos a importação de componentes agora, pode ser realizadas a partir do diretório raiz, desde que o caminho usado no *import* inicie-se por '@'. Para finalizar basta configurar o arquivo **tsconfig.app.json** adicionando o conteúdo abaixo na propriedade *compilerOptions*:
 ```json
 ...
 "compilerOptions": {
-	...,
-	"baseUrl": ".",
-	"paths": {
-		"@/*": ["./src/*"]
-	}
+    ...,
+    "baseUrl": ".",
+    "paths": {
+        "@/*": ["./src/*"]
+    }
 }
 ...
 ```
@@ -372,24 +371,20 @@ Com o primeiro componente criado, agora o processo será repetido, criando os co
 
 O próximo passo será criar o componente para cadastro de usuário, mas antes disso será necessário configurar a biblioteca Axios para que possam ser realizadas as requisições HTTP para a API.
 
----
-
-### 4. 🌎Configuração do Axios para as requisições HTTP
+### 4.  🌎Configuração do Axios para as requisições HTTP
 
 Para realizar as requisições HTTP para API será utilizado o cliente HTTP Axios, a configuração consiste em definir uma URL padrão para API, que será adicionada no arquivo **/src/lib/axios.ts**. A API desenvolvida com Spring Framework está sendo executada no endereço `http://localhost:8080` caso a porta da API tenha sido alterada na aplicação **server**, também deverá ser alterada nesse trecho de código.
 ```ts
-import  axios  from  'axios';
+import axios from 'axios';
 
-export  const  api  =  axios.create({
-	baseURL:  'http://localhost:8080',
+export const api = axios.create({
+    baseURL: 'http://localhost:8080',
 });
 ```
 
 Com o Axios configurado agora os *services* que precisam fazer requisições HTTP para API podem ser configurados.
 
----
-
-### 5. 🧑Cadastro de usuário
+### 5.  🧑Cadastro de usuário
 
 O cadastro de usuários será composto pela página de cadastro de usuários, representada pelo componente **RegisterPage**. A definição do tipo de objeto que será enviado para API (**IUserRegister**) e pela camada de serviço que será responsável por realizar a requisição HTTP para a API (**AuthService**).
 
@@ -398,17 +393,17 @@ O cadastro de usuários será composto pela página de cadastro de usuários, re
 As interfaces **IUserRegister** e **IResponse** serão definidas no arquivo **/src/commons/types.ts** (o arquivo e estrutura de pasta deverão ser criados) com os atributos necessários para o cadastro de um novo usuário na API, conforme o código:
 
 ```ts
-export  interface  IUserRegister {
-	displayName:  string;
-	username:  string;
-	password:  string;
+export interface IUserRegister {
+    displayName: string;
+    username: string;
+    password: string;
 }
 
-export  interface  IResponse {
-	status?:  number;
-	success?:  boolean;
-	message?:  string;
-	data?:  object
+export interface IResponse {
+    status?: number;
+    success?: boolean;
+    message?: string;
+    data?: object
 }
 ```
 A interface **IResponse** representa a reposta da requisição HTTP enviada pelo servidor e será utilizada dentro dos componente para recuperar o *status* da requisição e também os dados enviados pelo servidor, por meio da propriedade *data*.
@@ -614,13 +609,12 @@ import { RegisterPage } from "./pages/register";
 function App() {
   return (
     <>
-      <RegisterPage />
+        <RegisterPage />
     </>
   );
 }
 export default App;
 ```
-
 ---
 
 ### 6. 🔐 Autenticação
@@ -633,9 +627,9 @@ Será necessário criar a interface **IUserLogin** para representar o objeto que
 
 ```ts
 //...
-export  interface  IUserLogin {
-	username:  string;
-	password:  string;
+export interface IUserLogin {
+    username: string;
+    password: string;
 }
 ```
 
@@ -1060,7 +1054,6 @@ export  const  LoginPage  = () => {
 Com isso o contexto da aplicação e o componente de autenticação estão criados e podemos iniciar a configuração das rotas da aplicação.
 
 ---
-
 ### 8. 🔗 Configurando as rotas da aplicação
 
 Para controlar as rotas da aplicação será utilizada a biblioteca React Router [5]. Assim, de acordo com a URL informada no navegador um componente será renderizado para o usuário.
@@ -1120,7 +1113,6 @@ export function AppRoutes() {
 }
 ```
 ---
-
 ### 9. ⚓ Criando os componentes de Menu e Layout
 
 Para melhorar a navegação e usabilidade da aplicação será criado um menu superior (**TopMenu**) e um componente que irá ser o *layout* principal da aplicação (**Layout**).
@@ -1330,7 +1322,6 @@ export function AppRoutes() {
 Agora e possível se cadastrar, autenticar e navegar pelos componentes da aplicação, o próximo passo será desenvolver os CRUDs de Categoria e Produto.
 
 ---
-
 ### 10. 🏷️ CRUD de Categorias
 
 #### 10.1 Interface e *Service* de Categoria
@@ -1339,8 +1330,8 @@ O primeiro passo será criar a interface **ICategory**, que representa uma categ
 ```ts
 //...
 export  interface  ICategory {
-	id?:  number;
-	name:  string;
+    id?:  number;
+    name:  string;
 }
 ```
 Agora será desenvolvido o *service* **CategoryService**, para que possam ser realizadas requisições HTTP para a API. Criar o arquivo **/src/services/category-service.ts**:
@@ -1809,7 +1800,6 @@ Para finalizar o cadastro de categorias será necessário adicionar o atalho par
 Com o componente **CategoryFormPage** criado finalizamos o CRUD de categorias. O próximo passo será o desenvolvimento do CRUD de produtos.
 
 ---
-
 ### 11. 📱CRUD de Produtos
 
 #### 11.1 Interface e *Service* de Produto
@@ -2471,7 +2461,6 @@ export function AppRoutes() {
 }
 ```
 ---
-
 # 📚 Referências
 
 [1] React. Disponível em: https://pt-br.reactjs.org/.

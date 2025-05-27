@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Menubar } from "primereact/menubar";
-import { MenuItem } from "primereact/menuitem";
+import type { MenuItem } from "primereact/menuitem";
 import { Avatar } from "primereact/avatar";
 import { Button } from "primereact/button";
 import { useNavigate } from "react-router-dom";

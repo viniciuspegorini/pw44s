@@ -5,7 +5,7 @@ import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { ICategory, IProduct, IResponse } from "@/commons/types";
+import type { ICategory, IProduct, IResponse } from "@/commons/types";
 import { Toast } from "primereact/toast";
 import CategoryService from "@/services/category-service";
 import ProductService from "@/services/product-service";

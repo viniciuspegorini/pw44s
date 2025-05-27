@@ -1,4 +1,4 @@
-import { ICategory, IResponse } from "@/commons/types";
+import type { ICategory, IResponse } from "@/commons/types";
 import { api } from "@/lib/axios";
 
 // URL base para as requisições de categoria

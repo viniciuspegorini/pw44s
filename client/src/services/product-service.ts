@@ -1,4 +1,4 @@
-import { IProduct, IResponse } from "@/commons/types";
+import type { IProduct, IResponse } from "@/commons/types";
 import { api } from "@/lib/axios";
 
 // URL base para as requisições de produtos

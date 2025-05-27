@@ -1,4 +1,4 @@
-import { IUserRegister, IUserLogin, IResponse } from "@/commons/types";
+import type { IUserRegister, IUserLogin, IResponse } from "@/commons/types";
 import { api } from "@/lib/axios";
 
 /**

@@ -6,7 +6,7 @@ import { Card } from "primereact/card";
 import { Link, useNavigate } from "react-router-dom";
 import { classNames } from "primereact/utils";
 import { useRef, useState } from "react";
-import { IUserRegister } from "@/commons/types";
+import type  { IUserRegister } from "@/commons/types";
 import AuthService from "@/services/auth-service";
 import { Toast } from "primereact/toast";
 

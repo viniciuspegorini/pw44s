@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Toast } from "primereact/toast";
-import { ICategory, IResponse } from "@/commons/types";
+import type { ICategory, IResponse } from "@/commons/types";
 import CategoryService from "@/services/category-service";
 import { Controller, useForm } from "react-hook-form";
 import { InputText } from "primereact/inputtext";

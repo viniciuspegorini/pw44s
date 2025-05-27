@@ -328,13 +328,13 @@ Assim, todos a importação de componentes agora, pode ser realizadas a partir d
 ```json
 ...
 "compilerOptions": {
-    ...,
+    ... manter o restante do código anterior, apenas adicionando o trecho abaixo
     "baseUrl": ".",
     "paths": {
         "@/*": ["./src/*"]
     }
 }
-...
+... manter o restante do código...
 ```
 
 ---
@@ -412,7 +412,7 @@ A interface **IResponse** representa a reposta da requisição HTTP enviada pelo
 
 As chamadas HTTP serão realizadas por meio de *services* com o objetivo de deixar o código mais organizado e de fácil manutenção. Para isso, será criada a pasta **/src/services/** e dentro o arquivo **auth-service.ts**. No arquivo *auth-service.ts* será implementado a função assíncrona *signup()* que será responsável por realizar um HTTP POST para API com um objeto JSON representando um usuário.
 ```ts
-import { IUserRegister, IResponse } from "@/commons/types";
+import type { IUserRegister, IResponse } from "@/commons/types";
 import { api } from "@/lib/axios";
 
 /**
@@ -467,7 +467,7 @@ import { Card } from "primereact/card";
 import { Link, useNavigate } from "react-router-dom";
 import { classNames } from "primereact/utils";
 import { useRef, useState } from "react";
-import { IUserRegister } from "@/commons/types";
+import type { IUserRegister } from "@/commons/types";
 import AuthService from "@/services/auth-service";
 import { Toast } from "primereact/toast";
 
@@ -636,7 +636,7 @@ export interface IUserLogin {
 Agora será realizada a alteração do arquivo auth-service.ts adicionando a função responsável por realizar a requisição HTTP POST contendo um JSON com os atributos **username e password**:
 
 ```ts
-import { IUserRegister, IUserLogin, IResponse } from "@/commons/types";
+import type { IUserRegister, IUserLogin, IResponse } from "@/commons/types";
 import { api } from "@/lib/axios";
 
 /**
@@ -709,7 +709,7 @@ import { Password } from "primereact/password";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { Link, useNavigate } from "react-router-dom";
-import { IUserLogin } from "@/commons/types";
+import type { IUserLogin } from "@/commons/types";
 import AuthService from "@/services/auth-service";
 import { Toast } from "primereact/toast";
 
@@ -875,8 +875,9 @@ export interface AuthenticationResponse {
 Nessa etapa serão criados os arquivos **/src/context/AuthContext.tsx** e **/src/context/hooks/use-auth.ts**. O arquivo **AuthContext.tsx** terá o seguinte conteúdo:
 
 ```jsx
-import { createContext, ReactNode, useEffect, useState } from "react";
-import { AuthenticatedUser, AuthenticationResponse } from "@/commons/types";
+import { createContext, useEffect, useState } from "react";
+import type { ReactNode } from "react";
+import type { AuthenticatedUser, AuthenticationResponse } from "@/commons/types";
 import { api } from "@/lib/axios";
 import { useNavigate } from "react-router-dom";
 
@@ -1007,7 +1008,7 @@ Com o **AuthProvider** configurado, o próximo passo será desenvolver o compone
 
 ```jsx
 //...
-import { AuthenticationResponse, IUserLogin } from  "@/commons/types"; //adicionar a importação do AuthenticationResponse
+import type { AuthenticationResponse, IUserLogin } from  "@/commons/types"; //adicionar a importação do AuthenticationResponse
 import { useAuth } from  "@/context/hooks/use-auth"; // adicionar a importação do hook useAuth
 //...
 export  const  LoginPage  = () => {
@@ -1123,7 +1124,7 @@ O componente TopMenu irá conter o menu superior da aplicação com os links par
 ```jsx
 import React, { useEffect, useState } from "react";
 import { Menubar } from "primereact/menubar";
-import { MenuItem } from "primereact/menuitem";
+import type { MenuItem } from "primereact/menuitem";
 import { Avatar } from "primereact/avatar";
 import { Button } from "primereact/button";
 import { useNavigate } from "react-router-dom";
@@ -1337,7 +1338,7 @@ export  interface  ICategory {
 Agora será desenvolvido o *service* **CategoryService**, para que possam ser realizadas requisições HTTP para a API. Criar o arquivo **/src/services/category-service.ts**:
 
 ```ts
-import { ICategory, IResponse } from "@/commons/types";
+import type { ICategory, IResponse } from "@/commons/types";
 import { api } from "@/lib/axios";
 
 // URL base para as requisições de categoria
@@ -1467,7 +1468,7 @@ import { useEffect, useRef, useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import { ICategory } from "@/commons/types";
+import type { ICategory } from "@/commons/types";
 import CategoryService from "@/services/category-service";
 import { useNavigate } from "react-router-dom";
 import { Toast } from "primereact/toast";
@@ -1608,7 +1609,7 @@ Com a interface, *service* e o componente de lista criados, podemos criar o comp
 import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Toast } from "primereact/toast";
-import { ICategory, IResponse } from "@/commons/types";
+import type { ICategory, IResponse } from "@/commons/types";
 import CategoryService from "@/services/category-service";
 import { Controller, useForm } from "react-hook-form";
 import { InputText } from "primereact/inputtext";
@@ -1761,10 +1762,10 @@ export function AppRoutes() {
 //...
         {/* protected routes */}
         <Route element={<RequireAuth />}>
-		  //...
+		      //...
           <Route path="/categories" element={<CategoryListPage />} />
           <Route  path="/categories/new"  element={<CategoryFormPage  />}  />
-		  <Route  path="/categories/:id"  element={<CategoryFormPage  />}  />
+		      <Route  path="/categories/:id"  element={<CategoryFormPage  />}  />
         </Route>
 //...
 }
@@ -1819,7 +1820,7 @@ export interface IProduct {
 Agora será desenvolvido o *service* **ProductService**, para que possam ser realizadas requisições HTTP para a API. Criar o arquivo **/src/services/product-service.ts**:
 
 ```ts
-import { IProduct, IResponse } from "@/commons/types";
+import type { IProduct, IResponse } from "@/commons/types";
 import { api } from "@/lib/axios";
 
 // URL base para as requisições de produtos
@@ -1949,7 +1950,7 @@ import { useEffect, useRef, useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import { IProduct } from "@/commons/types";
+import type { IProduct } from "@/commons/types";
 import ProductService from "@/services/product-service";
 import { useNavigate } from "react-router-dom";
 import { Toast } from "primereact/toast";
@@ -2118,7 +2119,7 @@ import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { ICategory, IProduct, IResponse } from "@/commons/types";
+import type { ICategory, IProduct, IResponse } from "@/commons/types";
 import { Toast } from "primereact/toast";
 import CategoryService from "@/services/category-service";
 import ProductService from "@/services/product-service";
@@ -2341,10 +2342,10 @@ export function AppRoutes() {
 //...
         {/* protected routes */}
         <Route element={<RequireAuth />}>
-		  //...
+		      //...
           <Route path="/categories" element={<ProductListPage />} />
           <Route  path="/categories/new"  element={<ProductFormPage />}  />
-		  <Route  path="/categories/:id"  element={<ProductFormPage />}  />
+		      <Route  path="/categories/:id"  element={<ProductFormPage />}  />
         </Route>
 //...
 }
@@ -2397,7 +2398,7 @@ Com o componente **ProductFormPage** criado finalizamos o CRUD de produtos e o p
 
 ---
 
-### 12. 🚫Tratando o erro 404 Not Found
+### 12. 🚫 Tratando o erro 404 Not Found
 
 Para tratar o erro de página não encontrada no lado cliente da aplicação será desenvolvido o componente NotFound, em: **/src/pages/not-found/index.tsx**.
 

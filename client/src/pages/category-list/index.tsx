@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import { ICategory } from "@/commons/types";
+import type { ICategory } from "@/commons/types";
 import CategoryService from "@/services/category-service";
 import { useNavigate } from "react-router-dom";
 import { Toast } from "primereact/toast";

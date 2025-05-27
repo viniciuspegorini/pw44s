@@ -5,7 +5,7 @@ import { Password } from "primereact/password";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthenticationResponse, IUserLogin } from "@/commons/types";
+import type { AuthenticationResponse, IUserLogin } from "@/commons/types";
 import { useAuth } from "@/context/hooks/use-auth";
 import AuthService from "@/services/auth-service";
 import { Toast } from "primereact/toast";

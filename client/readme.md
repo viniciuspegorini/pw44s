@@ -1274,7 +1274,7 @@ createRoot(document.getElementById("root")!).render(
 
 #### 9.2 Componente Layout
 
-O componente de Layout será utilizado como base para todas as outras páginas da aplicação, podem ser adicionado componentes de menu, menu lateral, rodapé, entre outros. No caso da aplicação desenvolvida será adicionado apenas o menu superior. Dentro de **src/components/layout/index.ts**.
+O componente de Layout será utilizado como base para todas as outras páginas da aplicação, podem ser adicionado componentes de menu, menu lateral, rodapé, entre outros. No caso da aplicação desenvolvida será adicionado apenas o menu superior. Dentro de **src/components/layout/index.tsx**.
 
 ```jsx
 import { Outlet } from "react-router-dom";

@@ -63,6 +63,7 @@ const TopMenu: React.FC = () => {
             },
           ],
         },
+        { label: "Prod. Show", icon: "pi pi-search", command: () => navigate("/products/show") },
       ]
     : [];
 

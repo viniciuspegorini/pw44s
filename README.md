@@ -6,11 +6,11 @@ Durante a disciplina será desenvolvida uma solução web composta por dois proj
 
 ## API RESTful (*Back-end*)
 
-A API REST será desenvolvida utilizando o *framework* **Spring**.
+A API REST será desenvolvida utilizando o *framework* **Spring** com a linguagem de programação Java.
 
 ### ⚙️ Lista de Ferramentas
 
-- JDK 21 ou superior
+- <img src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/java.png" alt="Java" width="20" /> JDK 24
 - IDE:
     - <img width="20" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/intellij.png" alt="IntelliJ" title="IntelliJ"/> [IntelliJ Idea](https://www.jetbrains.com/idea/) ou 
     - <img width="20" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/eclipse.png" alt="eclipse" title="eclipse"/> [Eclipse](https://eclipseide.org/)

@@ -25,8 +25,11 @@ export const CategoryFormPage = () => {
 
   const isEdit = !!id;
 
-  useEffect(() => {
-    loadCategory();
+  useEffect(() => {    
+    if (id) {
+      loadCategory();
+    }
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 

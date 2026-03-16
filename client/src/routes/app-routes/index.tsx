@@ -10,6 +10,7 @@ import { ProductListPage } from "@/pages/product-list";
 import { ProductFormPage } from "@/pages/product-form";
 import { NotFound } from "@/pages/not-found";
 import { ProductShow } from "@/pages/product-show";
+import { ProductCardListPage } from '@/pages/product-card-list';
 
 export function AppRoutes() {
   return (
@@ -33,6 +34,7 @@ export function AppRoutes() {
           <Route path="/products/:id" element={<ProductFormPage />} />
 
           <Route path="/products/show" element={<ProductShow />} />
+          <Route path="/products/card-list" element={<ProductCardListPage />} />
           {/* catch all */}
           <Route path="*" element={<NotFound />} />
         </Route>

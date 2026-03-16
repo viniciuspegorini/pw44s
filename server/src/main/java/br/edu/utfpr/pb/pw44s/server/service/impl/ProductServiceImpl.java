@@ -20,4 +20,5 @@ public class ProductServiceImpl extends CrudServiceImpl<Product, Long>
     protected JpaRepository<Product, Long> getRepository() {
         return productRepository;
     }
+
 }

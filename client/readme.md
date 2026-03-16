@@ -214,6 +214,8 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
 
+import "primereact/resources/themes/lara-light-indigo/theme.css"; //theme
+import "primereact/resources/primereact.min.css"; //core css
 import { PrimeReactProvider } from "primereact/api";
 
 createRoot(document.getElementById("root")!).render(
@@ -272,6 +274,7 @@ import App from "./App.tsx";
 import { PrimeReactProvider } from "primereact/api";
 import "primereact/resources/themes/lara-light-indigo/theme.css"; //theme
 import "primereact/resources/primereact.min.css"; //core css
+import 'primeflex/primeflex.css';
 
 import { BrowserRouter } from "react-router-dom";
 
@@ -411,6 +414,12 @@ A interface **IResponse** representa a reposta da requisição HTTP enviada pelo
 #### 5.2 Service AuthService
 
 As chamadas HTTP serão realizadas por meio de *services* com o objetivo de deixar o código mais organizado e de fácil manutenção. Para isso, será criada a pasta **/src/services/** e dentro o arquivo **auth-service.ts**. No arquivo *auth-service.ts* será implementado a função assíncrona *signup()* que será responsável por realizar um HTTP POST para API com um objeto JSON representando um usuário.
+
+Ajustar o arquivo ***eslint.config.js***:
+```js
+  "@typescript-eslint/no-explicit-any": "off",
+```
+
 ```ts
 import type { IUserRegister, IResponse } from "@/commons/types";
 import { api } from "@/lib/axios";

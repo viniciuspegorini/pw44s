@@ -1,4 +1,4 @@
-import { IProduct } from "@/commons/types";
+import type { IProduct } from "@/commons/types";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 

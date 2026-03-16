@@ -2,7 +2,6 @@ package br.edu.utfpr.pb.pw44s.server.controller;
 
 import br.edu.utfpr.pb.pw44s.server.service.ICrudService;
 import jakarta.validation.Valid;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -19,22 +18,16 @@ public abstract class CrudController<T, D, ID extends Serializable> {
 
     protected abstract ICrudService<T, ID> getService();
 
-    protected abstract ModelMapper getModelMapper();
+    protected abstract D toDto(T entity);
 
-    private final Class<T> typeClass;
-    private final Class<D> typeDtoClass;
-
-    public CrudController(Class<T> typeClass, Class<D> typeDtoClass) {
-        this.typeClass = typeClass;
-        this.typeDtoClass = typeDtoClass;
-    }
+    protected abstract T toEntity(D dto);
 
     private D convertToDto(T entity) {
-        return getModelMapper().map(entity, this.typeDtoClass);
+        return toDto(entity);
     }
 
     private T convertToEntity(D entityDto) {
-        return getModelMapper().map(entityDto, this.typeClass);
+        return toEntity(entityDto);
     }
 
     @GetMapping //http://ip-api:port/request-mapping

@@ -1,24 +1,25 @@
 package br.edu.utfpr.pb.pw44s.server.controller;
 
 import br.edu.utfpr.pb.pw44s.server.dto.ProductDTO;
+import br.edu.utfpr.pb.pw44s.server.mapper.ProductMapper;
 import br.edu.utfpr.pb.pw44s.server.model.Product;
 import br.edu.utfpr.pb.pw44s.server.service.ICrudService;
 import br.edu.utfpr.pb.pw44s.server.service.IProductService;
-import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("products")
 public class ProductController extends CrudController<Product, ProductDTO, Long> {
-    private static IProductService productService;
-    private static ModelMapper modelMapper;
 
-    public ProductController(IProductService productService, ModelMapper modelMapper) {
-        super(Product.class, ProductDTO.class);
+    private final ProductMapper productMapper;
+
+    public ProductController(IProductService productService, ProductMapper productMapper) {
+        this.productMapper = productMapper;
         ProductController.productService = productService;
-        ProductController.modelMapper = modelMapper;
     }
+
+    private static IProductService productService;
 
     @Override
     protected ICrudService<Product, Long> getService() {
@@ -26,7 +27,12 @@ public class ProductController extends CrudController<Product, ProductDTO, Long>
     }
 
     @Override
-    protected ModelMapper getModelMapper() {
-        return modelMapper;
+    protected ProductDTO toDto(Product entity) {
+        return productMapper.toDto(entity);
+    }
+
+    @Override
+    protected Product toEntity(ProductDTO dto) {
+        return productMapper.toEntity(dto);
     }
 }

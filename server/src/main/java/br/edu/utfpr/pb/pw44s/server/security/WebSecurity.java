@@ -22,8 +22,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
-
 @EnableWebSecurity
 @Configuration
 public class WebSecurity {
@@ -64,14 +62,14 @@ public class WebSecurity {
         // configura a authorização das requisições
         http.authorizeHttpRequests((authorize) -> authorize
                 //permite que a rota "/users" seja acessada, mesmo sem o usuário estar autenticado desde que o método HTTP da requisição seja POST
-                .requestMatchers(antMatcher(HttpMethod.POST, "/users/**")).permitAll()
+                .requestMatchers(HttpMethod.POST, "/users/**").permitAll()
                 //permite que a rota "/error" seja acessada por qualquer    requisição mesmo o usuário não estando autenticado
-                .requestMatchers(antMatcher("/error/**")).permitAll()
+                .requestMatchers("/error/**").permitAll()
                 //permite que a rota "/h2-console" seja acessada por qualquer requisição mesmo o usuário não estando autenticado
-                .requestMatchers(antMatcher("/h2-console/**")).permitAll()
+                .requestMatchers("/h2-console/**").permitAll()
 
-                .requestMatchers(antMatcher("/products/**")).permitAll()
-                .requestMatchers(antMatcher("/categories/**")).permitAll()
+                .requestMatchers("/products/**").permitAll()
+                .requestMatchers("/categories/**").permitAll()
                 //as demais rotas da aplicação só podem ser acessadas se o usuário estiver autenticado
                 .anyRequest().authenticated()
         );

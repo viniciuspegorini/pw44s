@@ -26,7 +26,7 @@
 		<tag/>
 		<url/>
 	</scm>
-		<properties>
+	<properties>
 		<java.version>25</java.version>
 		<mapstruct.version>1.6.3</mapstruct.version>
 	</properties>
@@ -98,7 +98,7 @@
 		<dependency>
 			<groupId>com.auth0</groupId>
 			<artifactId>java-jwt</artifactId>
-			<version>4.4.0</version>
+			<version>4.5.1</version>
 		</dependency>
 
 		<!-- Conversão de Objetos e DTOs - MapStruct -->

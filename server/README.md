@@ -57,13 +57,13 @@ O projeto será criado utilizando como base o *framework* Spring Boot, que por s
 Será criado um projeto [Maven](https://maven.apache.org/) por meio da ferramenta web Spring Initializr: [https://start.spring.io/](https://start.spring.io/) com as seguintes configurações:  
 O projeto será do tipo **Maven Project**.  
 A linguagem será **Java**.  
-A versão do Spring Boot será a última versão estável na data de criação do projeto (**3.4.4**).  
+A versão do Spring Boot será a última versão estável na data de criação do projeto (**4.0.3**).  
 Os metadados do projeto são:
 - Group: **br.edu.utfpr.pb.pw44s**
 - Artifact: **server**
 - Options:
   - Packaging: **Jar**
-- Java: **21** ou superior (utilizar a versão instalada na máquina, preferência pela mais atual).
+- Java: **21** ou superior (utilizar a versão instalada na máquina, preferência pela mais atual, 25).
 
 Em dependências devem ser selecionados os *frameworks*:
 - Spring Web
@@ -82,28 +82,71 @@ O projeto está configurado e pode ser realizado o *download* do mesmo por meio 
 ### 2. 🎨 Adicionando as novas bibliotecas
 
 Além das bibliotecas selecionadas ao criar o projeto também será necessário adicionar à *tag* *<dependencies>* do pom.xml as seguintes bibliotecas:
-- [java-jwt](https://mvnrepository.com/artifact/com.auth0/java-jwt)  - na versão 4.4.0 - utilizada na autenticação para gerar o *token* JWT.
-- [modelmapper](https://mvnrepository.com/artifact/org.modelmapper/modelmapper) - na versão 3.2.0 - utilizada para conversão de objetos.
+- [java-jwt](https://mvnrepository.com/artifact/com.auth0/java-jwt)  - na versão 4.5.1 - utilizada na autenticação para gerar o *token* JWT.
+- [mapstruct](https://mvnrepository.com/artifact/org.mapstruct/mapstruct) - na versão 1.6.3 - utilizada para conversão de objetos.
 
 Conforme o código abaixo:
 ```xml  
 <!-- ... restante do pom -->  
-<dependencies>  
- <!-- ... restante das dependências -->    
-	<!-- Autenticação JWT -->    
-    <dependency>    
-       <groupId>com.auth0</groupId>    
-       <artifactId>java-jwt</artifactId>    
-       <version>4.4.0</version>    
-    </dependency>    
-    
-    <!-- Conversão de Objetos e DTOs -->    
-    <dependency>    
-       <groupId>org.modelmapper</groupId>    
-       <artifactId>modelmapper</artifactId>    
-       <version>3.2.0</version>    
-    </dependency>    
-<dependencies>  
+    <properties>
+        <java.version>25</java.version>
+        <mapstruct.version>1.6.3</mapstruct.version>
+    </properties>
+    <dependencies>  
+    <!-- ... restante das dependências -->    
+            <!-- Autenticação JWT -->
+            <dependency>
+                <groupId>com.auth0</groupId>
+                <artifactId>java-jwt</artifactId>
+                <version>4.5.1</version>
+            </dependency>
+
+            <!-- Conversão de Objetos e DTOs - MapStruct -->
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>${mapstruct.version}</version>
+            </dependency> 
+    <dependencies>
+    <build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>${mapstruct.version}</version>
+						</path>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</path>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok-mapstruct-binding</artifactId>
+							<version>0.2.0</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build> 
+</project>
 ```  
 ---
 ### 3. 🗂️ Estrutura do projeto

@@ -63,7 +63,7 @@ Os metadados do projeto são:
 - Artifact: **server**
 - Options:
   - Packaging: **Jar**
-- Java: **21** ou superior (utilizar a versão instalada na máquina, preferência pela mais atual, 25).
+- Java: **25** ou superior (utilizar a versão instalada na máquina, preferência pela mais atual).
 
 Em dependências devem ser selecionados os *frameworks*:
 - Spring Web
@@ -82,72 +82,72 @@ O projeto está configurado e pode ser realizado o *download* do mesmo por meio 
 ### 2. 🎨 Adicionando as novas bibliotecas
 
 Além das bibliotecas selecionadas ao criar o projeto também será necessário adicionar à *tag* *<dependencies>* do pom.xml as seguintes bibliotecas:
-- [java-jwt](https://mvnrepository.com/artifact/com.auth0/java-jwt)  - na versão 4.5.1 - utilizada na autenticação para gerar o *token* JWT.
+- [java-jwt](https://mvnrepository.com/artifact/com.auth0/java-jwt)  - na versão 4.4.0 - utilizada na autenticação para gerar o *token* JWT.
 - [mapstruct](https://mvnrepository.com/artifact/org.mapstruct/mapstruct) - na versão 1.6.3 - utilizada para conversão de objetos.
-
+-
+Conforme o código abaixo:  
 Conforme o código abaixo:
-```xml  
-<!-- ... restante do pom -->  
-    <properties>
-        <java.version>25</java.version>
-        <mapstruct.version>1.6.3</mapstruct.version>
-    </properties>
-    <dependencies>  
-    <!-- ... restante das dependências -->    
-            <!-- Autenticação JWT -->
-            <dependency>
-                <groupId>com.auth0</groupId>
-                <artifactId>java-jwt</artifactId>
-                <version>4.5.1</version>
-            </dependency>
-
-            <!-- Conversão de Objetos e DTOs - MapStruct -->
-            <dependency>
-                <groupId>org.mapstruct</groupId>
-                <artifactId>mapstruct</artifactId>
-                <version>${mapstruct.version}</version>
-            </dependency> 
-    <dependencies>
-    <build>
+```xml 
+<!-- ... restante do pom -->    
+	<properties>  
+		<java.version>25</java.version>
+		<mapstruct.version>1.6.3</mapstruct.version>
+	</properties>
+	<dependencies>    
+		<!-- ... restante das dependências -->      
+		<!-- Autenticação JWT -->  
+		<dependency>  
+			<groupId>com.auth0</groupId>  
+			<artifactId>java-jwt</artifactId>  
+			<version>4.5.1</version>  
+		</dependency>  
+		<!-- Conversão de Objetos e DTOs - MapStruct -->  
+		<dependency>  
+			<groupId>org.mapstruct</groupId>  
+			<artifactId>mapstruct</artifactId>  
+			<version>${mapstruct.version}</version>  
+		</dependency>
+	</dependencies>
+	<build>  
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>  
+				<artifactId>maven-compiler-plugin</artifactId>  
 				<configuration>
 					<annotationProcessorPaths>
 						<path>
-							<groupId>org.mapstruct</groupId>
-							<artifactId>mapstruct-processor</artifactId>
-							<version>${mapstruct.version}</version>
+							<groupId>org.mapstruct</groupId>  
+							<artifactId>mapstruct-processor</artifactId>  
+							<version>${mapstruct.version}</version>  
 						</path>
 						<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
+							<groupId>org.projectlombok</groupId>  
+							<artifactId>lombok</artifactId>  
 						</path>
 						<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok-mapstruct-binding</artifactId>
-							<version>0.2.0</version>
+							<groupId>org.projectlombok</groupId>  
+							<artifactId>lombok-mapstruct-binding</artifactId>  
+							<version>0.2.0</version>  
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
+				<groupId>org.springframework.boot</groupId>  
+				<artifactId>spring-boot-maven-plugin</artifactId>  
 				<configuration>
 					<excludes>
 						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
+							<groupId>org.projectlombok</groupId>  
+							<artifactId>lombok</artifactId>  
 						</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
 		</plugins>
-	</build> 
+	</build>  
 </project>
-```  
+```
 ---
 ### 3. 🗂️ Estrutura do projeto
 
@@ -166,6 +166,7 @@ src/
 │   │               ├── repository/                     # Interfaces de acesso a dados (ex: UserRepository)
 │   │               ├── service/                        # Lógica de negócio (ex: UserService)
 │   │               ├── security/                       # Configurações do Spring Security
+│   │               ├── mapper/                         # Conversão de DTOs e Entities
 │   │               └── dto/                            # Data Transfer Objects com validações
 │   └── resources/
 │       ├── application.properties                      # Configurações da aplicação
@@ -235,12 +236,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")  
 public class UserControllerTest {  
     private static final String API_USER = "/users";  
-    
-    @Autowired
-    private TestRestTemplate testRestTemplate;
+    @Autowired  
+	private TestRestTemplate testRestTemplate;
   
     @Test  
-    public void postUser_whenUserIsValid_receiveOk() {  
+	public void postUser_whenUserIsValid_receiveOk() {  
         User user = createValidUser();  
   
         ResponseEntity<Object> response = testRestTemplate.postForEntity(API_USER, user, Object.class);  
@@ -303,8 +303,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {  
   
     @PostMapping  
-    @ResponseStatus(HttpStatus.CREATED)  
-    public void createUser() {  
+	@ResponseStatus(HttpStatus.CREATED)  
+    void createUser() {  
     }  
 }
 ```  
@@ -347,8 +347,8 @@ import lombok.*;
 public class User {  
   
     @Id  
-    @GeneratedValue  
-    private long id;  
+	@GeneratedValue  
+	private long id;  
     private String username;  
     private String displayName;  
     private String password;  
@@ -388,14 +388,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")  
 public class UserControllerTest {  
     private static final String API_USER = "/users";  
-
     @Autowired  
-    private TestRestTemplate testRestTemplate;
+	private TestRestTemplate testRestTemplate;  
     @Autowired  
-    private UserRepository userRepository;  
+	private UserRepository userRepository;  
   
     @Test  
-    public void postUser_whenUserIsValid_receiveOk() {  
+  public void postUser_whenUserIsValid_receiveOk() {  
         User user = createValidUser();  
   
         ResponseEntity<Object> response = testRestTemplate.postForEntity(API_USER, user, Object.class);  
@@ -403,7 +402,7 @@ public class UserControllerTest {
     }  
   
     @Test  
-    public void postUser_whenUserIsValid_userSavedToDatabase() {  
+	public void postUser_whenUserIsValid_userSavedToDatabase() {  
         User user = createValidUser();  
         testRestTemplate.postForEntity(API_USER, user, Object.class);  
         assertThat(userRepository.count()).isEqualTo(1);  
@@ -467,8 +466,8 @@ public class UserController {
     }  
   
     @PostMapping  
-    @ResponseStatus(HttpStatus.CREATED)  
-    public void createUser(@RequestBody User user) {  
+	@ResponseStatus(HttpStatus.CREATED)  
+    void createUser(@RequestBody User user) {  
         this.userService.save(user);  
     }  
       
@@ -484,13 +483,13 @@ package br.edu.utfpr.pb.pw44s.server;
   
 //... Ocultando código repetido... 
 public class UserControllerTest {  
-    //... Ocultando código repetido... 
+	//... Ocultando código repetido... 
 	
-    @Autowired  
-    private UserRepository userRepository;
+	@Autowired  
+	private UserRepository userRepository;
 	    
     @BeforeEach  
-    public void cleanup() {  
+	public void cleanup() {  
         userRepository.deleteAll();  
         testRestTemplate.getRestTemplate().getInterceptors().clear();  
     }  
@@ -520,9 +519,9 @@ Ao abrir o Postam basta clicar em **File > New Tab** e uma nova aba para realiza
 
 ```json  
 {
-    "displayName"  :  "test-displayName",
-    "username"  :  "test-username",
-    "password"  :  "P4ssword"
+	"displayName"  :  "test-displayName",
+	"username"  :  "test-username",
+	"password"  :  "P4ssword"
 }
 ```  
 Adicionado o **JSON** basta clicar em send e a requisição será enviada para a API, o retorno que aparece em **Response** é um **201 CREATED** sem nenhum outro texto, pois é assim que está o código por enquanto. Agora executando novamente o comando **select * from tb_user** no console do banco de dados será possível visualizar o registro do usuário que foi adicionado.
@@ -534,15 +533,15 @@ No próximo teste será retornado ao cliente que chama a API além do *status* H
 ```java  
 //... ocultando código repetido  
 public class UsuarioControllerTest {  
-    //... ocultando código repetido  
-    @Test  
-    public void postUser_whenUserIsValid_receiveSuccessMessage() {  
-        User user = createValidUser();  
-        var response = postSignup(user, GenericResponse.class);  
-        Assertions.assertNotNull(response.getBody());  
-        assertThat(response.getBody().getMessage()).isNotNull();  
-    }
-    //... ocultando código repetido      
+	//... ocultando código repetido  
+	@Test  
+	public void postUser_whenUserIsValid_receiveSuccessMessage() {  
+	    User user = createValidUser();  
+	    var response = postSignup(user, GenericResponse.class);  
+	    Assertions.assertNotNull(response.getBody());  
+	    assertThat(response.getBody().getMessage()).isNotNull();  
+	}
+	//... ocultando código repetido      
 } 
 ```  
 
@@ -565,6 +564,7 @@ public class GenericResponse {
   
 }
 ```  
+
 A próxima alteração de código será realizado no método `createUser()` da classe `UserController`, que agora deverá retornar um objeto do tipo `GenericResponse`. Após essa alteração o teste criado irá passar. Para visualizar o comportamento na prática a requisição pode ser realizada novamente por meio do Postman.
 
 ```java  
@@ -588,7 +588,7 @@ public class UserController {
     }  
   
     @PostMapping  
-    @ResponseStatus(HttpStatus.CREATED)  
+	@ResponseStatus(HttpStatus.CREATED)  
     public ResponseEntity<GenericResponse> createUser(@RequestBody User user) {  
         this.userService.save(user);
           
@@ -602,18 +602,19 @@ public class UserController {
 Com essa etapa finalizada, agora serão adicionadas algumas melhorias no código e na maneira com que os dados são persistidos. Ao fazer uma consulta (***select***) no banco de dados é possível observar que a coluna **password** está sendo armazenada como texto, o que não é uma boa prática. O teste a seguir irá validar se a senha salva no banco está diferente da senha que foi enviada para cadastro, o que sinaliza que ela estará criptografada no banco de dados.
 
 ```java  
-    //...
-    @Test  
-    public void postUser_whenUserIsValid_passwordIsHashedInDatabase() {  
-        User user = createValidUser();  
+	//...
+	@Test  
+	public void postUser_whenUserIsValid_passwordIsHashedInDatabase() {  
+	    User user = createValidUser();  
 	      
-        testRestTemplate.postForEntity(API_USER, user, GenericResponse.class);  
-
-        List<User> users = userRepository.findAll();  
-        User userBD = users.getFirst();  
-        assertThat(userBD.getPassword()).isNotEqualTo(user.getPassword());  
-    } 
-    //...
+	    testRestTemplate.postForEntity(API_USER, user, GenericResponse.class);  
+	  
+	    List<User> users = userRepository.findAll();  
+	    User userBD = users.getFirst();  
+	  
+	    assertThat(userBD.getPassword()).isNotEqualTo(user.getPassword());  
+	} 
+	//...
 ```  
 
 A criptografia da senha será realizada na classe `UserService` para evitar que regras de negócio da aplicação sejam implementadas na classe *controller*. Para criptografia da senha será utilizada a classe `BCryptPasswordEncoder`[6]. Ao executar o método `bCryptPasswordEncoder.encode()` a senha será criptografada antes de ser salva no banco. Ao executar o teste ele vai passar. Para visualizar na prática só executar a requisição via Postman e executar o comando **select * from tb_user** no console do **H2**.
@@ -658,15 +659,15 @@ Nesse primeiro teste será validado o caso de recebimento do atributo `username`
 ```java  
 //...  
 public class UsuarioControllerTest {  
-    //...
-    @Test  
-    public void postUser_whenUserHasNullUsername_receiveBadRequest() {  
-        User user = createValidUser();  
-        user.setUsername(null);  
-        ResponseEntity<Object> response = testRestTemplate.postForEntity(API_USER, user, Object.class);  
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);  
-    } 
-    //...
+	//...
+	 @Test  
+	public void postUser_whenUserHasNullUsername_receiveBadRequest() {  
+	    User user = createValidUser();  
+		user.setUsername(null);  
+		ResponseEntity<Object> response = testRestTemplate.postForEntity(API_USER, user, Object.class);  
+	    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);  
+	} 
+	//...
 }  
 ```  
 
@@ -692,12 +693,12 @@ import lombok.*;
 public class User {  
   
     @Id  
-    @GeneratedValue  
-    private long id;  
+	@GeneratedValue  
+	private long id;  
   
     @NotNull  
-    private String username;  
-    private String displayName;  
+	private String username;  
+	private String displayName;  
     private String password;  
 }
 ```  
@@ -726,7 +727,7 @@ public class UserController {
     }  
   
     @PostMapping  
-    @ResponseStatus(HttpStatus.CREATED)  
+	@ResponseStatus(HttpStatus.CREATED)  
     public ResponseEntity<GenericResponse> createUser(@RequestBody @Valid User user) {  
         this.userService.save(user);  
   
@@ -765,13 +766,13 @@ public class User {
     private String username;  
   
     @NotNull  
-    @Size(min = 4, max = 50)  
+	@Size(min = 4, max = 50)  
     @Column(length = 50, name = "display_name")  
     private String displayName;  
   
     @NotNull  
-    @Size(min = 6)
-    // A expressão regular da anotação @Pattern valida para que o atributo tenha pelo menos 1 letra maiúscula, 1 letra minúscula e 1 número.  
+	@Size(min = 6)
+	// A expressão regular da anotação @Pattern valida para que o atributo tenha pelo menos 1 letra maiúscula, 1 letra minúscula e 1 número.  
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$")  
     private String password;  
 }
@@ -930,9 +931,9 @@ Por exemplo, ao enviar:
 
 ```json
 {
-    "displayName"  :  null,
-    "username"  :  "aa",
-    "password"  :  "password"
+	"displayName"  :  null,
+	"username"  :  "aa",
+	"password"  :  "password"
 }
 ```
 
@@ -940,15 +941,15 @@ O retorno da API será:
 
 ```json
 {
-    "timestamp":  4102477200,
-    "status":  400,
-    "message":  "Validation error!",
-    "url":  "/users",
-    "validationErrors":  {
-        "password":  "deve corresponder a \"^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$\"",
-        "displayName":  "não deve ser nulo",
-        "username":  "tamanho deve ser entre 4 e 50"
-    }
+	"timestamp":  4102477200,
+	"status":  400,
+	"message":  "Validation error!",
+	"url":  "/users",
+	"validationErrors":  {
+		"password":  "deve corresponder a \"^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$\"",
+		"displayName":  "não deve ser nulo",
+		"username":  "tamanho deve ser entre 4 e 50"
+	}
 }
 ```
 ---
@@ -974,15 +975,15 @@ import lombok.NoArgsConstructor;
 public class UserDTO {  
 
     @NotNull  
-    @Size(min = 4, max = 50)  
+	@Size(min = 4, max = 50)  
     private String username;  
   
     @NotNull  
-    @Size(min = 4, max = 50)  
+	@Size(min = 4, max = 50)  
     private String displayName;  
   
     @NotNull  
-    @Size(min = 6)  
+	@Size(min = 6)  
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$")  
     private String password;  
       
@@ -1002,7 +1003,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration  
 public class WebConfig {  
     @Bean  
-    public ModelMapper modelMapper() {  
+  public ModelMapper modelMapper() {  
         return new ModelMapper();  
     }  
 }  
@@ -1034,7 +1035,7 @@ public class UserController {
     }  
   
     @PostMapping  
-    @ResponseStatus(HttpStatus.CREATED)  
+ @ResponseStatus(HttpStatus.CREATED)  
     public ResponseEntity<GenericResponse> createUser(@RequestBody @Valid UserDTO userDTO) {  
         this.userService.save(modelMapper.map(userDTO, User.class));  
   
@@ -1088,16 +1089,16 @@ A classe `SecurityConstants` irá conter as constantes utilizadas pelas classes 
 package br.edu.utfpr.pb.pw44s.server.security;  
   
 public class SecurityConstants {  
-    public static final String SECRET = "utfpr"; // secret utilizado para gerar o token  
-    public static final long EXPIRATION_TIME = 86400000; // 1 dia = 60*60*24*1000  
-    public static final String TOKEN_PREFIX = "Bearer "; // tipo da autenticação  
-    public static final String HEADER_STRING = "Authorization"; // header que será passado ao server com o token  
+	public static final String SECRET = "utfpr"; // secret utilizado para gerar o token  
+	public static final long EXPIRATION_TIME = 86400000; // 1 dia = 60*60*24*1000  
+	public static final String TOKEN_PREFIX = "Bearer "; // tipo da autenticação  
+	public static final String HEADER_STRING = "Authorization"; // header que será passado ao server com o token  
 }
 ```  
 
 #### 5.3 Criação da classe EntryPointUnauthorizedHandler
 
-A classe `EntryPointUnauthorizedHandler` implementa a interface `AuthenticationEntryPoint` do *framework* Spring Security e será utilizada para definir o tipo de resposta ao cliente quando ocorrer um erro no processo de autenticação. Ao ocorrer a exceção durante a autenticação o Spring irá chamar o método  `commence()` presente na classe.
+A classe `EntryPointUnauthorizedHandler` implementa a interface `AuthenticationEntryPoint` do *framework* Spring Security e será utilizada para definir o tipo de resposta ao cliente quando ocorrer um erro no processo de autenticação, ao ocorrer a exceção durante a autenticação o Spring irá chamar o método  `commence()` presente na classe.
 
 ```java  
 package br.edu.utfpr.pb.pw44s.server.security;  
@@ -1113,18 +1114,17 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;  
   
 @Component("authenticationEntryPoint")  
-public class EntryPointUnauthorizedHandler implements AuthenticationEntryPoint {  
+public class EntryPointUnauthorizedHandler  
+        implements AuthenticationEntryPoint {  
   
     @Override  
-    public void commence(HttpServletRequest request,  
-                         HttpServletResponse response,  
-                         AuthenticationException authException)  
-                            throws IOException, ServletException {  
+    public void commence(HttpServletRequest request, HttpServletResponse response,  
+                         AuthenticationException authException) throws IOException, ServletException {  
         response.setStatus(HttpStatus.UNAUTHORIZED.value());  
         response.sendError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());  
     }  
   
-}  
+}
 ```  
 
 #### 5.4 Criação da classe Web Security
@@ -1156,11 +1156,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
   
 import java.util.List;  
   
-import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;  
-  
 @EnableWebSecurity  
 @Configuration  
-public class WebSecurity {    
+public class WebSecurity {  
+  
     // Service responsável por buscar um usuário no banco de dados por meio do método loadByUsername()  
     private final AuthService authService;  
     // Objeto responsável por realizar o tratamento de exceção quando o usuário informar credenciais incorretas ao autenticar-se.  
@@ -1172,63 +1171,70 @@ public class WebSecurity {
     }  
   
     @Bean  
-    @SneakyThrows  
+    @SneakyThrows
     public SecurityFilterChain filterChain(HttpSecurity http) {  
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.userDetailsService(authService).passwordEncoder(passwordEncoder());  
-        
+        AuthenticationManagerBuilder authenticationManagerBuilder =  
+                http.getSharedObject(AuthenticationManagerBuilder.class);  
+        authenticationManagerBuilder  
+                .userDetailsService(authService)  
+                .passwordEncoder(passwordEncoder());  
         // authenticationManager -> responsável por gerenciar a autenticação dos usuários  
-        AuthenticationManager authenticationManager = authenticationManagerBuilder.build();  
-        //Configuração para funcionar o console do H2.  
+        AuthenticationManager authenticationManager =  
+                authenticationManagerBuilder.build();  
+  
+        //Configuração para funcionar o console do H2.
         http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));  
-        // desabilita o uso de csrf  
+        // desabilita o uso de csrf
         http.csrf(AbstractHttpConfigurer::disable);  
   
         // Adiciona configuração de CORS
         http.cors(cors -> corsConfigurationSource());  
   
-        //define o objeto responsável pelo tratamento de exceção ao entrar com credenciais inválidas  
+        //define o objeto responsável pelo tratamento de exceção ao entrar com credenciais inválidas
         http.exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(authenticationEntryPoint));  
   
-        // configura a authorização das requisições  
+        // configura a authorização das requisições
         http.authorizeHttpRequests((authorize) -> authorize  
-            //permite que a rota "/users" seja acessada, mesmo sem o usuário estar autenticado desde que o método HTTP da requisição seja POST  
-            .requestMatchers(antMatcher(HttpMethod.POST, "/users/**")).permitAll()  
-            //permite que a rota "/error" seja acessada por qualquer requisição mesmo o usuário não estando autenticado  
-            .requestMatchers(antMatcher("/error/**")).permitAll()  
-            //permite que a rota "/h2-console" seja acessada por qualquer requisição mesmo o usuário não estando autenticado  
-            .requestMatchers(antMatcher("/h2-console/**")).permitAll()  
-            //as demais rotas da aplicação só podem ser acessadas se o usuário estiver autenticado  
-            .anyRequest().authenticated()  
+                //permite que a rota "/users" seja acessada, mesmo sem o usuário estar autenticado desde que o método HTTP da requisição seja POST
+                .requestMatchers(HttpMethod.POST, "/users/**").permitAll()  
+                //permite que a rota "/error" seja acessada por qualquer    requisição mesmo o usuário não estando autenticado
+                .requestMatchers("/error/**").permitAll()  
+                //permite que a rota "/h2-console" seja acessada por qualquer requisição mesmo o usuário não estando autenticado
+                .requestMatchers("/h2-console/**").permitAll()
+                .requestMatchers("/products/**").permitAll()  
+                .requestMatchers("/categories/**").permitAll()  
+                //as demais rotas da aplicação só podem ser acessadas se o usuário estiver autenticado
+                .anyRequest().authenticated()  
         );  
         http.authenticationManager(authenticationManager)  
-            //Filtro da Autenticação - sobrescreve o método padrão do Spring Security para Autenticação.
-            .addFilter(new JWTAuthenticationFilter(authenticationManager, authService))  
-            //Filtro da Autorização - - sobrescreve o método padrão do Spring Security para Autorização.
-            .addFilter(new JWTAuthorizationFilter(authenticationManager, authService))  
-            //Como será criada uma API REST e todas as requisições que necessitam de autenticação/autorização serão realizadas com o envio do token JWT do usuário, não será necessário fazer controle de sessão no *back-end*.
-            .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        );  
-        return http.build();  
-    }  
+                //Filtro da Autenticação - sobrescreve o método padrão do Spring Security para Autenticação.
+                .addFilter(new JWTAuthenticationFilter(authenticationManager, authService))  
+                //Filtro da Autorização - - sobrescreve o método padrão do Spring Security para Autorização.
+                .addFilter(new JWTAuthorizationFilter(authenticationManager, authService))  
+                //Como será criada uma API REST e todas as requisições que necessitam de autenticação/autorização serão realizadas com o envio do token JWT do usuário, não será necessário fazer controle de sessão no *back-end*.
+                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));  
+  
+			return http.build();  
+	}  
   
     // Criação do objeto utilizado na criptografia da senha, ele é usado no UserService ao cadastrar um usuário e pelo authenticationManagerBean para autenticar um usuário no sistema.  
-    @Bean  
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();  
-    }  
+	@Bean  
+	public PasswordEncoder passwordEncoder() {  
+		return new BCryptPasswordEncoder();  
+	}  
   
-    /* 
-    O compartilhamento de recursos de origem cruzada (CORS) é um mecanismo para integração de aplicativos. O CORS define uma maneira de os aplicativos Web clientes carregados em um domínio interagirem com recursos em um domínio diferente. */  
-    @Bean  
-    public CorsConfigurationSource corsConfigurationSource() {  
+    /*  
+	   O compartilhamento de recursos de origem cruzada (CORS) é um mecanismo para integração de aplicativos. O CORS define uma maneira de os aplicativos Web clientes carregados em um domínio interagirem com recursos em um domínio diferente. */  @Bean  
+	private CorsConfigurationSource corsConfigurationSource() {  
         CorsConfiguration configuration = new CorsConfiguration();  
-        // Lista das origens autorizadas, no nosso caso que iremos rodar a aplicação localmente o * poderia ser trocado  
-        // por: http://localhost:porta, em que :porta será a porta em que a aplicação cliente será executada
+        /* 
+        Lista das origens autorizadas, no nosso caso que iremos rodar a aplicação localmente o * poderia ser trocado
+        por: http://localhost:porta, em que :porta será a porta em que a aplicação cliente será executada
+        */
         configuration.setAllowedOrigins(List.of("*"));  
         // Lista dos métodos HTTP autorizados
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "TRACE", "CONNECT"));  
-        // Lista dos Headers autorizados, o Authorization será o header que iremos utilizar para transferir o Token  
+        // Lista dos Headers autorizados, o Authorization será o header que iremos utilizar para transferir o Token
         configuration.setAllowedHeaders(List.of("Authorization","x-xsrf-token",  
                 "Access-Control-Allow-Headers", "Origin",  
                 "Accept", "X-Requested-With", "Content-Type",  
@@ -1271,56 +1277,56 @@ import java.util.Collection;
 public class User implements UserDetails {  
   
     @Id  
-    @GeneratedValue(strategy = GenerationType.IDENTITY)  
+	@GeneratedValue(strategy = GenerationType.IDENTITY)  
     private long id;  
   
     @NotNull  
-    @Size(min = 4, max = 50)  
+	@Size(min = 4, max = 50)  
     @Column(length = 50)  
     private String username;  
   
     @NotNull  
-    @Size(min = 4, max = 50)  
+	@Size(min = 4, max = 50)  
     @Column(length = 50, name = "display_name")  
     private String displayName;  
   
     @NotNull  
-    @Size(min = 6)  
+	@Size(min = 6)  
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$")  
     private String password;  
   
     @Override  
-    @Transient 
-    @JsonIgnore  
-    public Collection<? extends GrantedAuthority> getAuthorities() {  
+	@Transient 
+	@JsonIgnore  
+	public Collection<? extends GrantedAuthority> getAuthorities() {  
         return AuthorityUtils.createAuthorityList("ROLE_USER");  
     }  
   
     @Override  
-    @Transient 
-    @JsonIgnore  
-    public boolean isAccountNonExpired() {  
+	@Transient 
+	@JsonIgnore  
+	public boolean isAccountNonExpired() {  
         return true;  
     }  
   
     @Override  
-    @Transient 
-    @JsonIgnore  
-    public boolean isAccountNonLocked() {  
+	@Transient 
+	@JsonIgnore  
+	public boolean isAccountNonLocked() {  
         return true;  
     }  
   
     @Override  
-    @Transient 
-    @JsonIgnore  
-    public boolean isCredentialsNonExpired() {
+	@Transient 
+	@JsonIgnore  
+	public boolean isCredentialsNonExpired() {  
         return true;  
     }  
   
     @Override  
-    @Transient 
-    @JsonIgnore  
-    public boolean isEnabled() {  
+	@Transient 
+	@JsonIgnore  
+	public boolean isEnabled() {  
         return true;  
     }  
   
@@ -1370,7 +1376,7 @@ public class AuthService implements UserDetailsService {
     }  
   
     @Override  
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {  
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {  
         User user = userRepository.findUserByUsername(username);  
         if (user == null) {  
             throw new UsernameNotFoundException("Usuário não encontrado!");  
@@ -1464,20 +1470,22 @@ Com as classes para compor a resposta ao cliente criadas, será criada a classe 
 ```java  
 package br.edu.utfpr.pb.pw44s.server.security;  
   
+import br.edu.utfpr.pb.pw44s.server.dto.AuthRequestDTO;  
 import br.edu.utfpr.pb.pw44s.server.model.User;  
 import br.edu.utfpr.pb.pw44s.server.security.dto.AuthenticationResponse;  
 import br.edu.utfpr.pb.pw44s.server.security.dto.UserResponseDTO;  
 import br.edu.utfpr.pb.pw44s.server.service.AuthService;  
 import com.auth0.jwt.JWT;  
 import com.auth0.jwt.algorithms.Algorithm;  
-import com.fasterxml.jackson.core.exc.StreamReadException;  
-import com.fasterxml.jackson.databind.DatabindException;  
-import com.fasterxml.jackson.databind.ObjectMapper;  
+import tools.jackson.core.exc.StreamReadException;  
+import tools.jackson.databind.DatabindException;  
+import tools.jackson.databind.ObjectMapper;  
 import jakarta.servlet.FilterChain;  
 import jakarta.servlet.ServletException;  
 import jakarta.servlet.http.HttpServletRequest;  
 import jakarta.servlet.http.HttpServletResponse;  
 import lombok.NoArgsConstructor;  
+import org.jspecify.annotations.NonNull;  
 import org.springframework.security.authentication.AuthenticationManager;  
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;  
 import org.springframework.security.core.Authentication;  
@@ -1486,7 +1494,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;  
   
 import java.io.IOException;  
-import java.util.Date;  
+import java.util.Date; 
   
   
 @NoArgsConstructor  
@@ -1500,23 +1508,22 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }  
   
     @Override  
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {  
+  public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {  
         try {  
             //HTTP.POST {"username":"admin", "password":"P4ssword"}  
-            //Obtém os dados de username e password utilizando o ObjectMapper para converter o JSON //em um objeto User com esses dados.  User credentials = new User();  
+			//Obtém os dados de username e password utilizando o ObjectMapper para converter o JSON //em um objeto User com esses dados.  User credentials = new User();  
             User user = new User();  
             //Verifica se o usuário existe no banco de dados, caso não exista uma Exception será disparada  
-            //e o código será parado de executar nessa parte e o usuário irá receber uma resposta //com falha na autenticação (classe: EntryPointUnauthorizedHandler)  
-            if (request.getInputStream() != null || request.getInputStream().available() > 0) {  
-                credentials = new ObjectMapper().readValue(request.getInputStream(), User.class);  
-                user = (User) authService.loadUserByUsername(credentials.getUsername());  
-            }  
-            //Caso o usuário seja encontrado, o objeto authenticationManager encarrega-se de autenticá-lo.  
-            //Como o authenticationManager foi configurado na classe WebSecurity e, foi informado o método  
-            //de criptografia da senha, a senha informada durante a autenticação é criptografada e  
-            //comparada com a senha armazenada no banco. Caso não esteja correta uma Exception será disparada
-            //Caso ocorra sucesso será chamado o método: successfulAuthentication dessa classe  
-            return authenticationManager.authenticate(  
+			//e o código será parado de executar nessa parte e o usuário irá receber uma resposta //com falha na autenticação (classe: EntryPointUnauthorizedHandler)  if (request.getInputStream() != null || request.getInputStream().available() > 0) {  
+            credentials = new ObjectMapper().readValue(request.getInputStream(), User.class);  
+            user = (User) authService.loadUserByUsername(credentials.getUsername());  
+		}  
+		//Caso o usuário seja encontrado, o objeto authenticationManager encarrega-se de autenticá-lo.  
+		//Como o authenticationManager foi configurado na classe WebSecurity e, foi informado o método  
+		//de criptografia da senha, a senha informada durante a autenticação é criptografada e  
+		//comparada com a senha armazenada no banco. Caso não esteja correta uma Exception será disparada 		
+		//Caso ocorra sucesso será chamado o método: successfulAuthentication dessa classe  
+		return authenticationManager.authenticate(  
                     new UsernamePasswordAuthenticationToken(  
                             credentials.getUsername(),  
                             credentials.getPassword(),  
@@ -1534,27 +1541,26 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }  
   
     @Override  
-    protected void successfulAuthentication(HttpServletRequest request,  
+	protected void successfulAuthentication(HttpServletRequest request,  
                                             HttpServletResponse response,  
                                             FilterChain chain,  
                                             Authentication authResult) throws IOException, ServletException {  
   
         User user = (User) authService.loadUserByUsername(authResult.getName());  
         // o método create() da classe JWT é utilizado para criação de um novo token JWT  
-        String token = JWT.create()  
-            // o objeto authResult possui os dados do usuário autenticado, nesse caso o método getName() retorna o username do usuário foi autenticado no método attemptAuthentication.  
-            .withSubject(authResult.getName())  
-            //a data de validade do token é a data atual mais o valor armazenado na constante EXPIRATION_TIME, nesse caso 1 dia  
-            .withExpiresAt(  
-                new Date(System.currentTimeMillis()  + SecurityConstants.EXPIRATION_TIME)  
-            )
-            //Por fim é informado o algoritmo utilizado para assinar o token e por parâmetro a chave utilizada para assinatura. O Secret também pode ser alterado na classe SecurityConstants que armazena alguns dados de configuração do Spring Security  
-            .sign(Algorithm.HMAC512(SecurityConstants.SECRET));    
+		String token = JWT.create()  
+        // o objeto authResult possui os dados do usuário autenticado, nesse caso o método getName() retorna o username do usuário foi autenticado no método attemptAuthentication.  
+		.withSubject(authResult.getName())  
+        //a data de validade do token é a data atual mais o valor armazenado na constante EXPIRATION_TIME, nesse caso 1 dia  
+		.withExpiresAt(  
+	        new Date(System.currentTimeMillis()  + SecurityConstants.EXPIRATION_TIME)  
+        )
+        //Por fim é informado o algoritmo utilizado para assinar o token e por parâmetro a chave utilizada para assinatura. O Secret também pode ser alterado na classe SecurityConstants que armazena alguns dados de configuração do Spring Security  
+		.sign(Algorithm.HMAC512(SecurityConstants.SECRET));    
         response.setContentType("application/json");    
         response.getWriter().write(  
                 new ObjectMapper().writeValueAsString(  
-                        new AuthenticationResponse(token, new UserResponseDTO(user))
-                    )  
+                        new AuthenticationResponse(token, new UserResponseDTO(user)))  
         );
     }  
   
@@ -1585,7 +1591,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;  
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;  
   
-import java.io.IOException;  
+import java.io.IOException; 
   
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {  
   
@@ -1598,21 +1604,22 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     }  
   
     @Override  
-    protected void doFilterInternal(HttpServletRequest request,  
+  protected void doFilterInternal(HttpServletRequest request,  
                                     HttpServletResponse response,  
                                     FilterChain chain) throws IOException, ServletException {  
   
         //Recuperar o token do Header(cabeçalho) da requisição  
-        String header = request.getHeader(SecurityConstants.HEADER_STRING);  
+  String header = request.getHeader(SecurityConstants.HEADER_STRING);  
         //Verifica se o token existe no cabeçalho  
-        if (header == null || !header.startsWith(SecurityConstants.TOKEN_PREFIX)) {  
+  if (header == null || !header.startsWith(SecurityConstants.TOKEN_PREFIX)) {  
             chain.doFilter(request, response);  
             return;  
         }  
         //Chama o método getAuthentication e retorna o usuário autenticado para dar sequência na requisição  
-        UsernamePasswordAuthenticationToken authenticationToken =  getAuthentication(request);  
+  UsernamePasswordAuthenticationToken authenticationToken =  
+                getAuthentication(request);  
         //Adiciona o usuário autenticado no contexto do spring security  
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);  
+  SecurityContextHolder.getContext().setAuthentication(authenticationToken);  
         chain.doFilter(request, response);  
     }  
   
@@ -1620,22 +1627,22 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         String token = request.getHeader(SecurityConstants.HEADER_STRING);  
   
         //verifica se o token é válido e retorna o username  
-        String username = JWT.require(Algorithm.HMAC512(SecurityConstants.SECRET))  
+  String username = JWT.require(Algorithm.HMAC512(SecurityConstants.SECRET))  
                 .build()  
                 .verify(token.replace(SecurityConstants.TOKEN_PREFIX, ""))  
                 .getSubject();  
   
         if (username != null) {  
             // com posse do username é verificado se ele existe na base de dados  
-            User user = (User) authService.loadUserByUsername(username);  
+  User user = (User) authService.loadUserByUsername(username);  
             //caso exista o usuário é autenticado e a requisição continua a ser executada.  
-            return new UsernamePasswordAuthenticationToken(  
+  return new UsernamePasswordAuthenticationToken(  
                     user.getUsername(),  
                     null,  
                     user.getAuthorities());  
         }  
         // senão é retornado null, se a url que o usuário solicitou necessita de autenticação ele vai receber erro 401 - Unauthorized  
-        return null;  
+  return null;  
     }  
 }
 ```  
@@ -1648,10 +1655,10 @@ Para testar, poder ser utilizado o Postman ou Insomia para realizar uma requisi�
 
 Abaixo está o JSON que deverá ser enviado via **HTTP POST** para URL **/users** para criar um novo usuário.
 ```json  
-{
-    "displayName"  :  "test-user-Display",
-    "username"  :  "test-user",
-    "password"  :  "P4ssword"
+ {
+	"displayName"  :  "test-user-Display",
+	"username"  :  "test-user",
+	"password"  :  "P4ssword"
 }
 ```  
 ##### 5.10.2 Autenticando-se
@@ -1659,24 +1666,24 @@ Abaixo está o JSON que deverá ser enviado via **HTTP POST** para URL **/users*
 Abaixo está o JSON que deverá ser enviado via **HTTP POST** para URL **/login** para autenticar-se na aplicação.
 ```json  
 {
-    "username"  :  "test-user",
-    "password"  :  "P4ssword"
+	"username"  :  "test-user",
+	"password"  :  "P4ssword"
 }
 ```  
 
 Abaixo está a resposta enviada ao cliente após a autenticação realizada com sucesso.
 ```json  
 {
-    "token":  "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LXVzZXIiLCJleHAiOjE3NDU5NTgxMDh9.hol5Y7HrmDTSAFXKXzYDaeJXKVSW_QWWwDhye64nBdCsXzzcOh2lYzNee92bT4evwffXqlstC4PVCwqGPTQfHA",
-    "user":  {
-        "displayName":  "test-user-Display",
-        "username":  "test-user",
-        "authorities":  [
-            {
-                "authority":  "ROLE_USER"
-            }
-        ]
-    }
+	"token":  "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LXVzZXIiLCJleHAiOjE3NDU5NTgxMDh9.hol5Y7HrmDTSAFXKXzYDaeJXKVSW_QWWwDhye64nBdCsXzzcOh2lYzNee92bT4evwffXqlstC4PVCwqGPTQfHA",
+	"user":  {
+		"displayName":  "test-user-Display",
+		"username":  "test-user",
+		"authorities":  [
+			{
+				"authority":  "ROLE_USER"
+			}
+		]
+	}
 }
 ```  
 
@@ -1719,16 +1726,16 @@ import java.util.Objects;
 public class Category {  
   
     @Id  
-    @GeneratedValue(strategy = GenerationType.IDENTITY)  
+	@GeneratedValue(strategy = GenerationType.IDENTITY)  
     private Long id;  
   
     @NotNull  
-    @Size(min = 2, max = 50)  
+	@Size(min = 2, max = 50)  
     @Column(length = 50, nullable = false)  
     private String name;  
   
     @Override  
-    public boolean equals(Object o) {  
+	public boolean equals(Object o) {  
         if (this == o) return true;  
         if (o == null || getClass() != o.getClass()) return false;  
         Category category = (Category) o;  
@@ -1736,7 +1743,7 @@ public class Category {
     }  
   
     @Override  
-    public int hashCode() {  
+	public int hashCode() {  
         return Objects.hash(id);  
     }  
 }
@@ -1761,7 +1768,7 @@ public class CategoryDTO {
     private Long id;  
   
     @NotNull  
-    @Size(min = 2, max = 50)  
+	@Size(min = 2, max = 50)  
     private String name;  
 }
 ```  
@@ -1829,40 +1836,40 @@ public class CategoryServiceImpl implements ICategoryService {
     }  
   
     @Override  
-    @Transactional(readOnly = true)  
+	@Transactional(readOnly = true)  
     public List<Category> findAll() {  
         return this.categoryRepository.findAll();  
     }  
   
     @Override  
-    @Transactional(readOnly = true)  
+	@Transactional(readOnly = true)  
     public Page<Category> findAll(Pageable pageable) {  
         return this.categoryRepository.findAll(pageable);  
     }  
   
     @Override  
-    @Transactional(readOnly = true)  
+	@Transactional(readOnly = true)  
     public Category findById(Long id) {  
         return this.categoryRepository.findById(id).orElse(null);  
     }  
   
     @Override  
-    public Category save(Category category) {  
+	public Category save(Category category) {  
         return this.categoryRepository.save(category);  
     }  
   
     @Override  
-    public void delete(Long id) {  
+	public void delete(Long id) {  
         this.categoryRepository.deleteById(id);  
     }  
   
     @Override  
-    public boolean exists(Long id) {  
+	public boolean exists(Long id) {  
         return this.categoryRepository.existsById(id);  
     }  
   
     @Override  
-    public long count() {  
+	public long count() {  
         return this.categoryRepository.count();  
     }  
 }
@@ -1899,26 +1906,25 @@ public class CategoryController {
     }  
   
     @PostMapping  
-    public ResponseEntity<Category> save(@RequestBody @Valid Category category) {  
+	public ResponseEntity<Category> save(@RequestBody @Valid Category category) {  
         categoryService.save(category);  
         return ResponseEntity.status(HttpStatus.CREATED).body(category);  
     }  
   
     @PutMapping  
-    public ResponseEntity<Category> update(@RequestBody @Valid Category category) {  
+	public ResponseEntity<Category> update(@RequestBody @Valid Category category) {  
         categoryService.save(category);  
         return ResponseEntity.status(HttpStatus.OK).body(category);  
     }  
   
     @GetMapping  
-    public ResponseEntity<List<Category>> findAll() {  
+	public ResponseEntity<List<Category>> findAll() {  
         return ResponseEntity  
                 .status(HttpStatus.OK).body(categoryService.findAll());  
     }  
   
     // http://localhost:8080/categories/1  
-    // http://localhost:8080/categories?id=1  
-    @GetMapping("{id}")  
+	// http://localhost:8080/categories?id=1  @GetMapping("{id}")  
     public ResponseEntity<Category> findById(@PathVariable Long id) {  
         Category category = categoryService.findById(id);  
         if (category != null) {  
@@ -1943,9 +1949,8 @@ public class CategoryController {
     public ResponseEntity<Boolean> exists(@PathVariable Long id) {  
         return ResponseEntity.status(HttpStatus.OK).body(categoryService.exists(id));  
     }  
-    
     //http://localhost:8080/categories/page?page=1&size=5  
-    @GetMapping("page")  
+	@GetMapping("page")  
     public ResponseEntity<Page<Category>> findPage(@RequestParam int page,  
                                                    @RequestParam int size,  
                                        @RequestParam(required = false) String order,  
@@ -1965,7 +1970,7 @@ Com a finalização do *controller* já é possível realizar requisições HTTP
 
 ```json  
 {
-    "name": "Categoria 1"
+	"name": "Categoria 1"
 }  
 ```  
 E, ao realizar um HTTP GET para URL [http://localhost:8080/categories](http://localhost:8080/categories) uma lista de categorias no formato JSON será exibida como resultado.
@@ -2003,25 +2008,25 @@ import java.util.Objects;
 public class Product {  
   
     @Id  
-    @GeneratedValue(strategy = GenerationType.IDENTITY)  
+	@GeneratedValue(strategy = GenerationType.IDENTITY)  
     private Long id;  
   
     @NotNull  
-    private String name;  
+	private String name;  
   
     @NotNull  
     @Column(length = 1024)  
     private String description;  
   
     @NotNull  
-    private BigDecimal price;  
+	private BigDecimal price;  
   
     @ManyToOne  
-    @JoinColumn(name = "category_id", referencedColumnName = "id")  
+	@JoinColumn(name = "category_id", referencedColumnName = "id")  
     private Category category;  
   
     @Override  
-    public boolean equals(Object o) {  
+	public boolean equals(Object o) {  
         if (this == o) return true;  
         if (o == null || getClass() != o.getClass()) return false;  
         Product product = (Product) o;  
@@ -2029,7 +2034,7 @@ public class Product {
     }  
   
     @Override  
-    public int hashCode() {  
+	public int hashCode() {  
         return Objects.hash(id);  
     }  
 }  
@@ -2053,15 +2058,15 @@ public class ProductDTO {
     private Long id;  
   
     @NotNull  
-    private String name;  
+	private String name;  
   
     @NotNull  
-    private String description;  
+	private String description;  
   
     @NotNull  
-    private BigDecimal price;  
+	private BigDecimal price;  
   
-    private CategoryDTO category;  
+	private CategoryDTO category;  
 }
 ```  
 #### 7.3 Interface ProductRepository
@@ -2117,7 +2122,7 @@ public class ProductServiceImpl implements IProductService {
     }  
   
     @Override  
-    @Transactional(readOnly = true)  
+	@Transactional(readOnly = true)  
     public List<Product> findAll() {  
         return this.productRepository.findAll();  
     }  
@@ -2129,28 +2134,28 @@ public class ProductServiceImpl implements IProductService {
     }  
   
     @Override  
-    @Transactional(readOnly = true)  
+	@Transactional(readOnly = true)  
     public Product findById(Long id) {  
         return this.productRepository.findById(id).orElse(null);  
     }  
   
     @Override  
-    public Product save(Product product) {  
+	public Product save(Product product) {  
         return this.productRepository.save(product);  
     }  
   
     @Override  
-    public void delete(Long id) {  
+	public void delete(Long id) {  
         this.productRepository.deleteById(id);  
     }  
   
     @Override  
-    public boolean exists(Long id) {  
+	public boolean exists(Long id) {  
         return this.productRepository.existsById(id);  
     }  
   
     @Override  
-    public long count() {  
+	public long count() {  
         return this.productRepository.count();  
     }  
 }
@@ -2181,26 +2186,25 @@ public class ProductController {
     }  
   
     @PostMapping  
-    public ResponseEntity<Product> save(@RequestBody @Valid Product product) {  
+	public ResponseEntity<Product> save(@RequestBody @Valid Product product) {  
         productService.save(product);  
         return ResponseEntity.status(HttpStatus.CREATED).body(product);  
     }  
   
     @PutMapping  
-    public ResponseEntity<Product> update(@RequestBody @Valid Product product) {  
+	public ResponseEntity<Product> update(@RequestBody @Valid Product product) {  
         productService.save(product);  
         return ResponseEntity.status(HttpStatus.OK).body(product);  
     }  
   
     @GetMapping  
-    public ResponseEntity<List<Product>> findAll() {  
+	public ResponseEntity<List<Product>> findAll() {  
         return ResponseEntity  
                 .status(HttpStatus.OK).body(productService.findAll());  
     }  
   
     // http://localhost:8080/products/1  
-    // http://localhost:8080/products?id=1
-    @GetMapping("{id}")  
+	// http://localhost:8080/products?id=1  @GetMapping("{id}")  
     public ResponseEntity<Product> findById(@PathVariable Long id) {  
         Product product = productService.findById(id);  
         if (product != null) {  
@@ -2227,7 +2231,7 @@ public class ProductController {
     }  
     
     //http://localhost:8080/products/page?page=1&size=5  
-    @GetMapping("page")  
+	@GetMapping("page")  
     public ResponseEntity<Page<Product>> findPage(@RequestParam int page,  
                                                    @RequestParam int size,  
                                        @RequestParam(required = false) String order,  
@@ -2247,26 +2251,26 @@ Finalizando o *controller* de produtos já é possível realizar requisições H
 
 ```json  
 {
-    "name": "Produto 1",
-    "description":"Descrição do produto 1",
-    "price":99.99,
-    "category": {
-        "id": 1
-    }
+	"name": "Produto 1",
+	"description":"Descrição do produto 1",
+	"price":99.99,
+	"category": {
+		"id": 1
+	}
 }  
 ```  
 E, ao realizar um HTTP GET para URL [http://localhost:8080/products](http://localhost:8080/products) uma lista de produtos no formato JSON será exibida como resultado, ex.:
 ```json
 [
-    {
-        "name": "Produto 1",
-        "description":"Descrição do produto 1",
-        "price":99.99,
-        "category": {
-            "id": 1,
-            "name": "Categoria 1"
-        }
-    }  
+	{
+		"name": "Produto 1",
+		"description":"Descrição do produto 1",
+		"price":99.99,
+		"category": {
+			"id": 1,
+			"name": "Categoria 1"
+		}
+	}  
 ]
 ```
 
@@ -2341,68 +2345,68 @@ public abstract class CrudServiceImpl<T, ID extends Serializable> implements ICr
     protected abstract JpaRepository<T, ID> getRepository();  
   
     @Override  
-    public List<T> findAll() {  
+	public List<T> findAll() {  
         return getRepository().findAll();  
     }  
   
     @Override  
-    public List<T> findAll(Sort sort) {  
+	public List<T> findAll(Sort sort) {  
         return getRepository().findAll(sort);  
     }  
   
     @Override  
-    public Page<T> findAll(Pageable pageable) {  
+	public Page<T> findAll(Pageable pageable) {  
         return getRepository().findAll(pageable);  
     }  
   
     @Override  
-    public T save(T entity) {  
+	public T save(T entity) {  
         return getRepository().save(entity);  
     }  
   
     @Override  
-    public T saveAndFlush(T entity) {  
+	public T saveAndFlush(T entity) {  
         return getRepository().saveAndFlush(entity);  
     }  
   
     @Override  
-    public Iterable<T> save(Iterable<T> iterable) {  
+	public Iterable<T> save(Iterable<T> iterable) {  
         return getRepository().saveAll(iterable);  
     }  
   
     @Override  
-    public void flush() {  
+	public void flush() {  
         getRepository().flush();  
     }  
   
     @Override  
-    public T findById(ID id) {  
+	public T findOne(ID id) {  
         return getRepository().findById(id).orElse(null);  
     }  
   
     @Override  
-    public boolean exists(ID id) {  
+	public boolean exists(ID id) {  
         return getRepository().existsById(id);  
     }  
   
     @Override  
-    @Transactional(readOnly = true)  
+	@Transactional(readOnly = true)  
     public long count() {  
         return getRepository().count();  
     }  
   
     @Override  
-    public void delete(ID id) {  
+	public void delete(ID id) {  
         getRepository().deleteById(id);  
     }  
   
     @Override  
-    public void delete(Iterable<? extends T> iterable) {  
+	public void delete(Iterable<? extends T> iterable) {  
         getRepository().deleteAll(iterable);  
     }  
   
     @Override  
-    public void deleteAll() {  
+	public void deleteAll() {  
         getRepository().deleteAll();  
     }  
 } 
@@ -2459,12 +2463,12 @@ public abstract class CrudController<T, D, ID extends Serializable> {
     }  
   
     @GetMapping //http://ip-api:port/request-mapping  
-    public ResponseEntity<List<D>> findAll() {  
+	public ResponseEntity<List<D>> findAll() {  
         return ResponseEntity.ok(getService().findAll().stream().map(this::convertToDto).collect(Collectors.toList()));  
     }  
   
-    @GetMapping("page") //http://ip-api:port/request-mapping/page?page=1&size=5  
-    public ResponseEntity<Page<D>> findAll(@RequestParam int page,   
+    @GetMapping("page")  //http://ip-api:port/request-mapping/page?page=1&size=5  
+	public ResponseEntity<Page<D>> findAll(@RequestParam int page,   
                                            @RequestParam int size,   
                                            @RequestParam(required = false) String order,   
                                            @RequestParam(required = false) Boolean asc) {  
@@ -2486,7 +2490,7 @@ public abstract class CrudController<T, D, ID extends Serializable> {
     }  
   
     @PostMapping  
-    public ResponseEntity<D> create(@RequestBody @Valid D entity) {  
+	public ResponseEntity<D> create(@RequestBody @Valid D entity) {  
         return ResponseEntity.status(HttpStatus.CREATED).body(convertToDto(getService().save(convertToEntity(entity))));  
   
     }  
@@ -2549,7 +2553,7 @@ public class CategoryServiceImpl extends CrudServiceImpl<Category, Long> impleme
     }  
   
     @Override  
-    protected JpaRepository<Category, Long> getRepository() {  
+	protected JpaRepository<Category, Long> getRepository() {  
         return categoryRepository;  
     }  
 }
@@ -2579,12 +2583,12 @@ public class CategoryController extends CrudController<Category, CategoryDTO, Lo
     }  
   
     @Override  
-    protected ICrudService<Category, Long> getService() {  
+	protected ICrudService<Category, Long> getService() {  
         return CategoryController.categoryService;  
     }  
   
     @Override  
-    protected ModelMapper getModelMapper() {  
+	protected ModelMapper getModelMapper() {  
         return CategoryController.modelMapper;  
     }  
 }
@@ -2623,7 +2627,7 @@ public class ProductServiceImpl extends CrudServiceImpl<Product, Long>
     }  
   
     @Override  
-    protected JpaRepository<Product, Long> getRepository() {  
+	protected JpaRepository<Product, Long> getRepository() {  
         return productRepository;  
     }  
 }
@@ -2653,12 +2657,12 @@ public class ProductController extends CrudController<Product, ProductDTO, Long>
     }  
   
     @Override  
-    protected ICrudService<Product, Long> getService() {  
+	protected ICrudService<Product, Long> getService() {  
         return productService;  
     }  
   
     @Override  
-    protected ModelMapper getModelMapper() {  
+	protected ModelMapper getModelMapper() {  
         return modelMapper;  
     }  
 }
@@ -2712,13 +2716,13 @@ spring.jpa.show-sql=true
 ```
 Além do ajuste no arquivo de propriedades devemos nos certificar que o *driver* do PosgresSQL está adicionado ao arquivo `pom.xml`.
 ```xml
-    <!--... -->
-    <dependency>  
-        <groupId>org.postgresql</groupId>  
-        <artifactId>postgresql</artifactId>  
-        <scope>runtime</scope>  
-    </dependency>
-    <!--... -->	
+	<!--... -->
+	<dependency>  
+		<groupId>org.postgresql</groupId>  
+		<artifactId>postgresql</artifactId>  
+		<scope>runtime</scope>  
+	</dependency>
+	<!--... -->	
 ```
 
 ### 12. 🔏 Recuperando os dados do usuário autenticado
@@ -2752,8 +2756,7 @@ public class AuthController {
     @GetMapping("user-info")  
     public UserDTO getUserInfo(Principal principal) {  
         // String username = SecurityContextHolder.getContext().getAuthentication().getName();  
-        // Ou:
-        String username = principal.getName();  
+		// ou  String username = principal.getName();  
         return modelMapper.map(authService.loadUserByUsername(username), UserDTO.class);  
     }  
 }

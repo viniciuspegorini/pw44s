@@ -40,12 +40,14 @@ REST não é uma arquitetura, biblioteca ou *framework*, é simplesmente um  **m
 REST não é uma arquitetura ou *framework* pronto, é apenas um conjunto de regras que serve como modelo para desenvolver uma API. Esse modelo foi criado por Roy Fielding [5] um dos principais responsáveis e criadores do protocolo HTTP, basicamente, tudo que está online utiliza o protocolo HTTP ou o HTTPS que é a evolução do mesmo.
 
 ---
-## 📦 Requisitos
+### ⚙️ Lista de Ferramentas
+
+- <img src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/java.png" alt="Java" width="20" /> JDK 25
+
 - IDE:
   - <img width="20" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/intellij.png" alt="IntelliJ" title="IntelliJ"/> [IntelliJ Idea](https://www.jetbrains.com/idea/) ou 
   - <img width="20" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/eclipse.png" alt="eclipse" title="eclipse"/> [Eclipse](https://eclipseide.org/)
-
-
+  
 ---  
 ## 🛠️Criação do Projeto com Spring Boot
 
@@ -84,8 +86,7 @@ O projeto está configurado e pode ser realizado o *download* do mesmo por meio 
 Além das bibliotecas selecionadas ao criar o projeto também será necessário adicionar à *tag* *<dependencies>* do pom.xml as seguintes bibliotecas:
 - [java-jwt](https://mvnrepository.com/artifact/com.auth0/java-jwt)  - na versão 4.4.0 - utilizada na autenticação para gerar o *token* JWT.
 - [mapstruct](https://mvnrepository.com/artifact/org.mapstruct/mapstruct) - na versão 1.6.3 - utilizada para conversão de objetos.
--
-Conforme o código abaixo:  
+
 Conforme o código abaixo:
 ```xml 
 <!-- ... restante do pom -->    
@@ -502,12 +503,12 @@ Agora é possível testar a API fazendo uma requisição HTTP fora do ambiente d
 Antes de realizar o teste na API será necessário fazer alguns ajustes no projeto. Primeiro será necessário criar um arquivo de configuração para que tenhamos acesso ao banco de dados que está sendo utilizado durante os testes, o H2. Dentro da pasta **/src/main/resources/** deverá ser editado o arquivo **application.properties**. As configurações servem para que seja possível gerar um nome de banco de dados único ao executara aplicação (`jdbc:h2:mem:testdb`) e para que possa ser acessado o console do banco de dados por meio da URL [http://localhost:8080/h2-console](http://localhost:8080/h2-console).
 
 ```properties
-spring.application.name=server  
-server.port=8080  
+spring.application.name=server
+server.port=8080
   
-spring.datasource.generate-unique-name=false  
-spring.datasource.url=jdbc:h2:mem:testdb  
-spring.h2.console.enabled=true  
+spring.datasource.generate-unique-name=false
+spring.datasource.url=jdbc:h2:mem:testdb
+spring.h2.console.enabled=true
 spring.h2.console.path=/h2-console
 ```  
 
@@ -991,57 +992,61 @@ public class UserDTO {
 ```  
 
 O DTO criado para representar a classe User é bem semelhante a classe original, apenas não possui a anotação *@Entity* pois os objetos dessa classe não serão persistidos no banco de dados, eles vão servir apenas para a transferência de dados entre o cliente e a API.  Também não possui o atributo `id` pois como será utilizado apenas para cadastrar um novo usuário o atributo `id` não será enviado pelo cliente.
-A próxima etapa vai ser ajustar a classe `UserController`, pois ao invés de receber diretamente um objeto do tipo `User`, agora a aplicação vai esperar um objeto do tipo `UserDTO`. Antes disso vamos criar uma classe de configuração para instanciar  um objeto do tipo modelMapper, pois uma tarefa que será sempre necessária ao utilizar DTOs é a conversão da classe *model* para DTO e vise-versa. A classe `WebConfig` vai ter um único método para instanciar um objeto do tipo `ModelMapper` e será criada no pacote `br.edu.utfpr.pb.pw44s.server.config`.
+
+Na próxima etapa será ajustada a classe `UserController`, pois ao invés de receber diretamente um objeto do tipo `User`, agora a aplicação vai esperar um objeto do tipo `UserDTO`. Mas para isso ser possível, antes devemos criar uma classe para realizar a conversão entre os objetos dos tipos `User` e `UserDTO`.
+
+A classe `UserMapper` será responsável por realizar as conversões e será criada no pacote `br.edu.utfpr.pb.pw44s.server.mapper`.
 
 ```java  
-package br.edu.utfpr.pb.pw44s.server.config;  
-  
-import org.modelmapper.ModelMapper;  
-import org.springframework.context.annotation.Bean;  
-import org.springframework.context.annotation.Configuration;  
-  
-@Configuration  
-public class WebConfig {  
-    @Bean  
-  public ModelMapper modelMapper() {  
-        return new ModelMapper();  
-    }  
-}  
+package br.edu.utfpr.pb.pw44s.server.mapper;
+
+import br.edu.utfpr.pb.pw44s.server.dto.UserDTO;
+import br.edu.utfpr.pb.pw44s.server.model.User;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
+
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public interface UserMapper {
+
+    @Mapping(target = "id", ignore = true)
+    User toEntity(UserDTO dto);
+
+    UserDTO toDto(User entity);
+} 
 ```  
-Agora será ajustada a classe `UserController`, que após o uso do objeto `modelMapper` irá ficar com o seguinte conteúdo:
+Agora será ajustada a classe `UserController`, que após o uso do objeto do tipo `UserMapper` irá ficar com o seguinte conteúdo:
 ```java  
-package br.edu.utfpr.pb.pw44s.server.controller;  
-  
-import br.edu.utfpr.pb.pw44s.server.dto.UserDTO;  
-import br.edu.utfpr.pb.pw44s.server.model.User;  
-import br.edu.utfpr.pb.pw44s.server.service.UserService;  
-import br.edu.utfpr.pb.pw44s.server.shared.GenericResponse;  
-import jakarta.validation.Valid;  
-import org.modelmapper.ModelMapper;  
-import org.springframework.http.HttpStatus;  
-import org.springframework.http.ResponseEntity;  
-import org.springframework.web.bind.annotation.*;  
-  
-@RestController  
-@RequestMapping("users")  
-public class UserController {  
-  
-    private final UserService userService;  
-    private final ModelMapper modelMapper;  
-  
-    public UserController(UserService userService, ModelMapper modelMapper) {  
-        this.userService = userService;  
-        this.modelMapper = modelMapper;  
-    }  
-  
-    @PostMapping  
- @ResponseStatus(HttpStatus.CREATED)  
-    public ResponseEntity<GenericResponse> createUser(@RequestBody @Valid UserDTO userDTO) {  
-        this.userService.save(modelMapper.map(userDTO, User.class));  
-  
-        return ResponseEntity.status(HttpStatus.CREATED).body(new GenericResponse("Usuário salvo com sucesso"));  
-    }  
-  
+package br.edu.utfpr.pb.pw44s.server.controller;
+
+import br.edu.utfpr.pb.pw44s.server.dto.UserDTO;
+import br.edu.utfpr.pb.pw44s.server.mapper.UserMapper;
+import br.edu.utfpr.pb.pw44s.server.service.UserService;
+import br.edu.utfpr.pb.pw44s.server.shared.GenericResponse;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("users")
+public class UserController {
+
+    private final UserService userService;
+    private final UserMapper userMapper;
+
+    public UserController(UserService userService, UserMapper userMapper) {
+        this.userService = userService;
+        this.userMapper = userMapper;
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<GenericResponse> createUser(@RequestBody @Valid UserDTO userDTO) {
+        this.userService.save(userMapper.toEntity(userDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new GenericResponse("Usuário salvo com sucesso"));
+    }
+
 } 
 ```  
 Após esse ajuste, não será necessário fazer mais nenhuma modificação na aplicação e os testes e as requisições realizadas anteriormente irão funcionar da mesma maneira. Apenas adicionamos uma camada de abstração dos dados que trafegam entre as diferentes camadas da solução que está sendo desenvolvida.
@@ -1509,11 +1514,13 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
   
     @Override  
   public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {  
+        //HTTP.POST {"username":"admin", "password":"P4ssword"}  
+        //Obtém os dados de username e password utilizando o ObjectMapper para converter o JSON //em um objeto User com esses dados.              
+        //Verifica se o usuário existe no banco de dados, caso não exista uma Exception será disparada  
+        User credentials = new User();  
+        User user = new User();  
         try {  
-            //HTTP.POST {"username":"admin", "password":"P4ssword"}  
-			//Obtém os dados de username e password utilizando o ObjectMapper para converter o JSON //em um objeto User com esses dados.  User credentials = new User();  
-            User user = new User();  
-            //Verifica se o usuário existe no banco de dados, caso não exista uma Exception será disparada  
+            
 			//e o código será parado de executar nessa parte e o usuário irá receber uma resposta //com falha na autenticação (classe: EntryPointUnauthorizedHandler)  if (request.getInputStream() != null || request.getInputStream().available() > 0) {  
             credentials = new ObjectMapper().readValue(request.getInputStream(), User.class);  
             user = (User) authService.loadUserByUsername(credentials.getUsername());  
@@ -1749,7 +1756,7 @@ public class Category {
 }
 ```  
 
-#### 6.2 Criando o *DTO* CategoryDTO
+#### 6.2 Criando o *DTO* CategoryDTO e o *Mapper* CategoryMapper
 
 Agora será apresentado o código-fonte da classe `CategoryDTO` que será utilizada na transferência de dados nas requisições HTTP entre cliente e servidor da aplicação.
 
@@ -1772,6 +1779,23 @@ public class CategoryDTO {
     private String name;  
 }
 ```  
+
+```java 
+package br.edu.utfpr.pb.pw44s.server.mapper;
+
+import br.edu.utfpr.pb.pw44s.server.dto.CategoryDTO;
+import br.edu.utfpr.pb.pw44s.server.model.Category;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
+
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public interface CategoryMapper {
+
+    CategoryDTO toDto(Category entity);
+
+    Category toEntity(CategoryDTO dto);
+}
+```
 
 #### 6.3 Criação da interface CategoryRepository
 
@@ -1805,7 +1829,7 @@ public interface ICategoryService {
     Page<Category> findAll(Pageable pageable);  
     Category findById(Long id);  
     Category save(Category category);  
-    void delete(Long id);  
+    void deleteById(Long id);  
     boolean exists(Long id);  
     long count();  
 }
@@ -1859,7 +1883,7 @@ public class CategoryServiceImpl implements ICategoryService {
     }  
   
     @Override  
-	public void delete(Long id) {  
+	public void deleteById(Long id) {  
         this.categoryRepository.deleteById(id);  
     }  
   
@@ -1882,88 +1906,99 @@ Com a criação da camada *service* está finalizada a camada de acesso e persis
 A classe `CategoryController` terá como atributos o objeto `categoryService` para persistência de dados e o `modelMapper` para conversão entre o *model* e o DTO.
 
 ```java  
-package br.edu.utfpr.pb.pw44s.server.controller;  
-  
-import br.edu.utfpr.pb.pw44s.server.model.Category;  
-import br.edu.utfpr.pb.pw44s.server.service.ICategoryService;  
-import jakarta.validation.Valid;  
-import org.springframework.data.domain.Page;  
-import org.springframework.data.domain.PageRequest;  
-import org.springframework.data.domain.Sort;  
-import org.springframework.http.HttpStatus;  
-import org.springframework.http.ResponseEntity;  
-import org.springframework.web.bind.annotation.*;  
-  
-import java.util.List;  
-  
-@RestController  
-@RequestMapping("categories")  
-public class CategoryController {  
-    private final ICategoryService categoryService;  
-    
-    public CategoryController(ICategoryService categoryService) {  
-        this.categoryService = categoryService;  
-    }  
-  
-    @PostMapping  
-	public ResponseEntity<Category> save(@RequestBody @Valid Category category) {  
-        categoryService.save(category);  
-        return ResponseEntity.status(HttpStatus.CREATED).body(category);  
-    }  
-  
-    @PutMapping  
-	public ResponseEntity<Category> update(@RequestBody @Valid Category category) {  
-        categoryService.save(category);  
-        return ResponseEntity.status(HttpStatus.OK).body(category);  
-    }  
-  
-    @GetMapping  
-	public ResponseEntity<List<Category>> findAll() {  
-        return ResponseEntity  
-                .status(HttpStatus.OK).body(categoryService.findAll());  
-    }  
-  
-    // http://localhost:8080/categories/1  
-	// http://localhost:8080/categories?id=1  @GetMapping("{id}")  
-    public ResponseEntity<Category> findById(@PathVariable Long id) {  
-        Category category = categoryService.findById(id);  
-        if (category != null) {  
-            return ResponseEntity.status(HttpStatus.OK).body(category);  
-        } else {  
-            return ResponseEntity.noContent().build();  
-        }  
-    }  
-  
-    @DeleteMapping("{id}")  
-    @ResponseStatus(HttpStatus.NO_CONTENT)  
-    public void delete(@PathVariable Long id) {  
-        categoryService.delete(id);  
-    }  
-  
-    @GetMapping("count")  
-    public ResponseEntity<Long> count() {  
-        return ResponseEntity.status(HttpStatus.OK).body(categoryService.count());  
-    }  
-  
-    @GetMapping("exists/{id}")  
-    public ResponseEntity<Boolean> exists(@PathVariable Long id) {  
-        return ResponseEntity.status(HttpStatus.OK).body(categoryService.exists(id));  
-    }  
-    //http://localhost:8080/categories/page?page=1&size=5  
-	@GetMapping("page")  
-    public ResponseEntity<Page<Category>> findPage(@RequestParam int page,  
-                                                   @RequestParam int size,  
-                                       @RequestParam(required = false) String order,  
-                                       @RequestParam(required = false) Boolean asc) {  
-        PageRequest pageRequest = PageRequest.of(page, size);  
-        if (order != null && asc != null) {  
-            pageRequest = PageRequest.of(page, size,  
-                    asc ? Sort.Direction.ASC : Sort.Direction.DESC, order);  
-        }  
-        return ResponseEntity.status(HttpStatus.OK).body(  
-                            categoryService.findAll(pageRequest));  
-    }   
+package br.edu.utfpr.pb.pw44s.server.controller;
+
+import br.edu.utfpr.pb.pw44s.server.dto.CategoryDTO;
+import br.edu.utfpr.pb.pw44s.server.mapper.CategoryMapper;
+import br.edu.utfpr.pb.pw44s.server.model.Category;
+import br.edu.utfpr.pb.pw44s.server.service.ICategoryService;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RestController
+@RequestMapping("categories")
+public class CategoryController {
+    private final ICategoryService categoryService;
+    private final CategoryMapper categoryMapper;
+
+    public CategoryControllerV1(ICategoryService categoryService, CategoryMapper categoryMapper) {
+        this.categoryService = categoryService;
+        this.categoryMapper = categoryMapper;
+    }
+
+    @PostMapping
+    public ResponseEntity<CategoryDTO> save(@RequestBody @Valid CategoryDTO category) {
+        Category categorySaved = categoryService.save(categoryMapper.toEntity(category));
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoryMapper.toDto(categorySaved));
+    }
+
+    @PutMapping
+    public ResponseEntity<CategoryDTO> update(@RequestBody @Valid CategoryDTO category) {
+        Category categorySaved = categoryService.save(categoryMapper.toEntity(category));
+        return ResponseEntity.status(HttpStatus.OK).body(categoryMapper.toDto(categorySaved));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CategoryDTO>> findAll() {
+        return ResponseEntity.ok(
+                categoryService.findAll()
+                        .stream()
+                        .map(categoryMapper::toDto)
+                        .collect(Collectors.toList())
+        );
+    }
+
+    // http://localhost:8080/categories/1
+    // http://localhost:8080/categories?id=1
+    @GetMapping("{id}")
+    public ResponseEntity<Category> findById(@PathVariable Long id) {
+        Category category = categoryService.findById(id);
+        if (category != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(category);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
+    }
+
+    @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        categoryService.deleteById(id);
+    }
+
+    @GetMapping("count")
+    public ResponseEntity<Long> count() {
+        return ResponseEntity.status(HttpStatus.OK).body(categoryService.count());
+    }
+
+    @GetMapping("exists/{id}")
+    public ResponseEntity<Boolean> exists(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(categoryService.exists(id));
+    }
+    //http://localhost:8080/categories/page?page=1&size=5
+    @GetMapping("page")
+    public ResponseEntity<Page<Category>> findPage(@RequestParam int page,
+                                                   @RequestParam int size,
+                                                   @RequestParam(required = false) String order,
+                                                   @RequestParam(required = false) Boolean asc) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        if (order != null && asc != null) {
+            pageRequest = PageRequest.of(page, size,
+                    asc ? Sort.Direction.ASC : Sort.Direction.DESC, order);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(
+                categoryService.findAll(pageRequest));
+    }
 }
+
 ```  
 
 Com a finalização do *controller* já é possível realizar requisições HTTP para adicionar, atualizar, buscar e remover categorias. Por exemplo, realizando um HTTP POST para URL [http://localhost:8080/categories](http://localhost:8080/categories), com um JSON no corpo da requisição com a propriedade `name` uma nova categoria será armazenada no banco de dados.

@@ -77,7 +77,7 @@ public class CategoryControllerV1 {
     }
     //http://localhost:8080/categories/page?page=1&size=5
     @GetMapping("page")
-    public ResponseEntity<Page<Category>> findPage(@RequestParam int page,
+    public ResponseEntity<Page<CategoryDTO>> findPage(@RequestParam int page,
                                                    @RequestParam int size,
                                                    @RequestParam(required = false) String order,
                                                    @RequestParam(required = false) Boolean asc) {
@@ -87,6 +87,6 @@ public class CategoryControllerV1 {
                     asc ? Sort.Direction.ASC : Sort.Direction.DESC, order);
         }
         return ResponseEntity.status(HttpStatus.OK).body(
-                categoryService.findAll(pageRequest));
+                categoryService.findAll(pageRequest).map(categoryMapper::toDto));
     }
 }

@@ -63,7 +63,7 @@ public class WebSecurity {
         http.authorizeHttpRequests((authorize) -> authorize
                 //permite que a rota "/users" seja acessada, mesmo sem o usuário estar autenticado desde que o método HTTP da requisição seja POST
                 .requestMatchers(HttpMethod.POST, "/users/**").permitAll()
-                //permite que a rota "/error" seja acessada por qualquer    requisição mesmo o usuário não estando autenticado
+                //permite que a rota "/error" seja acessada por qualquer requisição mesmo o usuário não estando autenticado
                 .requestMatchers("/error/**").permitAll()
                 //permite que a rota "/h2-console" seja acessada por qualquer requisição mesmo o usuário não estando autenticado
                 .requestMatchers("/h2-console/**").permitAll()

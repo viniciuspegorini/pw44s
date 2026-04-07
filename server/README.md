@@ -183,15 +183,31 @@ src/
 O projeto Spring Boot vêm com uma série de configurações inicias que não precisamos nos preocupar, iniciando com a classe principal da aplicação a `ServerApplication`, nela por meio da anotação `@SpringBootApplication` todas as configurações serão carregadas.
 
 #### 1.1 Desabilitando o Spring Security
-O *framework* **Spring Security** por exemplo, já vem pré-configurado protegendo todas as URLs. Como ainda não vamos configurar a camada de segurança, será necessário adicionar a propriedade `exclude = SecurityAutoConfiguration.class` na classe `ServerApplication`, dessa maneira o **SpringBoot** vai ignorar as configurações de segurança, na sequência do desenvolvimento essa configuração será alterada para o processo de autenticação e autorização funcionar. O banco de dados em memória utilizando o **H2** também já é criado por padrão nesse momento, ou seja, todas as configurações necessárias para o início do desenvolvimento estão prontas. Abaixo está o código editado na classe principal do projeto a classe `ServerApplication`:
+O *framework* **Spring Security** por exemplo, já vem pré-configurado protegendo todas as URLs. Como ainda não vamos configurar a camada de segurança, será necessário criar uma classe de configuração para ignorar as configurações de segurança geradas pelo Spring Security, na sequência do desenvolvimento essa configuração será alterada para o processo de autenticação e autorização funcionar. O banco de dados em memória utilizando o **H2** também já é criado por padrão nesse momento, ou seja, todas as configurações necessárias para o início do desenvolvimento estão prontas. Criar a classe `WebSecurity` no pacote `package br.edu.utfpr.pb.pw44s.server.security;`:
 
-```java  
-@SpringBootApplication(exclude = SecurityAutoConfiguration.class) 
-public class ServerApplication {    
-	public static void main(String[] args) {    
-	    SpringApplication.run(ServerApplication.class, args);    
-	} 
-}  
+```java
+package br.edu.utfpr.pb.pw44s.server.security;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Configuration
+public class WebSecurity {
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) {
+        http
+                .csrf(AbstractHttpConfigurer::disable) // Desabilita CSRF para APIs REST
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().permitAll() // Todas as rotas sem necessidade de autenticação ou autorização
+                );
+        return http.build();
+    }
+}
+
 ``` 
 Com as configurações básicas definidas será possível iniciar o desenvolvimento do projeto.
 
@@ -1016,6 +1032,7 @@ public interface UserMapper {
 } 
 ```  
 Agora será ajustada a classe `UserController`, que após o uso do objeto do tipo `UserMapper` irá ficar com o seguinte conteúdo:
+
 ```java  
 package br.edu.utfpr.pb.pw44s.server.controller;
 
@@ -1066,193 +1083,178 @@ Além disso, foram criadas dentro dos pacotes `security` e `service` as demais c
 - `UserResponseDTO`: classe que será utilizada para  montar a resposta ao usuário autenticado com sucesso, irá representar o usuário autenticado.
 - `AuthorityResponseDTO`: classe que será utilizada para  montar a resposta ao usuário autenticado com sucesso, irá representar uma permissão de usuário.
 
-#### 5.1 Ajuste na classe ServerApplication
-
-O primeiro passo a ser realizado para o **Spring Security** voltar funcionar é retirar o trecho de código `exclude = SecurityAutoConfiguration.class` da classe `ServerApplication`, pois será necessário que o *framework* Spring traga algumas configurações já definidas por convenção no Spring Boot. Por padrão, ao retirar essa configuração o **Spring Security** volta a funcionar na aplicação e todas as rotas da API passam a necessitar de autenticação. Ou seja nesse momento os testes vão parar de funcionar e, ao tentar fazer uma requisição **HTTP POST** para a URL **/users** da API o retorno será um código **HTTP** **403 FORBIDEN**, mesmo todos os campos estando corretos, pois o Spring Security está validando o acesso às rotas. Abaixo está o código da classe *ServerApplication* após a remoção da configuração `exclude = SecurityAutoConfiguration.class`.
-
-```java  
-package br.edu.utfpr.pb.pw44s.server;  
-  
-import org.springframework.boot.SpringApplication;  
-import org.springframework.boot.autoconfigure.SpringBootApplication;  
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;  
-  
-@SpringBootApplication  
-public class ServerApplication {  
-  
-    public static void main(String[] args) {  
-       SpringApplication.run(ServerApplication.class, args);  
-    }  
-  
-}
-```   
-#### 5.2 Criação da classe SecurityConstants
+#### 5.1 Criação da classe SecurityConstants
 
 A classe `SecurityConstants` irá conter as constantes utilizadas pelas classes de configuração do Spring Security. As constantes da classe são a chave utilizada para gerar o Token, o tempo de validade do Token, o prefixo do Token e o nome do atributo do cabeçalho da requisição HTTP que irá conter o Token no processo de autorização.
 
 ```java  
-package br.edu.utfpr.pb.pw44s.server.security;  
-  
-public class SecurityConstants {  
-	public static final String SECRET = "utfpr"; // secret utilizado para gerar o token  
-	public static final long EXPIRATION_TIME = 86400000; // 1 dia = 60*60*24*1000  
-	public static final String TOKEN_PREFIX = "Bearer "; // tipo da autenticação  
-	public static final String HEADER_STRING = "Authorization"; // header que será passado ao server com o token  
+package br.edu.utfpr.pb.pw44s.server.security;
+
+public class SecurityConstants {
+    public static final String SECRET = "utfpr"; // secret utilizado para gerar o token
+    public static final long EXPIRATION_TIME = 86400000; // 1 dia = 60*60*24*1000
+    public static final String TOKEN_PREFIX = "Bearer "; // tipo da autenticação
+    public static final String HEADER_STRING = "Authorization"; // header que será passado ao server com o token
 }
 ```  
 
-#### 5.3 Criação da classe EntryPointUnauthorizedHandler
+#### 5.2 Criação da classe EntryPointUnauthorizedHandler
 
 A classe `EntryPointUnauthorizedHandler` implementa a interface `AuthenticationEntryPoint` do *framework* Spring Security e será utilizada para definir o tipo de resposta ao cliente quando ocorrer um erro no processo de autenticação, ao ocorrer a exceção durante a autenticação o Spring irá chamar o método  `commence()` presente na classe.
 
 ```java  
-package br.edu.utfpr.pb.pw44s.server.security;  
-  
-import jakarta.servlet.ServletException;  
-import jakarta.servlet.http.HttpServletRequest;  
-import jakarta.servlet.http.HttpServletResponse;  
-import org.springframework.http.HttpStatus;  
-import org.springframework.security.core.AuthenticationException;  
-import org.springframework.security.web.AuthenticationEntryPoint;  
-import org.springframework.stereotype.Component;  
-  
-import java.io.IOException;  
-  
-@Component("authenticationEntryPoint")  
-public class EntryPointUnauthorizedHandler  
-        implements AuthenticationEntryPoint {  
-  
-    @Override  
-    public void commence(HttpServletRequest request, HttpServletResponse response,  
-                         AuthenticationException authException) throws IOException, ServletException {  
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());  
-        response.sendError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());  
-    }  
-  
+package br.edu.utfpr.pb.pw44s.server.security;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.jspecify.annotations.NonNull;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+
+@Component("authenticationEntryPoint")
+public class EntryPointUnauthorizedHandler
+        implements AuthenticationEntryPoint {
+
+    @Override
+    public void commence(@NonNull HttpServletRequest request,
+                         HttpServletResponse response,
+                         @NonNull AuthenticationException authException)
+                            throws IOException, ServletException {
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.sendError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
+    }
+
 }
 ```  
 
-#### 5.4 Criação da classe Web Security
+#### 5.3 Ajustes na classe WebSecurity
 
-Para configurar o **Spring Security** será criada a classe `WebSecurity` no pacote `br.edu.utfpr.pb.pw44s.server.security`. Nessa classe serão sobrescritas as configurações padrão do Spring Security, por isso ela recebe a anotação `@EnableWebSecurity` e como serão criados objetos compartilhados a anotação `@Configuration`. O objeto `authService` será explicado na sequência do texto e é utilizado para buscar um usuário no banco.  O objeto `authenticationEntryPoint` é responsável por realizar o tratamento de exceção quando o usuário informar credenciais incorretas ao autenticar-se. O método `filterChain()` retorna um objeto do tipo `SecurityFilterChain`, nesse método serão sobrescritas algumas configurações padrão do Spring Security. Essas configurações serão alteradas por meio do objeto `http` do tipo `HttpSecurity`, nele podem ser alteados os objetos de tratamento de erro, quais rotas da aplicação serão autenticadas/autorizadas, as rotas para autenticação, controle do tipo de sessão e no caso desse projeto os filtros utilizados na Autenticação (`authenticationManager`) e autorização dos usuários (`authorizationManager`), conforme pode ser observado nos comentários do código abaixo.
+Para configurar o **Spring Security** será ajustada a classe `WebSecurity` no pacote `br.edu.utfpr.pb.pw44s.server.security`. Nessa classe serão sobrescritas as configurações definidas por padrão no Spring Security, por isso ela recebe a anotação `@EnableWebSecurity` e como serão criados objetos compartilhados a anotação `@Configuration`. O objeto `authService` será explicado na sequência do texto e é utilizado para buscar um usuário no banco.  O objeto `authenticationEntryPoint` é responsável por realizar o tratamento de exceção quando o usuário informar credenciais incorretas ao autenticar-se. O método `filterChain()` retorna um objeto do tipo `SecurityFilterChain`, nesse método serão sobrescritas algumas configurações padrão do Spring Security. Essas configurações serão alteradas por meio do objeto `http` do tipo `HttpSecurity`, nele podem ser alteados os objetos de tratamento de erro, quais rotas da aplicação serão autenticadas/autorizadas, as rotas para autenticação, controle do tipo de sessão e no caso desse projeto os filtros utilizados na Autenticação (`authenticationManager`) e autorização dos usuários (`authorizationManager`), conforme pode ser observado nos comentários do código abaixo.
 
 ```java  
-package br.edu.utfpr.pb.pw44s.server.security;  
-  
-import br.edu.utfpr.pb.pw44s.server.service.AuthService;  
-import lombok.SneakyThrows;  
-import org.springframework.context.annotation.Bean;  
-import org.springframework.context.annotation.Configuration;  
-import org.springframework.http.HttpMethod;  
-import org.springframework.security.authentication.AuthenticationManager;  
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;  
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;  
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;  
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;  
-import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;  
-import org.springframework.security.config.http.SessionCreationPolicy;  
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;  
-import org.springframework.security.crypto.password.PasswordEncoder;  
-import org.springframework.security.web.AuthenticationEntryPoint;  
-import org.springframework.security.web.SecurityFilterChain;  
-import org.springframework.web.cors.CorsConfiguration;  
-import org.springframework.web.cors.CorsConfigurationSource;  
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;  
-  
-import java.util.List;  
-  
-@EnableWebSecurity  
-@Configuration  
-public class WebSecurity {  
-  
-    // Service responsável por buscar um usuário no banco de dados por meio do método loadByUsername()  
-    private final AuthService authService;  
-    // Objeto responsável por realizar o tratamento de exceção quando o usuário informar credenciais incorretas ao autenticar-se.  
-    private final AuthenticationEntryPoint authenticationEntryPoint;  
-  
-    public WebSecurity(AuthService authService, AuthenticationEntryPoint authenticationEntryPoint) {  
-        this.authService = authService;  
-        this.authenticationEntryPoint = authenticationEntryPoint;  
-    }  
-  
-    @Bean  
+package br.edu.utfpr.pb.pw44s.server.security;
+
+import br.edu.utfpr.pb.pw44s.server.service.AuthService;
+import lombok.SneakyThrows;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
+
+@EnableWebSecurity
+@Configuration
+public class WebSecurity {
+
+    // Service responsável por buscar um usuário no banco de dados por meio do método loadByUsername()
+    private final AuthService authService;
+    // Objeto responsável por realizar o tratamento de exceção quando o usuário informar credenciais incorretas ao autenticar-se.
+    private final AuthenticationEntryPoint authenticationEntryPoint;
+
+    public WebSecurity(AuthService authService, AuthenticationEntryPoint authenticationEntryPoint) {
+        this.authService = authService;
+        this.authenticationEntryPoint = authenticationEntryPoint;
+    }
+
+    @Bean
     @SneakyThrows
-    public SecurityFilterChain filterChain(HttpSecurity http) {  
-        AuthenticationManagerBuilder authenticationManagerBuilder =  
-                http.getSharedObject(AuthenticationManagerBuilder.class);  
-        authenticationManagerBuilder  
-                .userDetailsService(authService)  
-                .passwordEncoder(passwordEncoder());  
-        // authenticationManager -> responsável por gerenciar a autenticação dos usuários  
-        AuthenticationManager authenticationManager =  
-                authenticationManagerBuilder.build();  
-  
+    public SecurityFilterChain filterChain(HttpSecurity http) {
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+                http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder
+                .userDetailsService(authService)
+                .passwordEncoder(passwordEncoder());
+        // authenticationManager -> responsável por gerenciar a autenticação dos usuários
+        AuthenticationManager authenticationManager =
+                authenticationManagerBuilder.build();
+
         //Configuração para funcionar o console do H2.
-        http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));  
+        http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
         // desabilita o uso de csrf
-        http.csrf(AbstractHttpConfigurer::disable);  
-  
+        http.csrf(AbstractHttpConfigurer::disable);
+
         // Adiciona configuração de CORS
-        http.cors(cors -> corsConfigurationSource());  
-  
+        http.cors(cors -> corsConfigurationSource());
+
         //define o objeto responsável pelo tratamento de exceção ao entrar com credenciais inválidas
-        http.exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(authenticationEntryPoint));  
-  
+        http.exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(authenticationEntryPoint));
+
         // configura a authorização das requisições
-        http.authorizeHttpRequests((authorize) -> authorize  
+        http.authorizeHttpRequests((authorize) -> authorize
                 //permite que a rota "/users" seja acessada, mesmo sem o usuário estar autenticado desde que o método HTTP da requisição seja POST
-                .requestMatchers(HttpMethod.POST, "/users/**").permitAll()  
-                //permite que a rota "/error" seja acessada por qualquer    requisição mesmo o usuário não estando autenticado
-                .requestMatchers("/error/**").permitAll()  
+                .requestMatchers(HttpMethod.POST, "/users/**").permitAll()
+                //permite que a rota "/error" seja acessada por qualquer requisição mesmo o usuário não estando autenticado
+                .requestMatchers("/error/**").permitAll()
                 //permite que a rota "/h2-console" seja acessada por qualquer requisição mesmo o usuário não estando autenticado
                 .requestMatchers("/h2-console/**").permitAll()
-                .requestMatchers("/products/**").permitAll()  
-                .requestMatchers("/categories/**").permitAll()  
+
+                .requestMatchers("/products/**").permitAll()
+                .requestMatchers("/categories/**").permitAll()
                 //as demais rotas da aplicação só podem ser acessadas se o usuário estiver autenticado
-                .anyRequest().authenticated()  
-        );  
-        http.authenticationManager(authenticationManager)  
+                .anyRequest().authenticated()
+        );
+        http.authenticationManager(authenticationManager)
                 //Filtro da Autenticação - sobrescreve o método padrão do Spring Security para Autenticação.
-                .addFilter(new JWTAuthenticationFilter(authenticationManager, authService))  
+                .addFilter(new JWTAuthenticationFilter(authenticationManager, authService))
                 //Filtro da Autorização - - sobrescreve o método padrão do Spring Security para Autorização.
-                .addFilter(new JWTAuthorizationFilter(authenticationManager, authService))  
+                .addFilter(new JWTAuthorizationFilter(authenticationManager, authService))
                 //Como será criada uma API REST e todas as requisições que necessitam de autenticação/autorização serão realizadas com o envio do token JWT do usuário, não será necessário fazer controle de sessão no *back-end*.
-                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));  
-  
-			return http.build();  
-	}  
-  
-    // Criação do objeto utilizado na criptografia da senha, ele é usado no UserService ao cadastrar um usuário e pelo authenticationManagerBean para autenticar um usuário no sistema.  
-	@Bean  
-	public PasswordEncoder passwordEncoder() {  
-		return new BCryptPasswordEncoder();  
-	}  
-  
-    /*  
-	   O compartilhamento de recursos de origem cruzada (CORS) é um mecanismo para integração de aplicativos. O CORS define uma maneira de os aplicativos Web clientes carregados em um domínio interagirem com recursos em um domínio diferente. */  @Bean  
-	private CorsConfigurationSource corsConfigurationSource() {  
-        CorsConfiguration configuration = new CorsConfiguration();  
-        /* 
-        Lista das origens autorizadas, no nosso caso que iremos rodar a aplicação localmente o * poderia ser trocado
-        por: http://localhost:porta, em que :porta será a porta em que a aplicação cliente será executada
-        */
-        configuration.setAllowedOrigins(List.of("*"));  
+                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        return http.build();
+    }
+
+    // Criação do objeto utilizado na criptografia da senha, ele é usado no UserService ao cadastrar um usuário e pelo authenticationManagerBean para autenticar um usuário no sistema.
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    /*
+        O compartilhamento de recursos de origem cruzada (CORS) é um mecanismo para integração de aplicativos.
+        O CORS define uma maneira de os aplicativos Web clientes carregados em um domínio interagirem com recursos em um domínio diferente.
+    */
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        // Lista das origens autorizadas, no nosso caso que iremos rodar a aplicação localmente o * poderia ser trocado
+        // por: http://localhost:porta, em que :porta será a porta em que a aplicação cliente será executada
+        configuration.setAllowedOrigins(List.of("*"));
         // Lista dos métodos HTTP autorizados
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "TRACE", "CONNECT"));  
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "TRACE", "CONNECT"));
         // Lista dos Headers autorizados, o Authorization será o header que iremos utilizar para transferir o Token
-        configuration.setAllowedHeaders(List.of("Authorization","x-xsrf-token",  
-                "Access-Control-Allow-Headers", "Origin",  
-                "Accept", "X-Requested-With", "Content-Type",  
-                "Access-Control-Request-Method",  
-                "Access-Control-Request-Headers", "Auth-Id-Token"));  
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();  
-        source.registerCorsConfiguration("/**", configuration);  
-        return source;  
-    }  
+        configuration.setAllowedHeaders(List.of("Authorization","x-xsrf-token",
+                "Access-Control-Allow-Headers", "Origin",
+                "Accept", "X-Requested-With", "Content-Type",
+                "Access-Control-Request-Method",
+                "Access-Control-Request-Headers", "Auth-Id-Token"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 }
 ```  
 
-#### 5.5 Ajustes na classe User
+#### 5.4 Ajustes na classe User
 
 Para autenticar-se em um sistema qualquer geralmente precisamos ter credenciais, no caso deste projeto as credenciais para acesso serão gerenciadas pela classe `User` por meio dos atributos `username` e `password`. Dessa maneira os objetos instanciados a partir da classe `User` serão armazenados no banco de dados e utilizados posteriormente para autenticação e autorização. O processo de salvar um novo usuário já foi explicado no início deste projeto, já o processo de autenticação e autorização está sendo descrito agora. Por padrão, para autenticar-se em uma aplicação Spring Security é necessário realizar uma requisição do tipo **HTTP POST** para URL **/login** (no caso dessa aplicação: http://localhost:8080/login), enviando no corpo da requisição os dados de usuário e senha no formato JSON, essa URL e verbo HTTP são padrão do Spring Security, mas caso necessário pode ser alterado na classe de configuração.
 
@@ -1473,109 +1475,116 @@ public class AuthenticationResponse {
 Com as classes para compor a resposta ao cliente criadas, será criada a classe `JWTAuthenticationFilter`:
 
 ```java  
-package br.edu.utfpr.pb.pw44s.server.security;  
-  
-import br.edu.utfpr.pb.pw44s.server.dto.AuthRequestDTO;  
-import br.edu.utfpr.pb.pw44s.server.model.User;  
-import br.edu.utfpr.pb.pw44s.server.security.dto.AuthenticationResponse;  
-import br.edu.utfpr.pb.pw44s.server.security.dto.UserResponseDTO;  
-import br.edu.utfpr.pb.pw44s.server.service.AuthService;  
-import com.auth0.jwt.JWT;  
-import com.auth0.jwt.algorithms.Algorithm;  
-import tools.jackson.core.exc.StreamReadException;  
-import tools.jackson.databind.DatabindException;  
-import tools.jackson.databind.ObjectMapper;  
-import jakarta.servlet.FilterChain;  
-import jakarta.servlet.ServletException;  
-import jakarta.servlet.http.HttpServletRequest;  
-import jakarta.servlet.http.HttpServletResponse;  
-import lombok.NoArgsConstructor;  
-import org.jspecify.annotations.NonNull;  
-import org.springframework.security.authentication.AuthenticationManager;  
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;  
-import org.springframework.security.core.Authentication;  
-import org.springframework.security.core.AuthenticationException;  
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;  
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;  
-  
-import java.io.IOException;  
-import java.util.Date; 
-  
-  
-@NoArgsConstructor  
-public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {  
-    private AuthenticationManager authenticationManager;  
-    private AuthService authService;  
-  
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, AuthService authService) {  
-        this.authenticationManager = authenticationManager;  
-        this.authService = authService;  
-    }  
-  
-    @Override  
-  public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {  
-        //HTTP.POST {"username":"admin", "password":"P4ssword"}  
-        //Obtém os dados de username e password utilizando o ObjectMapper para converter o JSON //em um objeto User com esses dados.              
-        //Verifica se o usuário existe no banco de dados, caso não exista uma Exception será disparada  
-        User credentials = new User();  
-        User user = new User();  
-        try {  
-            
-			//e o código será parado de executar nessa parte e o usuário irá receber uma resposta //com falha na autenticação (classe: EntryPointUnauthorizedHandler)  if (request.getInputStream() != null || request.getInputStream().available() > 0) {  
-            credentials = new ObjectMapper().readValue(request.getInputStream(), User.class);  
-            user = (User) authService.loadUserByUsername(credentials.getUsername());  
-		}  
-		//Caso o usuário seja encontrado, o objeto authenticationManager encarrega-se de autenticá-lo.  
-		//Como o authenticationManager foi configurado na classe WebSecurity e, foi informado o método  
-		//de criptografia da senha, a senha informada durante a autenticação é criptografada e  
-		//comparada com a senha armazenada no banco. Caso não esteja correta uma Exception será disparada 		
-		//Caso ocorra sucesso será chamado o método: successfulAuthentication dessa classe  
-		return authenticationManager.authenticate(  
-                    new UsernamePasswordAuthenticationToken(  
-                            credentials.getUsername(),  
-                            credentials.getPassword(),  
-                            user.getAuthorities()  
-                    )  
+package br.edu.utfpr.pb.pw44s.server.security;
+
+import br.edu.utfpr.pb.pw44s.server.dto.AuthRequestDTO;
+import br.edu.utfpr.pb.pw44s.server.model.User;
+import br.edu.utfpr.pb.pw44s.server.security.dto.AuthenticationResponse;
+import br.edu.utfpr.pb.pw44s.server.security.dto.UserResponseDTO;
+import br.edu.utfpr.pb.pw44s.server.service.AuthService;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import tools.jackson.core.exc.StreamReadException;
+import tools.jackson.databind.DatabindException;
+import tools.jackson.databind.ObjectMapper;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.NoArgsConstructor;
+import org.jspecify.annotations.NonNull;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.io.IOException;
+import java.util.Date;
+
+
+@NoArgsConstructor
+public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+
+    private AuthenticationManager authenticationManager;
+    private AuthService authService;
+
+    public JWTAuthenticationFilter(AuthenticationManager authenticationManager,
+                                   AuthService authService) {
+        this.authenticationManager = authenticationManager;
+        this.authService = authService;
+    }
+
+    @Override
+    public Authentication attemptAuthentication(HttpServletRequest request,
+                                                @NonNull HttpServletResponse response)
+                                                throws AuthenticationException {
+
+        try {
+            //HTTP.POST {"username":"admin", "password":"P4ssword"}
+            //Obtém os dados de username e password utilizando o ObjectMapper para converter o JSON
+            //em um objeto User com esses dados.
+            AuthRequestDTO credentials = new AuthRequestDTO();
+            User user = new User();
+            //Verifica se o usuário existe no banco de dados, caso não exista uma Exception será disparada
+            //e o código será parado de executar nessa parte e o usuário irá receber uma resposta
+            //com falha na autenticação (classe: EntryPointUnauthorizedHandler)
+            if (request.getInputStream() != null || request.getInputStream().available() > 0) {
+                credentials = new ObjectMapper().readValue(request.getInputStream(), AuthRequestDTO.class);
+                user = (User) authService.loadUserByUsername(credentials.getUsername());
+            }
+            //Caso o usuário seja encontrado, o objeto authenticationManager encarrega-se de autenticá-lo.
+            //Como o authenticationManager foi configurado na classe WebSecurity e, foi informado o método
+            //de criptografia da senha, a senha informada durante a autenticação é criptografada e
+            //comparada com a senha armazenada no banco. Caso não esteja correta uma Exception será disparada
+            //Caso ocorra sucesso será chamado o método: successfulAuthentication dessa classe
+            return authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            credentials.getUsername(),
+                            credentials.getPassword(),
+                            user.getAuthorities()
+                    )
             );
-              
-        } catch (StreamReadException e) {  
-            throw new RuntimeException(e);  
-        } catch (DatabindException e) {  
-            throw new RuntimeException(e);  
-        } catch (IOException e) {  
-            throw new RuntimeException(e);  
-        }  
-    }  
-  
-    @Override  
-	protected void successfulAuthentication(HttpServletRequest request,  
-                                            HttpServletResponse response,  
-                                            FilterChain chain,  
-                                            Authentication authResult) throws IOException, ServletException {  
-  
-        User user = (User) authService.loadUserByUsername(authResult.getName());  
-        // o método create() da classe JWT é utilizado para criação de um novo token JWT  
-		String token = JWT.create()  
-        // o objeto authResult possui os dados do usuário autenticado, nesse caso o método getName() retorna o username do usuário foi autenticado no método attemptAuthentication.  
-		.withSubject(authResult.getName())  
-        //a data de validade do token é a data atual mais o valor armazenado na constante EXPIRATION_TIME, nesse caso 1 dia  
-		.withExpiresAt(  
-	        new Date(System.currentTimeMillis()  + SecurityConstants.EXPIRATION_TIME)  
-        )
-        //Por fim é informado o algoritmo utilizado para assinar o token e por parâmetro a chave utilizada para assinatura. O Secret também pode ser alterado na classe SecurityConstants que armazena alguns dados de configuração do Spring Security  
-		.sign(Algorithm.HMAC512(SecurityConstants.SECRET));    
-        response.setContentType("application/json");    
-        response.getWriter().write(  
-                new ObjectMapper().writeValueAsString(  
-                        new AuthenticationResponse(token, new UserResponseDTO(user)))  
+
+        } catch (StreamReadException | DatabindException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    protected void successfulAuthentication(@NonNull HttpServletRequest request,
+                                            HttpServletResponse response,
+                                            @NonNull FilterChain chain,
+                                            Authentication authResult) throws IOException, ServletException {
+
+        User user = (User) authService.loadUserByUsername(authResult.getName());
+        // o método create() da classe JWT é utilizado para criação de um novo token JWT
+        String token = JWT.create()
+                // o objeto authResult possui os dados do usuário autenticado, nesse caso o método getName() retorna o username do usuário foi autenticado no método attemptAuthentication.
+                .withSubject(authResult.getName())
+                //a data de validade do token é a data atual mais o valor armazenado na constante EXPIRATION_TIME, nesse caso 1 dia
+                .withExpiresAt(
+                    new Date(System.currentTimeMillis()  + SecurityConstants.EXPIRATION_TIME)
+                )
+                //Por fim é informado o algoritmo utilizado para assinar o token e por parâmetro a chave utilizada para assinatura.
+                // O Secret também pode ser alterado na classe SecurityConstants que armazena alguns dados de configuração do Spring Security
+                .sign(Algorithm.HMAC512(SecurityConstants.SECRET));
+
+        response.setContentType("application/json");
+
+        response.getWriter().write(
+                new ObjectMapper().writeValueAsString(
+                        new AuthenticationResponse(token, new UserResponseDTO(user)))
         );
-    }  
-  
-    @Override  
-	protected AuthenticationSuccessHandler getSuccessHandler() {  
-        return super.getSuccessHandler();  
-    }  
-}  
+
+    }
+
+    @Override
+    public AuthenticationSuccessHandler getSuccessHandler() {
+        return super.getSuccessHandler();
+    }
+} 
 ```  
 
 #### 5.9 Criação da classe JWTAuthorizationFilter
@@ -1583,74 +1592,74 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 Entretanto, para que o Token sejá utilizado para autorizar no usuário nas novas requisições foi criada a classe `JWTAuthorizationFilter`, que será responsável por extrair o Token do cabeçalho da requisição **HTTP** e verificar se ele é válido. A classe herda de `BasicAuthenticationFilter` e implementa o método `doFilterInternal`, esse método recebe como parâmetro um objeto do tipo HttpServletRequest, e é desse objeto que é extraído o Token do cabeçalho da requisição. Após pegar o Token do cabeçalho o mesmo é passado por parâmetro para o método `getAuthentication`, no qual é verificado a validade do Token, então é recuperado o **username** que está  no corpo do Token. Na sequência é verificado se o usuário que está tentando autorização ainda existe no banco de dados, caso exista o usuário é autorizado e a autorização é adicionada no contexto do Spring Security.
 
 ```java  
-package br.edu.utfpr.pb.pw44s.server.security;  
-  
-import br.edu.utfpr.pb.pw44s.server.model.User;  
-import br.edu.utfpr.pb.pw44s.server.service.AuthService;  
-import com.auth0.jwt.JWT;  
-import com.auth0.jwt.algorithms.Algorithm;  
-import jakarta.servlet.FilterChain;  
-import jakarta.servlet.ServletException;  
-import jakarta.servlet.http.HttpServletRequest;  
-import jakarta.servlet.http.HttpServletResponse;  
-import org.springframework.security.authentication.AuthenticationManager;  
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;  
-import org.springframework.security.core.context.SecurityContextHolder;  
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;  
-  
-import java.io.IOException; 
-  
-public class JWTAuthorizationFilter extends BasicAuthenticationFilter {  
-  
-    private final AuthService authService;  
-  
-    public JWTAuthorizationFilter(AuthenticationManager authenticationManager,  
-                                  AuthService authService) {  
-        super(authenticationManager);  
-        this.authService = authService;  
-    }  
-  
-    @Override  
-  protected void doFilterInternal(HttpServletRequest request,  
-                                    HttpServletResponse response,  
-                                    FilterChain chain) throws IOException, ServletException {  
-  
-        //Recuperar o token do Header(cabeçalho) da requisição  
-  String header = request.getHeader(SecurityConstants.HEADER_STRING);  
-        //Verifica se o token existe no cabeçalho  
-  if (header == null || !header.startsWith(SecurityConstants.TOKEN_PREFIX)) {  
-            chain.doFilter(request, response);  
-            return;  
-        }  
-        //Chama o método getAuthentication e retorna o usuário autenticado para dar sequência na requisição  
-  UsernamePasswordAuthenticationToken authenticationToken =  
-                getAuthentication(request);  
-        //Adiciona o usuário autenticado no contexto do spring security  
-  SecurityContextHolder.getContext().setAuthentication(authenticationToken);  
-        chain.doFilter(request, response);  
-    }  
-  
-    private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {  
-        String token = request.getHeader(SecurityConstants.HEADER_STRING);  
-  
-        //verifica se o token é válido e retorna o username  
-  String username = JWT.require(Algorithm.HMAC512(SecurityConstants.SECRET))  
-                .build()  
-                .verify(token.replace(SecurityConstants.TOKEN_PREFIX, ""))  
-                .getSubject();  
-  
-        if (username != null) {  
-            // com posse do username é verificado se ele existe na base de dados  
-  User user = (User) authService.loadUserByUsername(username);  
-            //caso exista o usuário é autenticado e a requisição continua a ser executada.  
-  return new UsernamePasswordAuthenticationToken(  
-                    user.getUsername(),  
-                    null,  
-                    user.getAuthorities());  
-        }  
-        // senão é retornado null, se a url que o usuário solicitou necessita de autenticação ele vai receber erro 401 - Unauthorized  
-  return null;  
-    }  
+package br.edu.utfpr.pb.pw44s.server.security;
+
+import br.edu.utfpr.pb.pw44s.server.model.User;
+import br.edu.utfpr.pb.pw44s.server.service.AuthService;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+
+import java.io.IOException;
+
+public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
+
+    private final AuthService authService;
+
+    public JWTAuthorizationFilter(AuthenticationManager authenticationManager,
+                                  AuthService authService) {
+        super(authenticationManager);
+        this.authService = authService;
+    }
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain chain) throws IOException, ServletException {
+
+        //Recuperar o token do Header(cabeçalho) da requisição
+        String header = request.getHeader(SecurityConstants.HEADER_STRING);
+        //Verifica se o token existe no cabeçalho
+        if (header == null || !header.startsWith(SecurityConstants.TOKEN_PREFIX)) {
+            chain.doFilter(request, response);
+            return;
+        }
+        //Chama o método getAuthentication e retorna o usuário autenticado para dar sequência na requisição
+        UsernamePasswordAuthenticationToken authenticationToken =
+                getAuthentication(request);
+        //Adiciona o usuário autenticado no contexto do spring security
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        chain.doFilter(request, response);
+    }
+
+    private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
+        String token = request.getHeader(SecurityConstants.HEADER_STRING);
+
+        //verifica se o token é válido e retorna o username
+        String username = JWT.require(Algorithm.HMAC512(SecurityConstants.SECRET))
+                .build()
+                .verify(token.replace(SecurityConstants.TOKEN_PREFIX, ""))
+                .getSubject();
+
+        if (username != null) {
+            // com posse do username é verificado se ele existe na base de dados
+            User user = (User) authService.loadUserByUsername(username);
+            //caso exista o usuário é autenticado e a requisição continua a ser executada.
+            return new UsernamePasswordAuthenticationToken(
+                    user.getUsername(),
+                    null,
+                    user.getAuthorities());
+        }
+        // senão é retornado null, se a url que o usuário solicitou necessita de autenticação ele vai receber erro 401 - Unauthorized
+        return null;
+    }
 }
 ```  
 
